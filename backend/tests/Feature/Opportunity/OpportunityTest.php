@@ -107,6 +107,29 @@ class OpportunityTest extends TestCase
         $response->assertOk()->assertJsonPath('data.status', OpportunityStatus::Perdida->value);
     }
 
+    public function test_closed_at_is_set_when_stage_becomes_terminal_and_cleared_on_reopen(): void
+    {
+        $this->actingUser();
+        $opportunity = Opportunity::factory()->create(['stage' => OpportunityStage::Negociacion]);
+        $this->assertNull($opportunity->closed_at);
+
+        $this->putJson("/api/v1/opportunities/{$opportunity->id}", [
+            'client_id' => $opportunity->client_id,
+            'stage' => OpportunityStage::CierreGanado->value,
+        ])->assertOk();
+
+        $opportunity->refresh();
+        $this->assertNotNull($opportunity->closed_at);
+
+        $this->putJson("/api/v1/opportunities/{$opportunity->id}", [
+            'client_id' => $opportunity->client_id,
+            'stage' => OpportunityStage::Negociacion->value,
+        ])->assertOk();
+
+        $opportunity->refresh();
+        $this->assertNull($opportunity->closed_at);
+    }
+
     public function test_authenticated_user_can_delete_an_opportunity(): void
     {
         $this->actingUser();

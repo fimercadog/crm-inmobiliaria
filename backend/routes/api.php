@@ -3,6 +3,7 @@
 use App\Http\Controllers\Api\V1\ActivityController;
 use App\Http\Controllers\Api\V1\AuthController;
 use App\Http\Controllers\Api\V1\ClientController;
+use App\Http\Controllers\Api\V1\DashboardController;
 use App\Http\Controllers\Api\V1\LeadController;
 use App\Http\Controllers\Api\V1\OpportunityController;
 use App\Http\Controllers\Api\V1\OwnerController;
@@ -29,6 +30,8 @@ Route::prefix('v1')->group(function (): void {
     });
 
     Route::middleware('auth:api')->group(function (): void {
+        Route::get('/dashboard/summary', [DashboardController::class, 'summary']);
+
         Route::get('/properties/export', [PropertyController::class, 'export']);
         Route::get('/properties/options', [PropertyController::class, 'options']);
         Route::apiResource('properties', PropertyController::class);

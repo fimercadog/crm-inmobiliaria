@@ -38,6 +38,7 @@ class OpportunityResource extends JsonResource
             'value' => $this->value !== null ? (float) $this->value : null,
             'stage' => $this->stage->value,
             'status' => $this->status->value,
+            'closed_at' => $this->closed_at?->toIso8601String(),
             'probability' => $this->probability,
             'next_action' => $this->next_action,
             'estimated_close_date' => $this->estimated_close_date?->toDateString(),

@@ -35,14 +35,23 @@ class Opportunity extends Model
             'status' => OpportunityStatus::class,
             'value' => 'decimal:2',
             'estimated_close_date' => 'date',
+            'closed_at' => 'datetime',
         ];
     }
 
     protected static function booted(): void
     {
         $syncStatus = function (Opportunity $opportunity): void {
-            if ($opportunity->stage instanceof OpportunityStage) {
-                $opportunity->status = $opportunity->stage->status();
+            if (! $opportunity->stage instanceof OpportunityStage) {
+                return;
+            }
+
+            $opportunity->status = $opportunity->stage->status();
+
+            if ($opportunity->status === OpportunityStatus::Abierta) {
+                $opportunity->closed_at = null;
+            } elseif (! $opportunity->exists || $opportunity->isDirty('stage')) {
+                $opportunity->closed_at = now();
             }
         };
 
