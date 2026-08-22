@@ -3,7 +3,6 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { PageContainer } from "@/components/shared/page-container";
 import { PageHeader } from "@/components/shared/page-header";
-import { DemoDataTable } from "@/app/(app)/dashboard/demo-data-table";
 
 export default function DashboardPage() {
   return (
@@ -12,19 +11,6 @@ export default function DashboardPage() {
         title="Dashboard"
         description="Vista general del negocio inmobiliario — en construcción (Fase 14)"
       />
-
-      <Card>
-        <CardHeader>
-          <CardTitle>DataTable</CardTitle>
-          <CardDescription>
-            Demostración del sistema de tabla reutilizable (búsqueda, filtros, orden, paginación, acciones) —
-            datos de ejemplo, se reemplaza por el módulo de Propiedades en la Fase 8
-          </CardDescription>
-        </CardHeader>
-        <CardContent>
-          <DemoDataTable />
-        </CardContent>
-      </Card>
 
       <Card>
         <CardHeader>
