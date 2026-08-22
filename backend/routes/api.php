@@ -1,6 +1,8 @@
 <?php
 
 use App\Http\Controllers\Api\V1\AuthController;
+use App\Http\Controllers\Api\V1\ClientController;
+use App\Http\Controllers\Api\V1\LeadController;
 use App\Http\Controllers\Api\V1\OwnerController;
 use App\Http\Controllers\Api\V1\PropertyController;
 use Illuminate\Support\Facades\Route;
@@ -29,5 +31,12 @@ Route::prefix('v1')->group(function (): void {
         Route::get('/owners/export', [OwnerController::class, 'export']);
         Route::get('/owners/options', [OwnerController::class, 'options']);
         Route::apiResource('owners', OwnerController::class);
+
+        Route::get('/clients/export', [ClientController::class, 'export']);
+        Route::apiResource('clients', ClientController::class);
+
+        Route::get('/leads/export', [LeadController::class, 'export']);
+        Route::post('/leads/{lead}/convert', [LeadController::class, 'convert']);
+        Route::apiResource('leads', LeadController::class);
     });
 });

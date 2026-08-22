@@ -2,6 +2,8 @@
 
 namespace Database\Seeders;
 
+use App\Models\Client;
+use App\Models\Lead;
 use App\Models\Owner;
 use App\Models\Property;
 use App\Models\User;
@@ -28,5 +30,9 @@ class DatabaseSeeder extends Seeder
             ->recycle($owners)
             ->recycle($agents->push($admin))
             ->create();
+
+        Client::factory(20)->create();
+
+        Lead::factory(25)->create();
     }
 }
