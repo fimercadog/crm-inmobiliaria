@@ -6,18 +6,18 @@ import { toast } from "sonner";
 import { Card, CardContent } from "@/components/ui/card";
 import { LoadingState } from "@/components/shared/loading-state";
 import { ErrorState } from "@/components/shared/error-state";
-import { OwnerForm, ownerToFormValues } from "@/features/owners/owner-form";
-import { fetchOwner, updateOwner } from "@/features/owners/api";
+import { ClientForm, clientToFormValues } from "@/features/clients/client-form";
+import { fetchClient, updateClient } from "@/features/clients/api";
 import { ApiError } from "@/types/api";
-import type { Owner } from "@/types/owner";
-import type { OwnerFormOutput } from "@/features/owners/owner-form-schema";
+import type { Client } from "@/types/client";
+import type { ClientFormOutput } from "@/features/clients/client-form-schema";
 
-export function EditOwnerView() {
+export function EditClientView() {
   const params = useParams<{ id: string }>();
   const router = useRouter();
-  const ownerId = Number(params.id);
+  const clientId = Number(params.id);
 
-  const [owner, setOwner] = useState<Owner | null>(null);
+  const [client, setClient] = useState<Client | null>(null);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [retryToken, setRetryToken] = useState(0);
@@ -25,12 +25,12 @@ export function EditOwnerView() {
   useEffect(() => {
     let ignore = false;
 
-    fetchOwner(ownerId)
+    fetchClient(clientId)
       .then((data) => {
-        if (!ignore) setOwner(data);
+        if (!ignore) setClient(data);
       })
       .catch((err: unknown) => {
-        if (!ignore) setError(err instanceof ApiError ? err.message : "No fue posible cargar el propietario");
+        if (!ignore) setError(err instanceof ApiError ? err.message : "No fue posible cargar el cliente");
       })
       .finally(() => {
         if (!ignore) setIsLoading(false);
@@ -39,7 +39,7 @@ export function EditOwnerView() {
     return () => {
       ignore = true;
     };
-  }, [ownerId, retryToken]);
+  }, [clientId, retryToken]);
 
   function handleRetry() {
     setIsLoading(true);
@@ -47,13 +47,13 @@ export function EditOwnerView() {
     setRetryToken((token) => token + 1);
   }
 
-  async function handleSubmit(values: OwnerFormOutput) {
+  async function handleSubmit(values: ClientFormOutput) {
     try {
-      await updateOwner(ownerId, values);
-      toast.success("Propietario actualizado correctamente");
-      router.push("/owners");
+      await updateClient(clientId, values);
+      toast.success("Cliente actualizado correctamente");
+      router.push("/clients");
     } catch (err) {
-      toast.error(err instanceof ApiError ? err.message : "No fue posible actualizar el propietario");
+      toast.error(err instanceof ApiError ? err.message : "No fue posible actualizar el cliente");
     }
   }
 
@@ -61,14 +61,14 @@ export function EditOwnerView() {
     return <LoadingState rows={6} />;
   }
 
-  if (error || !owner) {
+  if (error || !client) {
     return <ErrorState description={error ?? undefined} onRetry={handleRetry} />;
   }
 
   return (
     <Card>
       <CardContent className="pt-6">
-        <OwnerForm defaultValues={ownerToFormValues(owner)} onSubmit={handleSubmit} submitLabel="Guardar cambios" />
+        <ClientForm defaultValues={clientToFormValues(client)} onSubmit={handleSubmit} submitLabel="Guardar cambios" />
       </CardContent>
     </Card>
   );

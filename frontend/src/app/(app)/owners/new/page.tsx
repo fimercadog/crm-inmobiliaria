@@ -8,12 +8,12 @@ import { Card, CardContent } from "@/components/ui/card";
 import { OwnerForm } from "@/features/owners/owner-form";
 import { createOwner } from "@/features/owners/api";
 import { ApiError } from "@/types/api";
-import type { OwnerFormSchema } from "@/features/owners/owner-form-schema";
+import type { OwnerFormOutput } from "@/features/owners/owner-form-schema";
 
 export default function NewOwnerPage() {
   const router = useRouter();
 
-  async function handleSubmit(values: OwnerFormSchema) {
+  async function handleSubmit(values: OwnerFormOutput) {
     try {
       await createOwner(values);
       toast.success("Propietario creado correctamente");

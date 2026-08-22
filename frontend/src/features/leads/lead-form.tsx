@@ -9,76 +9,83 @@ import { Textarea } from "@/components/ui/textarea";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Field, FieldError, FieldGroup, FieldLabel } from "@/components/ui/field";
 import {
-  ownerFormSchema,
-  type OwnerFormInput,
-  type OwnerFormOutput,
-} from "@/features/owners/owner-form-schema";
-import { OWNER_STATUS_LABELS, OWNER_STATUSES, type Owner } from "@/types/owner";
+  leadFormSchema,
+  type LeadFormInput,
+  type LeadFormOutput,
+} from "@/features/leads/lead-form-schema";
+import { LEAD_SOURCE_LABELS, LEAD_SOURCES, LEAD_STATUS_LABELS, LEAD_STATUSES, type Lead } from "@/types/lead";
 
-interface OwnerFormProps {
-  defaultValues?: Partial<OwnerFormInput>;
-  onSubmit: SubmitHandler<OwnerFormOutput>;
+interface LeadFormProps {
+  defaultValues?: Partial<LeadFormInput>;
+  onSubmit: SubmitHandler<LeadFormOutput>;
   submitLabel?: string;
 }
 
-export function ownerToFormValues(owner: Owner): Partial<OwnerFormInput> {
+export function leadToFormValues(lead: Lead): Partial<LeadFormInput> {
   return {
-    name: owner.name,
-    document: owner.document ?? undefined,
-    phone: owner.phone ?? undefined,
-    whatsapp: owner.whatsapp ?? undefined,
-    email: owner.email ?? undefined,
-    address: owner.address ?? undefined,
-    notes: owner.notes ?? undefined,
-    status: owner.status,
+    name: lead.name,
+    phone: lead.phone ?? undefined,
+    email: lead.email ?? undefined,
+    source: lead.source,
+    status: lead.status,
+    notes: lead.notes ?? undefined,
   };
 }
 
-export function OwnerForm({ defaultValues, onSubmit, submitLabel = "Guardar" }: OwnerFormProps) {
+export function LeadForm({ defaultValues, onSubmit, submitLabel = "Guardar" }: LeadFormProps) {
   const {
     register,
     handleSubmit,
     control,
     formState: { errors, isSubmitting },
-  } = useForm<OwnerFormInput, unknown, OwnerFormOutput>({
-    resolver: zodResolver(ownerFormSchema),
-    defaultValues: { status: "activo", ...defaultValues },
+  } = useForm<LeadFormInput, unknown, LeadFormOutput>({
+    resolver: zodResolver(leadFormSchema),
+    defaultValues: { source: "manual", status: "nuevo", ...defaultValues },
   });
 
   return (
     <form onSubmit={handleSubmit(onSubmit)} noValidate className="flex flex-col gap-6">
       <FieldGroup>
-        <div className="grid gap-4 sm:grid-cols-2">
+        <div className="grid gap-4 sm:grid-cols-3">
           <Field data-invalid={errors.name ? "true" : undefined}>
             <FieldLabel htmlFor="name">Nombre</FieldLabel>
             <Input id="name" {...register("name")} />
             <FieldError errors={errors.name ? [errors.name] : undefined} />
           </Field>
-          <Field data-invalid={errors.document ? "true" : undefined}>
-            <FieldLabel htmlFor="document">Documento</FieldLabel>
-            <Input id="document" {...register("document")} />
-            <FieldError errors={errors.document ? [errors.document] : undefined} />
-          </Field>
-        </div>
-
-        <div className="grid gap-4 sm:grid-cols-2">
           <Field data-invalid={errors.phone ? "true" : undefined}>
             <FieldLabel htmlFor="phone">Teléfono</FieldLabel>
             <Input id="phone" {...register("phone")} />
             <FieldError errors={errors.phone ? [errors.phone] : undefined} />
           </Field>
-          <Field data-invalid={errors.whatsapp ? "true" : undefined}>
-            <FieldLabel htmlFor="whatsapp">WhatsApp</FieldLabel>
-            <Input id="whatsapp" {...register("whatsapp")} />
-            <FieldError errors={errors.whatsapp ? [errors.whatsapp] : undefined} />
+          <Field data-invalid={errors.email ? "true" : undefined}>
+            <FieldLabel htmlFor="email">Correo</FieldLabel>
+            <Input id="email" type="email" {...register("email")} />
+            <FieldError errors={errors.email ? [errors.email] : undefined} />
           </Field>
         </div>
 
         <div className="grid gap-4 sm:grid-cols-2">
-          <Field data-invalid={errors.email ? "true" : undefined}>
-            <FieldLabel htmlFor="email">Correo electrónico</FieldLabel>
-            <Input id="email" type="email" {...register("email")} />
-            <FieldError errors={errors.email ? [errors.email] : undefined} />
+          <Field data-invalid={errors.source ? "true" : undefined}>
+            <FieldLabel htmlFor="source">Origen</FieldLabel>
+            <Controller
+              name="source"
+              control={control}
+              render={({ field }) => (
+                <Select value={field.value ?? ""} onValueChange={field.onChange}>
+                  <SelectTrigger id="source" className="w-full">
+                    <SelectValue />
+                  </SelectTrigger>
+                  <SelectContent>
+                    {LEAD_SOURCES.map((option) => (
+                      <SelectItem key={option} value={option}>
+                        {LEAD_SOURCE_LABELS[option]}
+                      </SelectItem>
+                    ))}
+                  </SelectContent>
+                </Select>
+              )}
+            />
+            <FieldError errors={errors.source ? [errors.source] : undefined} />
           </Field>
           <Field data-invalid={errors.status ? "true" : undefined}>
             <FieldLabel htmlFor="status">Estado</FieldLabel>
@@ -91,9 +98,9 @@ export function OwnerForm({ defaultValues, onSubmit, submitLabel = "Guardar" }: 
                     <SelectValue />
                   </SelectTrigger>
                   <SelectContent>
-                    {OWNER_STATUSES.map((option) => (
+                    {LEAD_STATUSES.map((option) => (
                       <SelectItem key={option} value={option}>
-                        {OWNER_STATUS_LABELS[option]}
+                        {LEAD_STATUS_LABELS[option]}
                       </SelectItem>
                     ))}
                   </SelectContent>
@@ -103,12 +110,6 @@ export function OwnerForm({ defaultValues, onSubmit, submitLabel = "Guardar" }: 
             <FieldError errors={errors.status ? [errors.status] : undefined} />
           </Field>
         </div>
-
-        <Field data-invalid={errors.address ? "true" : undefined}>
-          <FieldLabel htmlFor="address">Dirección</FieldLabel>
-          <Input id="address" {...register("address")} />
-          <FieldError errors={errors.address ? [errors.address] : undefined} />
-        </Field>
 
         <Field data-invalid={errors.notes ? "true" : undefined}>
           <FieldLabel htmlFor="notes">Notas</FieldLabel>
