@@ -12,63 +12,86 @@ import { DataTablePagination } from "@/components/tables/data-table-pagination";
 import { FilterDropdown } from "@/components/shared/filter-dropdown";
 import { ExportButtons } from "@/components/shared/export-buttons";
 import { StatusBadge } from "@/components/shared/status-badge";
-import { ActionMenu } from "@/components/shared/action-menu";
+import { ActionMenu, type ActionMenuItem } from "@/components/shared/action-menu";
 import { DeleteDialog } from "@/components/dialogs/delete-dialog";
 import { deleteActivity } from "@/features/activities/api";
 import { ACTIVITY_TYPE_CONFIG } from "@/features/activities/type-config";
+import { usePermissions } from "@/hooks/use-permissions";
 import { useServerTable } from "@/hooks/use-server-table";
 import { ACTIVITY_TYPE_LABELS, ACTIVITY_TYPES, type Activity } from "@/types/activity";
 
 const dateFormatter = new Intl.DateTimeFormat("es-CO", { dateStyle: "medium", timeStyle: "short" });
 
-const columns: DataTableColumnDef<Activity>[] = [
-  {
-    accessorKey: "type",
-    header: "Tipo",
-    cell: ({ getValue }) => <StatusBadge status={getValue<Activity["type"]>()} config={ACTIVITY_TYPE_CONFIG} />,
-  },
-  { accessorKey: "notes", header: "Notas", cell: ({ getValue }) => <span className="line-clamp-1">{getValue<string>()}</span> },
-  {
-    accessorKey: "occurred_at",
-    header: "Fecha",
-    enableSorting: true,
-    cell: ({ getValue }) => dateFormatter.format(new Date(getValue<string>())),
-  },
-  {
-    id: "actions",
-    header: "",
-    cell: ({ row, table }) => (
-      <div className="flex justify-end">
-        <ActionMenu
-          items={[
-            {
-              label: "Editar",
-              icon: Pencil,
-              onSelect: () =>
-                (table.options.meta as { navigateToEdit: (id: number) => void }).navigateToEdit(row.original.id),
-            },
-            {
-              label: "Eliminar",
-              icon: Trash2,
-              variant: "destructive",
-              separatorBefore: true,
-              onSelect: () =>
-                (table.options.meta as { requestDelete: (row: Activity) => void }).requestDelete(row.original),
-            },
-          ]}
-        />
-      </div>
-    ),
-  },
-];
+function buildColumns(canWrite: boolean, canDelete: boolean): DataTableColumnDef<Activity>[] {
+  return [
+    {
+      accessorKey: "type",
+      header: "Tipo",
+      cell: ({ getValue }) => <StatusBadge status={getValue<Activity["type"]>()} config={ACTIVITY_TYPE_CONFIG} />,
+    },
+    {
+      accessorKey: "notes",
+      header: "Notas",
+      cell: ({ getValue }) => <span className="line-clamp-1">{getValue<string>()}</span>,
+    },
+    {
+      accessorKey: "occurred_at",
+      header: "Fecha",
+      enableSorting: true,
+      cell: ({ getValue }) => dateFormatter.format(new Date(getValue<string>())),
+    },
+    {
+      id: "actions",
+      header: "",
+      cell: ({ row, table }) => {
+        const items: ActionMenuItem[] = [
+          ...(canWrite
+            ? [
+                {
+                  label: "Editar",
+                  icon: Pencil,
+                  onSelect: () =>
+                    (table.options.meta as { navigateToEdit: (id: number) => void }).navigateToEdit(
+                      row.original.id,
+                    ),
+                },
+              ]
+            : []),
+          ...(canDelete
+            ? [
+                {
+                  label: "Eliminar",
+                  icon: Trash2,
+                  variant: "destructive" as const,
+                  separatorBefore: canWrite,
+                  onSelect: () =>
+                    (table.options.meta as { requestDelete: (row: Activity) => void }).requestDelete(row.original),
+                },
+              ]
+            : []),
+        ];
+
+        if (items.length === 0) return <div />;
+
+        return (
+          <div className="flex justify-end">
+            <ActionMenu items={items} />
+          </div>
+        );
+      },
+    },
+  ];
+}
 
 export function ActivitiesTable() {
   const router = useRouter();
+  const { canWrite, canDelete } = usePermissions();
   const [type, setType] = useState<string | undefined>(undefined);
   const [pendingDelete, setPendingDelete] = useState<Activity | null>(null);
   const [isDeleting, setIsDeleting] = useState(false);
 
   const filters = useMemo(() => ({ type }), [type]);
+  const columns = useMemo(() => buildColumns(canWrite, canDelete), [canWrite, canDelete]);
   const table = useServerTable<Activity>({ endpoint: "/activities", filters });
 
   async function handleDelete() {
@@ -109,12 +132,14 @@ export function ActivitiesTable() {
           />
         }
         actions={
-          <Button size="sm" asChild>
-            <Link href="/activities/new">
-              <Plus />
-              Nuevo seguimiento
-            </Link>
-          </Button>
+          canWrite ? (
+            <Button size="sm" asChild>
+              <Link href="/activities/new">
+                <Plus />
+                Nuevo seguimiento
+              </Link>
+            </Button>
+          ) : undefined
         }
       />
 

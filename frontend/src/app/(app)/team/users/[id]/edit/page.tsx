@@ -2,25 +2,25 @@ import { Suspense } from "react";
 import { PageContainer } from "@/components/shared/page-container";
 import { PageHeader } from "@/components/shared/page-header";
 import { LoadingState } from "@/components/shared/loading-state";
-import { RequireWrite } from "@/features/auth/require-write";
-import { EditOpportunityView } from "@/features/opportunities/edit-opportunity-view";
+import { RequireAdmin } from "@/features/auth/require-admin";
+import { EditUserView } from "@/features/users/edit-user-view";
 
-export default function EditOpportunityPage() {
+export default function EditUserPage() {
   return (
-    <RequireWrite>
+    <RequireAdmin>
       <PageContainer>
         <PageHeader
-          title="Editar oportunidad"
+          title="Editar usuario"
           breadcrumbs={[
             { title: "Dashboard", href: "/dashboard" },
-            { title: "Oportunidades", href: "/opportunities" },
+            { title: "Usuarios", href: "/team/users" },
             { title: "Editar" },
           ]}
         />
         <Suspense fallback={<LoadingState rows={6} />}>
-          <EditOpportunityView />
+          <EditUserView />
         </Suspense>
       </PageContainer>
-    </RequireWrite>
+    </RequireAdmin>
   );
 }

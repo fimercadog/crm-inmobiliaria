@@ -5,6 +5,7 @@ import { toast } from "sonner";
 import { PageContainer } from "@/components/shared/page-container";
 import { PageHeader } from "@/components/shared/page-header";
 import { Card, CardContent } from "@/components/ui/card";
+import { RequireWrite } from "@/features/auth/require-write";
 import { TaskForm } from "@/features/tasks/task-form";
 import { createTask } from "@/features/tasks/api";
 import { ApiError } from "@/types/api";
@@ -24,21 +25,23 @@ export default function NewTaskPage() {
   }
 
   return (
-    <PageContainer>
-      <PageHeader
-        title="Nueva tarea"
-        description="Crea una tarea pendiente para el equipo."
-        breadcrumbs={[
-          { title: "Dashboard", href: "/dashboard" },
-          { title: "Tareas", href: "/tasks" },
-          { title: "Nueva" },
-        ]}
-      />
-      <Card>
-        <CardContent className="pt-6">
-          <TaskForm onSubmit={handleSubmit} submitLabel="Crear tarea" />
-        </CardContent>
-      </Card>
-    </PageContainer>
+    <RequireWrite>
+      <PageContainer>
+        <PageHeader
+          title="Nueva tarea"
+          description="Crea una tarea pendiente para el equipo."
+          breadcrumbs={[
+            { title: "Dashboard", href: "/dashboard" },
+            { title: "Tareas", href: "/tasks" },
+            { title: "Nueva" },
+          ]}
+        />
+        <Card>
+          <CardContent className="pt-6">
+            <TaskForm onSubmit={handleSubmit} submitLabel="Crear tarea" />
+          </CardContent>
+        </Card>
+      </PageContainer>
+    </RequireWrite>
   );
 }

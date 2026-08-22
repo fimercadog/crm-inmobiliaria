@@ -5,6 +5,7 @@ import { toast } from "sonner";
 import { PageContainer } from "@/components/shared/page-container";
 import { PageHeader } from "@/components/shared/page-header";
 import { Card, CardContent } from "@/components/ui/card";
+import { RequireWrite } from "@/features/auth/require-write";
 import { LeadForm } from "@/features/leads/lead-form";
 import { createLead } from "@/features/leads/api";
 import { ApiError } from "@/types/api";
@@ -24,21 +25,23 @@ export default function NewLeadPage() {
   }
 
   return (
-    <PageContainer>
-      <PageHeader
-        title="Nuevo lead"
-        description="Registra un nuevo prospecto y su canal de captación."
-        breadcrumbs={[
-          { title: "Dashboard", href: "/dashboard" },
-          { title: "Leads", href: "/leads" },
-          { title: "Nuevo" },
-        ]}
-      />
-      <Card>
-        <CardContent className="pt-6">
-          <LeadForm onSubmit={handleSubmit} submitLabel="Crear lead" />
-        </CardContent>
-      </Card>
-    </PageContainer>
+    <RequireWrite>
+      <PageContainer>
+        <PageHeader
+          title="Nuevo lead"
+          description="Registra un nuevo prospecto y su canal de captación."
+          breadcrumbs={[
+            { title: "Dashboard", href: "/dashboard" },
+            { title: "Leads", href: "/leads" },
+            { title: "Nuevo" },
+          ]}
+        />
+        <Card>
+          <CardContent className="pt-6">
+            <LeadForm onSubmit={handleSubmit} submitLabel="Crear lead" />
+          </CardContent>
+        </Card>
+      </PageContainer>
+    </RequireWrite>
   );
 }

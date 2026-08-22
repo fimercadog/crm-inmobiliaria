@@ -5,6 +5,7 @@ import { toast } from "sonner";
 import { PageContainer } from "@/components/shared/page-container";
 import { PageHeader } from "@/components/shared/page-header";
 import { Card, CardContent } from "@/components/ui/card";
+import { RequireWrite } from "@/features/auth/require-write";
 import { ActivityForm } from "@/features/activities/activity-form";
 import { createActivity } from "@/features/activities/api";
 import { ApiError } from "@/types/api";
@@ -24,21 +25,23 @@ export default function NewActivityPage() {
   }
 
   return (
-    <PageContainer>
-      <PageHeader
-        title="Nuevo seguimiento"
-        description="Registra una llamada, correo, reunión u otra interacción."
-        breadcrumbs={[
-          { title: "Dashboard", href: "/dashboard" },
-          { title: "Seguimientos", href: "/activities" },
-          { title: "Nuevo" },
-        ]}
-      />
-      <Card>
-        <CardContent className="pt-6">
-          <ActivityForm onSubmit={handleSubmit} submitLabel="Registrar seguimiento" />
-        </CardContent>
-      </Card>
-    </PageContainer>
+    <RequireWrite>
+      <PageContainer>
+        <PageHeader
+          title="Nuevo seguimiento"
+          description="Registra una llamada, correo, reunión u otra interacción."
+          breadcrumbs={[
+            { title: "Dashboard", href: "/dashboard" },
+            { title: "Seguimientos", href: "/activities" },
+            { title: "Nuevo" },
+          ]}
+        />
+        <Card>
+          <CardContent className="pt-6">
+            <ActivityForm onSubmit={handleSubmit} submitLabel="Registrar seguimiento" />
+          </CardContent>
+        </Card>
+      </PageContainer>
+    </RequireWrite>
   );
 }

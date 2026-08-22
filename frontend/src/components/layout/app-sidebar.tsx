@@ -4,6 +4,7 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { Building2, ChevronRight } from "lucide-react";
 import { BOTTOM_LINKS, DASHBOARD_LINK, NAV_GROUPS } from "@/constants/navigation";
+import { usePermissions } from "@/hooks/use-permissions";
 import { Collapsible, CollapsibleContent, CollapsibleTrigger } from "@/components/ui/collapsible";
 import {
   Sidebar,
@@ -27,6 +28,11 @@ function isPathActive(pathname: string, href: string): boolean {
 
 export function AppSidebar() {
   const pathname = usePathname();
+  const { isAdmin, canWrite } = usePermissions();
+  const visibleGroups = NAV_GROUPS.filter((group) => !group.adminOnly || isAdmin).map((group) => ({
+    ...group,
+    items: group.items.filter((item) => !item.writeOnly || canWrite),
+  }));
 
   return (
     <Sidebar collapsible="icon">
@@ -60,7 +66,7 @@ export function AppSidebar() {
               </SidebarMenuButton>
             </SidebarMenuItem>
 
-            {NAV_GROUPS.map((group) => {
+            {visibleGroups.map((group) => {
               const groupActive = group.items.some((item) => isPathActive(pathname, item.href));
 
               return (

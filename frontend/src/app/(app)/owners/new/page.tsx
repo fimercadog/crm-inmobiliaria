@@ -5,6 +5,7 @@ import { toast } from "sonner";
 import { PageContainer } from "@/components/shared/page-container";
 import { PageHeader } from "@/components/shared/page-header";
 import { Card, CardContent } from "@/components/ui/card";
+import { RequireWrite } from "@/features/auth/require-write";
 import { OwnerForm } from "@/features/owners/owner-form";
 import { createOwner } from "@/features/owners/api";
 import { ApiError } from "@/types/api";
@@ -24,21 +25,23 @@ export default function NewOwnerPage() {
   }
 
   return (
-    <PageContainer>
-      <PageHeader
-        title="Nuevo propietario"
-        description="Completa la información del propietario."
-        breadcrumbs={[
-          { title: "Dashboard", href: "/dashboard" },
-          { title: "Propietarios", href: "/owners" },
-          { title: "Nuevo" },
-        ]}
-      />
-      <Card>
-        <CardContent className="pt-6">
-          <OwnerForm onSubmit={handleSubmit} submitLabel="Crear propietario" />
-        </CardContent>
-      </Card>
-    </PageContainer>
+    <RequireWrite>
+      <PageContainer>
+        <PageHeader
+          title="Nuevo propietario"
+          description="Completa la información del propietario."
+          breadcrumbs={[
+            { title: "Dashboard", href: "/dashboard" },
+            { title: "Propietarios", href: "/owners" },
+            { title: "Nuevo" },
+          ]}
+        />
+        <Card>
+          <CardContent className="pt-6">
+            <OwnerForm onSubmit={handleSubmit} submitLabel="Crear propietario" />
+          </CardContent>
+        </Card>
+      </PageContainer>
+    </RequireWrite>
   );
 }

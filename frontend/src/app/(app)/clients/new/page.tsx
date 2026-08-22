@@ -5,6 +5,7 @@ import { toast } from "sonner";
 import { PageContainer } from "@/components/shared/page-container";
 import { PageHeader } from "@/components/shared/page-header";
 import { Card, CardContent } from "@/components/ui/card";
+import { RequireWrite } from "@/features/auth/require-write";
 import { ClientForm } from "@/features/clients/client-form";
 import { createClient } from "@/features/clients/api";
 import { ApiError } from "@/types/api";
@@ -24,21 +25,23 @@ export default function NewClientPage() {
   }
 
   return (
-    <PageContainer>
-      <PageHeader
-        title="Nuevo cliente"
-        description="Registra a una persona interesada en comprar o arrendar."
-        breadcrumbs={[
-          { title: "Dashboard", href: "/dashboard" },
-          { title: "Clientes", href: "/clients" },
-          { title: "Nuevo" },
-        ]}
-      />
-      <Card>
-        <CardContent className="pt-6">
-          <ClientForm onSubmit={handleSubmit} submitLabel="Crear cliente" />
-        </CardContent>
-      </Card>
-    </PageContainer>
+    <RequireWrite>
+      <PageContainer>
+        <PageHeader
+          title="Nuevo cliente"
+          description="Registra a una persona interesada en comprar o arrendar."
+          breadcrumbs={[
+            { title: "Dashboard", href: "/dashboard" },
+            { title: "Clientes", href: "/clients" },
+            { title: "Nuevo" },
+          ]}
+        />
+        <Card>
+          <CardContent className="pt-6">
+            <ClientForm onSubmit={handleSubmit} submitLabel="Crear cliente" />
+          </CardContent>
+        </Card>
+      </PageContainer>
+    </RequireWrite>
   );
 }

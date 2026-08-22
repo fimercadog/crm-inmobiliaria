@@ -10,7 +10,8 @@ export interface NavLink {
 export interface NavGroup {
   title: string;
   icon: LucideIcon;
-  items: { title: string; href: string }[];
+  items: { title: string; href: string; writeOnly?: boolean }[];
+  adminOnly?: boolean;
 }
 
 export const DASHBOARD_LINK: NavLink = { title: "Dashboard", href: "/dashboard", icon: LayoutDashboard };
@@ -25,7 +26,7 @@ export const NAV_GROUPS: NavGroup[] = [
       { title: "Reservadas", href: "/properties?status=reservado" },
       { title: "Vendidas", href: "/properties?status=vendido" },
       { title: "Arrendadas", href: "/properties?status=arrendado" },
-      { title: "Nueva propiedad", href: "/properties/new" },
+      { title: "Nueva propiedad", href: "/properties/new", writeOnly: true },
     ],
   },
   {
@@ -50,11 +51,8 @@ export const NAV_GROUPS: NavGroup[] = [
   {
     title: "Equipo",
     icon: UsersRound,
-    items: [
-      { title: "Agentes", href: "/team/agents" },
-      { title: "Usuarios", href: "/team/users" },
-      { title: "Roles", href: "/team/roles" },
-    ],
+    adminOnly: true,
+    items: [{ title: "Usuarios", href: "/team/users" }],
   },
 ];
 

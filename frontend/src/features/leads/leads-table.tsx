@@ -12,63 +12,75 @@ import { DataTablePagination } from "@/components/tables/data-table-pagination";
 import { FilterDropdown } from "@/components/shared/filter-dropdown";
 import { ExportButtons } from "@/components/shared/export-buttons";
 import { StatusBadge } from "@/components/shared/status-badge";
-import { ActionMenu } from "@/components/shared/action-menu";
+import { ActionMenu, type ActionMenuItem } from "@/components/shared/action-menu";
 import { DeleteDialog } from "@/components/dialogs/delete-dialog";
 import { ConfirmDialog } from "@/components/dialogs/confirm-dialog";
 import { convertLead, deleteLead } from "@/features/leads/api";
 import { LEAD_STATUS_CONFIG } from "@/features/leads/status-config";
+import { usePermissions } from "@/hooks/use-permissions";
 import { useServerTable } from "@/hooks/use-server-table";
 import { LEAD_SOURCE_LABELS, LEAD_SOURCES, type Lead } from "@/types/lead";
 
-const columns: DataTableColumnDef<Lead>[] = [
-  { accessorKey: "name", header: "Nombre", enableSorting: true },
-  { accessorKey: "phone", header: "Teléfono", cell: ({ getValue }) => getValue<string | null>() ?? "—" },
-  {
-    accessorKey: "source",
-    header: "Origen",
-    cell: ({ getValue }) => LEAD_SOURCE_LABELS[getValue<Lead["source"]>()],
-  },
-  {
-    accessorKey: "status",
-    header: "Estado",
-    cell: ({ getValue }) => <StatusBadge status={getValue<Lead["status"]>()} config={LEAD_STATUS_CONFIG} />,
-  },
-  {
-    id: "actions",
-    header: "",
-    cell: ({ row, table }) => {
-      const meta = table.options.meta as {
-        navigateToEdit: (id: number) => void;
-        requestDelete: (row: Lead) => void;
-        requestConvert: (row: Lead) => void;
-      };
-      const isConverted = row.original.status === "convertido";
-
-      return (
-        <div className="flex justify-end">
-          <ActionMenu
-            items={[
-              ...(isConverted
-                ? []
-                : [{ label: "Convertir a cliente", icon: UserCheck, onSelect: () => meta.requestConvert(row.original) }]),
-              { label: "Editar", icon: Pencil, onSelect: () => meta.navigateToEdit(row.original.id) },
-              {
-                label: "Eliminar",
-                icon: Trash2,
-                variant: "destructive" as const,
-                separatorBefore: true,
-                onSelect: () => meta.requestDelete(row.original),
-              },
-            ]}
-          />
-        </div>
-      );
+function buildColumns(canWrite: boolean, canDelete: boolean): DataTableColumnDef<Lead>[] {
+  return [
+    { accessorKey: "name", header: "Nombre", enableSorting: true },
+    { accessorKey: "phone", header: "Teléfono", cell: ({ getValue }) => getValue<string | null>() ?? "—" },
+    {
+      accessorKey: "source",
+      header: "Origen",
+      cell: ({ getValue }) => LEAD_SOURCE_LABELS[getValue<Lead["source"]>()],
     },
-  },
-];
+    {
+      accessorKey: "status",
+      header: "Estado",
+      cell: ({ getValue }) => <StatusBadge status={getValue<Lead["status"]>()} config={LEAD_STATUS_CONFIG} />,
+    },
+    {
+      id: "actions",
+      header: "",
+      cell: ({ row, table }) => {
+        const meta = table.options.meta as {
+          navigateToEdit: (id: number) => void;
+          requestDelete: (row: Lead) => void;
+          requestConvert: (row: Lead) => void;
+        };
+        const isConverted = row.original.status === "convertido";
+
+        const items: ActionMenuItem[] = [
+          ...(canWrite && !isConverted
+            ? [{ label: "Convertir a cliente", icon: UserCheck, onSelect: () => meta.requestConvert(row.original) }]
+            : []),
+          ...(canWrite
+            ? [{ label: "Editar", icon: Pencil, onSelect: () => meta.navigateToEdit(row.original.id) }]
+            : []),
+          ...(canDelete
+            ? [
+                {
+                  label: "Eliminar",
+                  icon: Trash2,
+                  variant: "destructive" as const,
+                  separatorBefore: canWrite,
+                  onSelect: () => meta.requestDelete(row.original),
+                },
+              ]
+            : []),
+        ];
+
+        if (items.length === 0) return <div />;
+
+        return (
+          <div className="flex justify-end">
+            <ActionMenu items={items} />
+          </div>
+        );
+      },
+    },
+  ];
+}
 
 export function LeadsTable() {
   const router = useRouter();
+  const { canWrite, canDelete } = usePermissions();
   const [source, setSource] = useState<string | undefined>(undefined);
   const [pendingDelete, setPendingDelete] = useState<Lead | null>(null);
   const [pendingConvert, setPendingConvert] = useState<Lead | null>(null);
@@ -76,6 +88,7 @@ export function LeadsTable() {
   const [isConverting, setIsConverting] = useState(false);
 
   const filters = useMemo(() => ({ source }), [source]);
+  const columns = useMemo(() => buildColumns(canWrite, canDelete), [canWrite, canDelete]);
   const table = useServerTable<Lead>({ endpoint: "/leads", filters });
 
   async function handleDelete() {
@@ -128,12 +141,14 @@ export function LeadsTable() {
           <ExportButtons endpoint="/leads/export" params={{ search: table.search || undefined, ...filters }} fileBaseName="leads" />
         }
         actions={
-          <Button size="sm" asChild>
-            <Link href="/leads/new">
-              <Plus />
-              Nuevo lead
-            </Link>
-          </Button>
+          canWrite ? (
+            <Button size="sm" asChild>
+              <Link href="/leads/new">
+                <Plus />
+                Nuevo lead
+              </Link>
+            </Button>
+          ) : undefined
         }
       />
 

@@ -12,64 +12,83 @@ import { DataTablePagination } from "@/components/tables/data-table-pagination";
 import { FilterDropdown } from "@/components/shared/filter-dropdown";
 import { ExportButtons } from "@/components/shared/export-buttons";
 import { StatusBadge } from "@/components/shared/status-badge";
-import { ActionMenu } from "@/components/shared/action-menu";
+import { ActionMenu, type ActionMenuItem } from "@/components/shared/action-menu";
 import { DeleteDialog } from "@/components/dialogs/delete-dialog";
 import { deleteVisit } from "@/features/visits/api";
 import { VISIT_STATUS_CONFIG } from "@/features/visits/status-config";
+import { usePermissions } from "@/hooks/use-permissions";
 import { useServerTable } from "@/hooks/use-server-table";
 import { VISIT_STATUS_LABELS, VISIT_STATUSES, type Visit } from "@/types/visit";
 
 const dateFormatter = new Intl.DateTimeFormat("es-CO", { dateStyle: "medium", timeStyle: "short" });
 
-const columns: DataTableColumnDef<Visit>[] = [
-  { id: "property", header: "Propiedad", cell: ({ row }) => row.original.property?.title ?? "—" },
-  { id: "client", header: "Cliente", cell: ({ row }) => row.original.client?.name ?? "—" },
-  {
-    accessorKey: "scheduled_at",
-    header: "Fecha y hora",
-    enableSorting: true,
-    cell: ({ getValue }) => dateFormatter.format(new Date(getValue<string>())),
-  },
-  {
-    accessorKey: "status",
-    header: "Estado",
-    cell: ({ getValue }) => <StatusBadge status={getValue<Visit["status"]>()} config={VISIT_STATUS_CONFIG} />,
-  },
-  {
-    id: "actions",
-    header: "",
-    cell: ({ row, table }) => (
-      <div className="flex justify-end">
-        <ActionMenu
-          items={[
-            {
-              label: "Editar",
-              icon: Pencil,
-              onSelect: () =>
-                (table.options.meta as { navigateToEdit: (id: number) => void }).navigateToEdit(row.original.id),
-            },
-            {
-              label: "Eliminar",
-              icon: Trash2,
-              variant: "destructive",
-              separatorBefore: true,
-              onSelect: () =>
-                (table.options.meta as { requestDelete: (row: Visit) => void }).requestDelete(row.original),
-            },
-          ]}
-        />
-      </div>
-    ),
-  },
-];
+function buildColumns(canWrite: boolean, canDelete: boolean): DataTableColumnDef<Visit>[] {
+  return [
+    { id: "property", header: "Propiedad", cell: ({ row }) => row.original.property?.title ?? "—" },
+    { id: "client", header: "Cliente", cell: ({ row }) => row.original.client?.name ?? "—" },
+    {
+      accessorKey: "scheduled_at",
+      header: "Fecha y hora",
+      enableSorting: true,
+      cell: ({ getValue }) => dateFormatter.format(new Date(getValue<string>())),
+    },
+    {
+      accessorKey: "status",
+      header: "Estado",
+      cell: ({ getValue }) => <StatusBadge status={getValue<Visit["status"]>()} config={VISIT_STATUS_CONFIG} />,
+    },
+    {
+      id: "actions",
+      header: "",
+      cell: ({ row, table }) => {
+        const items: ActionMenuItem[] = [
+          ...(canWrite
+            ? [
+                {
+                  label: "Editar",
+                  icon: Pencil,
+                  onSelect: () =>
+                    (table.options.meta as { navigateToEdit: (id: number) => void }).navigateToEdit(
+                      row.original.id,
+                    ),
+                },
+              ]
+            : []),
+          ...(canDelete
+            ? [
+                {
+                  label: "Eliminar",
+                  icon: Trash2,
+                  variant: "destructive" as const,
+                  separatorBefore: canWrite,
+                  onSelect: () =>
+                    (table.options.meta as { requestDelete: (row: Visit) => void }).requestDelete(row.original),
+                },
+              ]
+            : []),
+        ];
+
+        if (items.length === 0) return <div />;
+
+        return (
+          <div className="flex justify-end">
+            <ActionMenu items={items} />
+          </div>
+        );
+      },
+    },
+  ];
+}
 
 export function VisitsTable() {
   const router = useRouter();
+  const { canWrite, canDelete } = usePermissions();
   const [status, setStatus] = useState<string | undefined>(undefined);
   const [pendingDelete, setPendingDelete] = useState<Visit | null>(null);
   const [isDeleting, setIsDeleting] = useState(false);
 
   const filters = useMemo(() => ({ status }), [status]);
+  const columns = useMemo(() => buildColumns(canWrite, canDelete), [canWrite, canDelete]);
   const table = useServerTable<Visit>({ endpoint: "/visits", filters });
 
   async function handleDelete() {
@@ -110,12 +129,14 @@ export function VisitsTable() {
           />
         }
         actions={
-          <Button size="sm" asChild>
-            <Link href="/visits/new">
-              <Plus />
-              Nueva visita
-            </Link>
-          </Button>
+          canWrite ? (
+            <Button size="sm" asChild>
+              <Link href="/visits/new">
+                <Plus />
+                Nueva visita
+              </Link>
+            </Button>
+          ) : undefined
         }
       />
 
