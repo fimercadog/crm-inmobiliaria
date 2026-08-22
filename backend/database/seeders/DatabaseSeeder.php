@@ -8,6 +8,7 @@ use App\Models\Opportunity;
 use App\Models\Owner;
 use App\Models\Property;
 use App\Models\User;
+use App\Models\Visit;
 use Illuminate\Database\Seeder;
 
 class DatabaseSeeder extends Seeder
@@ -37,6 +38,11 @@ class DatabaseSeeder extends Seeder
         Lead::factory(25)->create();
 
         Opportunity::factory(30)
+            ->recycle($clients)
+            ->recycle($properties)
+            ->create();
+
+        Visit::factory(25)
             ->recycle($clients)
             ->recycle($properties)
             ->create();

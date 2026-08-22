@@ -6,6 +6,7 @@ use App\Http\Controllers\Api\V1\LeadController;
 use App\Http\Controllers\Api\V1\OpportunityController;
 use App\Http\Controllers\Api\V1\OwnerController;
 use App\Http\Controllers\Api\V1\PropertyController;
+use App\Http\Controllers\Api\V1\VisitController;
 use Illuminate\Support\Facades\Route;
 
 Route::prefix('v1')->group(function (): void {
@@ -44,5 +45,8 @@ Route::prefix('v1')->group(function (): void {
 
         Route::get('/opportunities/export', [OpportunityController::class, 'export']);
         Route::apiResource('opportunities', OpportunityController::class);
+
+        Route::get('/visits/export', [VisitController::class, 'export']);
+        Route::apiResource('visits', VisitController::class);
     });
 });
