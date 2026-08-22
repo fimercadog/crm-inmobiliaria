@@ -1,5 +1,10 @@
 import type { PropertyTypeValue } from "@/types/property";
 
+export interface ClientOption {
+  id: number;
+  name: string;
+}
+
 export const CLIENT_STATUSES = ["activo", "inactivo"] as const;
 export type ClientStatusValue = (typeof CLIENT_STATUSES)[number];
 

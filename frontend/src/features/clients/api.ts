@@ -1,6 +1,6 @@
 import { api } from "@/lib/api/axios";
 import type { ApiSuccessResponse } from "@/types/api";
-import type { Client } from "@/types/client";
+import type { Client, ClientOption } from "@/types/client";
 import type { ClientFormOutput } from "@/features/clients/client-form-schema";
 
 export async function createClient(values: ClientFormOutput): Promise<Client> {
@@ -19,5 +19,10 @@ export async function deleteClient(id: number): Promise<void> {
 
 export async function fetchClient(id: number): Promise<Client> {
   const response = await api.get<ApiSuccessResponse<Client>>(`/clients/${id}`);
+  return response.data.data;
+}
+
+export async function fetchClientOptions(): Promise<ClientOption[]> {
+  const response = await api.get<ApiSuccessResponse<ClientOption[]>>("/clients/options");
   return response.data.data;
 }

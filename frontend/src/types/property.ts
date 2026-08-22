@@ -12,6 +12,13 @@ export interface PropertyOwnerRef {
   name: string;
 }
 
+export interface PropertyOption {
+  id: number;
+  code: string;
+  title: string;
+  owner_id: number | null;
+}
+
 export interface PropertyAgentRef {
   id: number;
   name: string;
