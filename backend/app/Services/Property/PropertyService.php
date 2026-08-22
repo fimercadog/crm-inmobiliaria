@@ -26,6 +26,14 @@ class PropertyService
         return $this->baseQuery($request)->get();
     }
 
+    public function forSelect(): Collection
+    {
+        return Property::query()
+            ->select(['id', 'code', 'title', 'owner_id'])
+            ->orderBy('title')
+            ->get();
+    }
+
     private function baseQuery(Request $request): Builder
     {
         $query = Property::query()->with(['owner', 'agent']);

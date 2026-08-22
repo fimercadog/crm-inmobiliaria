@@ -1,16 +1,16 @@
 <?php
 
-namespace App\Services\Client;
+namespace App\Services\Opportunity;
 
-use App\Models\Client;
+use App\Models\Opportunity;
 use Illuminate\Contracts\Pagination\LengthAwarePaginator;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Http\Request;
 use Illuminate\Support\Collection;
 
-class ClientService
+class OpportunityService
 {
-    private const SORTABLE_COLUMNS = ['name', 'status', 'budget_max', 'created_at'];
+    private const SORTABLE_COLUMNS = ['value', 'stage', 'status', 'probability', 'estimated_close_date', 'created_at'];
 
     public function paginate(Request $request): LengthAwarePaginator
     {
@@ -26,28 +26,19 @@ class ClientService
         return $this->baseQuery($request)->get();
     }
 
-    public function forSelect(): Collection
-    {
-        return Client::query()
-            ->select(['id', 'name'])
-            ->orderBy('name')
-            ->get();
-    }
-
     private function baseQuery(Request $request): Builder
     {
-        $query = Client::query()->with('agent');
+        $query = Opportunity::query()->with(['client', 'property', 'agent', 'owner']);
 
         if ($search = $request->string('search')->trim()->value()) {
             $query->where(function (Builder $inner) use ($search): void {
-                $inner->where('name', 'like', "%{$search}%")
-                    ->orWhere('document', 'like', "%{$search}%")
-                    ->orWhere('email', 'like', "%{$search}%")
-                    ->orWhere('phone', 'like', "%{$search}%");
+                $inner->whereHas('client', fn (Builder $q) => $q->where('name', 'like', "%{$search}%"))
+                    ->orWhereHas('property', fn (Builder $q) => $q->where('title', 'like', "%{$search}%"))
+                    ->orWhere('next_action', 'like', "%{$search}%");
             });
         }
 
-        foreach (['status', 'interest_type', 'property_type_interest', 'agent_id'] as $filterKey) {
+        foreach (['stage', 'status', 'agent_id', 'client_id', 'property_id'] as $filterKey) {
             if ($value = $request->input("filter.{$filterKey}")) {
                 $query->where($filterKey, $value);
             }
@@ -65,20 +56,20 @@ class ClientService
         return $query;
     }
 
-    public function create(array $data): Client
+    public function create(array $data): Opportunity
     {
-        return Client::create($data);
+        return Opportunity::create($data);
     }
 
-    public function update(Client $client, array $data): Client
+    public function update(Opportunity $opportunity, array $data): Opportunity
     {
-        $client->update($data);
+        $opportunity->update($data);
 
-        return $client;
+        return $opportunity;
     }
 
-    public function delete(Client $client): void
+    public function delete(Opportunity $opportunity): void
     {
-        $client->delete();
+        $opportunity->delete();
     }
 }

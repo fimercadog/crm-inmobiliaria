@@ -4,6 +4,7 @@ namespace Database\Seeders;
 
 use App\Models\Client;
 use App\Models\Lead;
+use App\Models\Opportunity;
 use App\Models\Owner;
 use App\Models\Property;
 use App\Models\User;
@@ -26,13 +27,18 @@ class DatabaseSeeder extends Seeder
 
         $owners = Owner::factory(15)->create();
 
-        Property::factory(40)
+        $properties = Property::factory(40)
             ->recycle($owners)
             ->recycle($agents->push($admin))
             ->create();
 
-        Client::factory(20)->create();
+        $clients = Client::factory(20)->create();
 
         Lead::factory(25)->create();
+
+        Opportunity::factory(30)
+            ->recycle($clients)
+            ->recycle($properties)
+            ->create();
     }
 }

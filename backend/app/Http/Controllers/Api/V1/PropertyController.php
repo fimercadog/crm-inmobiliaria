@@ -40,6 +40,11 @@ class PropertyController extends Controller
         return ApiResponse::paginated(PropertyResource::collection($paginator));
     }
 
+    public function options(): JsonResponse
+    {
+        return ApiResponse::success($this->propertyService->forSelect());
+    }
+
     public function store(StorePropertyRequest $request): JsonResponse
     {
         $property = $this->propertyService->create($request->validated());

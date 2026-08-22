@@ -37,6 +37,11 @@ class ClientController extends Controller
         return ApiResponse::paginated(ClientResource::collection($paginator));
     }
 
+    public function options(): JsonResponse
+    {
+        return ApiResponse::success($this->clientService->forSelect());
+    }
+
     public function store(StoreClientRequest $request): JsonResponse
     {
         $client = $this->clientService->create($request->validated());
