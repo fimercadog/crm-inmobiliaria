@@ -1,11 +1,13 @@
 <?php
 
+use App\Http\Controllers\Api\V1\ActivityController;
 use App\Http\Controllers\Api\V1\AuthController;
 use App\Http\Controllers\Api\V1\ClientController;
 use App\Http\Controllers\Api\V1\LeadController;
 use App\Http\Controllers\Api\V1\OpportunityController;
 use App\Http\Controllers\Api\V1\OwnerController;
 use App\Http\Controllers\Api\V1\PropertyController;
+use App\Http\Controllers\Api\V1\TaskController;
 use App\Http\Controllers\Api\V1\VisitController;
 use Illuminate\Support\Facades\Route;
 
@@ -48,5 +50,11 @@ Route::prefix('v1')->group(function (): void {
 
         Route::get('/visits/export', [VisitController::class, 'export']);
         Route::apiResource('visits', VisitController::class);
+
+        Route::get('/activities/export', [ActivityController::class, 'export']);
+        Route::apiResource('activities', ActivityController::class);
+
+        Route::get('/tasks/export', [TaskController::class, 'export']);
+        Route::apiResource('tasks', TaskController::class);
     });
 });

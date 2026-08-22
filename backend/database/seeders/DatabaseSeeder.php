@@ -2,11 +2,13 @@
 
 namespace Database\Seeders;
 
+use App\Models\Activity;
 use App\Models\Client;
 use App\Models\Lead;
 use App\Models\Opportunity;
 use App\Models\Owner;
 use App\Models\Property;
+use App\Models\Task;
 use App\Models\User;
 use App\Models\Visit;
 use Illuminate\Database\Seeder;
@@ -46,5 +48,9 @@ class DatabaseSeeder extends Seeder
             ->recycle($clients)
             ->recycle($properties)
             ->create();
+
+        Activity::factory(30)->create();
+
+        Task::factory(20)->create();
     }
 }
