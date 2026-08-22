@@ -16,6 +16,7 @@ export const propertyFormSchema = z.object({
   property_type: z.enum(PROPERTY_TYPES, { message: "Selecciona un tipo de inmueble" }),
   listing_type: z.enum(LISTING_TYPES, { message: "Selecciona venta o arriendo" }),
   status: z.enum(PROPERTY_STATUSES, { message: "Selecciona un estado" }),
+  owner_id: optionalNumber,
   city: z.string().min(1, "La ciudad es obligatoria").max(255),
   zone: z.string().optional(),
   address: z.string().optional(),

@@ -13,6 +13,7 @@ import {
   type PropertyFormInput,
   type PropertyFormOutput,
 } from "@/features/properties/property-form-schema";
+import { useOwnerOptions } from "@/features/owners/use-owner-options";
 import {
   LISTING_TYPE_LABELS,
   LISTING_TYPES,
@@ -46,6 +47,7 @@ export function propertyToFormValues(property: Property): Partial<PropertyFormIn
     city: property.city,
     zone: property.zone ?? undefined,
     address: property.address ?? undefined,
+    owner_id: property.owner_id ?? undefined,
     price: property.price,
     admin_fee: property.admin_fee ?? undefined,
     stratum: property.stratum ?? undefined,
@@ -69,6 +71,8 @@ export function PropertyForm({ defaultValues, onSubmit, submitLabel = "Guardar" 
     resolver: zodResolver(propertyFormSchema),
     defaultValues: toDefaultValues(defaultValues),
   });
+
+  const { options: ownerOptions } = useOwnerOptions();
 
   return (
     <form onSubmit={handleSubmit(onSubmit)} noValidate className="flex flex-col gap-8">
@@ -113,6 +117,32 @@ export function PropertyForm({ defaultValues, onSubmit, submitLabel = "Guardar" 
               error={errors.status?.message}
             />
           </div>
+
+          <Field data-invalid={errors.owner_id ? "true" : undefined}>
+            <FieldLabel htmlFor="owner_id">Propietario</FieldLabel>
+            <Controller
+              name="owner_id"
+              control={control}
+              render={({ field }) => (
+                <Select
+                  value={field.value ? String(field.value) : ""}
+                  onValueChange={(value) => field.onChange(value ? Number(value) : undefined)}
+                >
+                  <SelectTrigger id="owner_id" className="w-full">
+                    <SelectValue placeholder="Sin asignar" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    {ownerOptions.map((owner) => (
+                      <SelectItem key={owner.id} value={String(owner.id)}>
+                        {owner.name}
+                      </SelectItem>
+                    ))}
+                  </SelectContent>
+                </Select>
+              )}
+            />
+            <FieldError errors={errors.owner_id ? [errors.owner_id] : undefined} />
+          </Field>
         </FieldGroup>
       </FieldSet>
 

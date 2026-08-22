@@ -1,7 +1,7 @@
 "use client";
 
 import Link from "next/link";
-import { useRouter, useSearchParams } from "next/navigation";
+import { useRouter } from "next/navigation";
 import { useMemo, useState } from "react";
 import { toast } from "sonner";
 import { Pencil, Plus, Trash2 } from "lucide-react";
@@ -14,42 +14,21 @@ import { ExportButtons } from "@/components/shared/export-buttons";
 import { StatusBadge } from "@/components/shared/status-badge";
 import { ActionMenu } from "@/components/shared/action-menu";
 import { DeleteDialog } from "@/components/dialogs/delete-dialog";
-import { deleteProperty } from "@/features/properties/api";
-import { PROPERTY_STATUS_CONFIG } from "@/features/properties/status-config";
+import { deleteOwner } from "@/features/owners/api";
+import { OWNER_STATUS_CONFIG } from "@/features/owners/status-config";
 import { useServerTable } from "@/hooks/use-server-table";
-import {
-  LISTING_TYPE_LABELS,
-  LISTING_TYPES,
-  PROPERTY_STATUS_LABELS,
-  PROPERTY_STATUSES,
-  type Property,
-} from "@/types/property";
+import { OWNER_STATUS_LABELS, OWNER_STATUSES, type Owner } from "@/types/owner";
 
-const currencyFormatter = new Intl.NumberFormat("es-CO", {
-  style: "currency",
-  currency: "COP",
-  maximumFractionDigits: 0,
-});
-
-const columns: DataTableColumnDef<Property>[] = [
-  { accessorKey: "code", header: "Código" },
-  { accessorKey: "title", header: "Propiedad", enableSorting: true },
-  { accessorKey: "city", header: "Ciudad", enableSorting: true },
-  {
-    id: "owner",
-    header: "Propietario",
-    cell: ({ row }) => row.original.owner?.name ?? "—",
-  },
-  {
-    accessorKey: "price",
-    header: "Precio",
-    enableSorting: true,
-    cell: ({ getValue }) => currencyFormatter.format(getValue<number>()),
-  },
+const columns: DataTableColumnDef<Owner>[] = [
+  { accessorKey: "name", header: "Nombre", enableSorting: true },
+  { accessorKey: "document", header: "Documento", cell: ({ getValue }) => getValue<string | null>() ?? "—" },
+  { accessorKey: "phone", header: "Teléfono", cell: ({ getValue }) => getValue<string | null>() ?? "—" },
+  { accessorKey: "email", header: "Correo", cell: ({ getValue }) => getValue<string | null>() ?? "—" },
+  { accessorKey: "properties_count", header: "Propiedades" },
   {
     accessorKey: "status",
     header: "Estado",
-    cell: ({ getValue }) => <StatusBadge status={getValue<Property["status"]>()} config={PROPERTY_STATUS_CONFIG} />,
+    cell: ({ getValue }) => <StatusBadge status={getValue<Owner["status"]>()} config={OWNER_STATUS_CONFIG} />,
   },
   {
     id: "actions",
@@ -70,7 +49,7 @@ const columns: DataTableColumnDef<Property>[] = [
               variant: "destructive",
               separatorBefore: true,
               onSelect: () =>
-                (table.options.meta as { requestDelete: (row: Property) => void }).requestDelete(row.original),
+                (table.options.meta as { requestDelete: (row: Owner) => void }).requestDelete(row.original),
             },
           ]}
         />
@@ -79,31 +58,26 @@ const columns: DataTableColumnDef<Property>[] = [
   },
 ];
 
-export function PropertiesTable() {
+export function OwnersTable() {
   const router = useRouter();
-  const searchParams = useSearchParams();
-  const statusFromUrl = searchParams.get("status") ?? undefined;
-
-  const [status, setStatus] = useState<string | undefined>(statusFromUrl);
-  const [listingType, setListingType] = useState<string | undefined>(undefined);
-  const [pendingDelete, setPendingDelete] = useState<Property | null>(null);
+  const [status, setStatus] = useState<string | undefined>(undefined);
+  const [pendingDelete, setPendingDelete] = useState<Owner | null>(null);
   const [isDeleting, setIsDeleting] = useState(false);
 
-  const filters = useMemo(() => ({ status, listing_type: listingType }), [status, listingType]);
-
-  const table = useServerTable<Property>({ endpoint: "/properties", filters });
+  const filters = useMemo(() => ({ status }), [status]);
+  const table = useServerTable<Owner>({ endpoint: "/owners", filters });
 
   async function handleDelete() {
     if (!pendingDelete) return;
 
     setIsDeleting(true);
     try {
-      await deleteProperty(pendingDelete.id);
-      toast.success(`"${pendingDelete.title}" eliminada correctamente`);
+      await deleteOwner(pendingDelete.id);
+      toast.success(`"${pendingDelete.name}" eliminado correctamente`);
       setPendingDelete(null);
       table.refetch();
     } catch {
-      toast.error("No fue posible eliminar la propiedad");
+      toast.error("No fue posible eliminar el propietario");
     } finally {
       setIsDeleting(false);
     }
@@ -114,35 +88,27 @@ export function PropertiesTable() {
       <DataTableToolbar
         search={table.search}
         onSearchChange={table.setSearch}
-        searchPlaceholder="Buscar propiedades..."
+        searchPlaceholder="Buscar propietarios..."
         filters={
-          <>
-            <FilterDropdown
-              label="Estado"
-              value={status}
-              onChange={setStatus}
-              options={PROPERTY_STATUSES.map((value) => ({ value, label: PROPERTY_STATUS_LABELS[value] }))}
-            />
-            <FilterDropdown
-              label="Venta/Arriendo"
-              value={listingType}
-              onChange={setListingType}
-              options={LISTING_TYPES.map((value) => ({ value, label: LISTING_TYPE_LABELS[value] }))}
-            />
-          </>
+          <FilterDropdown
+            label="Estado"
+            value={status}
+            onChange={setStatus}
+            options={OWNER_STATUSES.map((value) => ({ value, label: OWNER_STATUS_LABELS[value] }))}
+          />
         }
         exportSlot={
           <ExportButtons
-            endpoint="/properties/export"
+            endpoint="/owners/export"
             params={{ search: table.search || undefined, ...filters }}
-            fileBaseName="propiedades"
+            fileBaseName="propietarios"
           />
         }
         actions={
           <Button size="sm" asChild>
-            <Link href="/properties/new">
+            <Link href="/owners/new">
               <Plus />
-              Nueva propiedad
+              Nuevo propietario
             </Link>
           </Button>
         }
@@ -156,12 +122,12 @@ export function PropertiesTable() {
         onRetry={table.refetch}
         sorting={table.sorting}
         onSortingChange={table.setSorting}
-        emptyTitle="No hay propiedades"
-        emptyDescription="Ajusta la búsqueda o los filtros, o crea una nueva propiedad."
+        emptyTitle="No hay propietarios"
+        emptyDescription="Ajusta la búsqueda o los filtros, o crea un nuevo propietario."
         getRowId={(row) => String(row.id)}
         meta={{
           requestDelete: setPendingDelete,
-          navigateToEdit: (id: number) => router.push(`/properties/${id}/edit`),
+          navigateToEdit: (id: number) => router.push(`/owners/${id}/edit`),
         }}
       />
 
@@ -177,7 +143,7 @@ export function PropertiesTable() {
       <DeleteDialog
         open={pendingDelete !== null}
         onOpenChange={(open) => !open && setPendingDelete(null)}
-        resourceName={pendingDelete?.title}
+        resourceName={pendingDelete?.name}
         isSubmitting={isDeleting}
         onConfirm={handleDelete}
       />
