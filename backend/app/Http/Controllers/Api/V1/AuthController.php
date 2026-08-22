@@ -24,7 +24,10 @@ class AuthController extends Controller
             return ApiResponse::error('Credenciales inválidas', null, 401);
         }
 
-        return ApiResponse::success($this->authService->tokenPayload($token), 'Sesión iniciada correctamente');
+        return ApiResponse::success([
+            ...$this->authService->tokenPayload($token),
+            'user' => new UserResource($this->authService->currentUser()),
+        ], 'Sesión iniciada correctamente');
     }
 
     public function me(): JsonResponse

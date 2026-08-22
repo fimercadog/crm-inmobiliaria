@@ -23,7 +23,8 @@ class AuthTest extends TestCase
 
         $response->assertOk()
             ->assertJsonPath('success', true)
-            ->assertJsonStructure(['data' => ['token', 'type', 'expires_in']]);
+            ->assertJsonPath('data.user.email', $user->email)
+            ->assertJsonStructure(['data' => ['token', 'type', 'expires_in', 'user' => ['id', 'name', 'email']]]);
     }
 
     public function test_user_cannot_login_with_invalid_credentials(): void
