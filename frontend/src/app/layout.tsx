@@ -4,6 +4,7 @@ import { StoreProvider } from "@/store/StoreProvider";
 import { ThemeProvider } from "@/components/theme-provider";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import { Toaster } from "@/components/ui/sonner";
+import { AuthProvider } from "@/features/auth/auth-provider";
 import "./globals.css";
 
 const geistSans = Geist({
@@ -31,10 +32,12 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
       <body className="min-h-full flex flex-col">
         <ThemeProvider attribute="class" defaultTheme="system" enableSystem disableTransitionOnChange>
           <StoreProvider>
-            <TooltipProvider>
-              {children}
-              <Toaster />
-            </TooltipProvider>
+            <AuthProvider>
+              <TooltipProvider>
+                {children}
+                <Toaster />
+              </TooltipProvider>
+            </AuthProvider>
           </StoreProvider>
         </ThemeProvider>
       </body>

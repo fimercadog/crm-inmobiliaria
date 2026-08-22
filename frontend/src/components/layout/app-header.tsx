@@ -1,6 +1,9 @@
 "use client";
 
+import { useRouter } from "next/navigation";
 import { LogOut, User } from "lucide-react";
+import { toast } from "sonner";
+import { logout as logoutRequest } from "@/features/auth/api";
 import { ModeToggle } from "@/components/mode-toggle";
 import { Button } from "@/components/ui/button";
 import {
@@ -13,10 +16,27 @@ import {
 } from "@/components/ui/dropdown-menu";
 import { Separator } from "@/components/ui/separator";
 import { SidebarTrigger } from "@/components/ui/sidebar";
-import { useAppSelector } from "@/hooks/redux";
+import { useAppDispatch, useAppSelector } from "@/hooks/redux";
+import { setStoredToken } from "@/lib/api/axios";
+import { clearCredentials } from "@/store/slices/authSlice";
 
 export function AppHeader() {
   const user = useAppSelector((state) => state.auth.user);
+  const dispatch = useAppDispatch();
+  const router = useRouter();
+
+  async function handleLogout() {
+    try {
+      await logoutRequest();
+    } catch {
+      // best-effort: proceed with local logout even if the request fails
+    } finally {
+      setStoredToken(null);
+      dispatch(clearCredentials());
+      toast.success("Sesión cerrada correctamente");
+      router.push("/login");
+    }
+  }
 
   return (
     <header className="flex h-14 shrink-0 items-center gap-2 border-b px-4">
@@ -35,7 +55,7 @@ export function AppHeader() {
           <DropdownMenuContent align="end">
             <DropdownMenuLabel>{user?.name ?? "Mi cuenta"}</DropdownMenuLabel>
             <DropdownMenuSeparator />
-            <DropdownMenuItem>
+            <DropdownMenuItem onSelect={handleLogout}>
               <LogOut className="size-4" />
               Cerrar sesión
             </DropdownMenuItem>
