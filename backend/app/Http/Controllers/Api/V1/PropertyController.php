@@ -47,6 +47,8 @@ class PropertyController extends Controller
 
     public function store(StorePropertyRequest $request): JsonResponse
     {
+        $this->authorize('create', Property::class);
+
         $property = $this->propertyService->create($request->validated());
 
         return ApiResponse::success(new PropertyResource($property->load(['owner', 'agent'])), 'Propiedad creada correctamente', Response::HTTP_CREATED);
@@ -59,6 +61,8 @@ class PropertyController extends Controller
 
     public function update(UpdatePropertyRequest $request, Property $property): JsonResponse
     {
+        $this->authorize('update', $property);
+
         $this->propertyService->update($property, $request->validated());
 
         return ApiResponse::success(new PropertyResource($property->load(['owner', 'agent'])), 'Propiedad actualizada correctamente');
@@ -66,6 +70,8 @@ class PropertyController extends Controller
 
     public function destroy(Property $property): JsonResponse
     {
+        $this->authorize('delete', $property);
+
         $this->propertyService->delete($property);
 
         return ApiResponse::success(null, 'Propiedad eliminada correctamente');

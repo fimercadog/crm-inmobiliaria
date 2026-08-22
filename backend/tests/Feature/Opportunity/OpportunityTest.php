@@ -4,6 +4,7 @@ namespace Tests\Feature\Opportunity;
 
 use App\Enums\OpportunityStage;
 use App\Enums\OpportunityStatus;
+use App\Enums\UserRole;
 use App\Models\Client;
 use App\Models\Opportunity;
 use App\Models\Property;
@@ -17,7 +18,7 @@ class OpportunityTest extends TestCase
 
     private function actingUser(): void
     {
-        $user = User::factory()->create();
+        $user = User::factory()->create(['role' => UserRole::Admin]);
         $this->withHeader('Authorization', 'Bearer '.auth('api')->login($user));
     }
 

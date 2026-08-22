@@ -40,6 +40,8 @@ class LeadController extends Controller
 
     public function store(StoreLeadRequest $request): JsonResponse
     {
+        $this->authorize('create', Lead::class);
+
         $lead = $this->leadService->create($request->validated());
 
         return ApiResponse::success(new LeadResource($lead->load('agent')), 'Lead creado correctamente', Response::HTTP_CREATED);
@@ -52,6 +54,8 @@ class LeadController extends Controller
 
     public function update(UpdateLeadRequest $request, Lead $lead): JsonResponse
     {
+        $this->authorize('update', $lead);
+
         $this->leadService->update($lead, $request->validated());
 
         return ApiResponse::success(new LeadResource($lead->load('agent')), 'Lead actualizado correctamente');
@@ -59,6 +63,8 @@ class LeadController extends Controller
 
     public function destroy(Lead $lead): JsonResponse
     {
+        $this->authorize('delete', $lead);
+
         $this->leadService->delete($lead);
 
         return ApiResponse::success(null, 'Lead eliminado correctamente');
@@ -66,6 +72,8 @@ class LeadController extends Controller
 
     public function convert(Lead $lead): JsonResponse
     {
+        $this->authorize('update', $lead);
+
         if ($lead->status === LeadStatus::Convertido) {
             return ApiResponse::error('Este lead ya fue convertido', null, 422);
         }

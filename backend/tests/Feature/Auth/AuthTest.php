@@ -2,6 +2,7 @@
 
 namespace Tests\Feature\Auth;
 
+use App\Enums\UserRole;
 use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Tests\TestCase;
@@ -43,7 +44,7 @@ class AuthTest extends TestCase
 
     public function test_authenticated_user_can_fetch_their_profile(): void
     {
-        $user = User::factory()->create();
+        $user = User::factory()->create(['role' => UserRole::Admin]);
         $token = auth('api')->login($user);
 
         $response = $this->withHeader('Authorization', "Bearer {$token}")

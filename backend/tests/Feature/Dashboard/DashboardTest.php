@@ -6,6 +6,7 @@ use App\Enums\LeadStatus;
 use App\Enums\OpportunityStage;
 use App\Enums\PropertyStatus;
 use App\Enums\TaskStatus;
+use App\Enums\UserRole;
 use App\Models\Lead;
 use App\Models\Opportunity;
 use App\Models\Property;
@@ -20,7 +21,7 @@ class DashboardTest extends TestCase
 
     private function actingUser(): void
     {
-        $user = User::factory()->create();
+        $user = User::factory()->create(['role' => UserRole::Admin]);
         $this->withHeader('Authorization', 'Bearer '.auth('api')->login($user));
     }
 

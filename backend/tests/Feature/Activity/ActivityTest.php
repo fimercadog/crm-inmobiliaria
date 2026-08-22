@@ -3,6 +3,7 @@
 namespace Tests\Feature\Activity;
 
 use App\Enums\ActivityType;
+use App\Enums\UserRole;
 use App\Models\Activity;
 use App\Models\Client;
 use App\Models\User;
@@ -15,7 +16,7 @@ class ActivityTest extends TestCase
 
     private function actingUser(): void
     {
-        $user = User::factory()->create();
+        $user = User::factory()->create(['role' => UserRole::Admin]);
         $this->withHeader('Authorization', 'Bearer '.auth('api')->login($user));
     }
 

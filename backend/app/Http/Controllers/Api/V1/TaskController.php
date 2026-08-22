@@ -36,6 +36,8 @@ class TaskController extends Controller
 
     public function store(StoreTaskRequest $request): JsonResponse
     {
+        $this->authorize('create', Task::class);
+
         $task = $this->taskService->create($request->validated());
 
         return ApiResponse::success(new TaskResource($task->load('agent')), 'Tarea creada correctamente', Response::HTTP_CREATED);
@@ -48,6 +50,8 @@ class TaskController extends Controller
 
     public function update(UpdateTaskRequest $request, Task $task): JsonResponse
     {
+        $this->authorize('update', $task);
+
         $this->taskService->update($task, $request->validated());
 
         return ApiResponse::success(new TaskResource($task->load('agent')), 'Tarea actualizada correctamente');
@@ -55,6 +59,8 @@ class TaskController extends Controller
 
     public function destroy(Task $task): JsonResponse
     {
+        $this->authorize('delete', $task);
+
         $this->taskService->delete($task);
 
         return ApiResponse::success(null, 'Tarea eliminada correctamente');

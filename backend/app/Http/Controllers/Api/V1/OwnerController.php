@@ -44,6 +44,8 @@ class OwnerController extends Controller
 
     public function store(StoreOwnerRequest $request): JsonResponse
     {
+        $this->authorize('create', Owner::class);
+
         $owner = $this->ownerService->create($request->validated());
 
         return ApiResponse::success(new OwnerResource($owner), 'Propietario creado correctamente', Response::HTTP_CREATED);
@@ -56,6 +58,8 @@ class OwnerController extends Controller
 
     public function update(UpdateOwnerRequest $request, Owner $owner): JsonResponse
     {
+        $this->authorize('update', $owner);
+
         $this->ownerService->update($owner, $request->validated());
 
         return ApiResponse::success(new OwnerResource($owner->loadCount('properties')), 'Propietario actualizado correctamente');
@@ -63,6 +67,8 @@ class OwnerController extends Controller
 
     public function destroy(Owner $owner): JsonResponse
     {
+        $this->authorize('delete', $owner);
+
         $this->ownerService->delete($owner);
 
         return ApiResponse::success(null, 'Propietario eliminado correctamente');

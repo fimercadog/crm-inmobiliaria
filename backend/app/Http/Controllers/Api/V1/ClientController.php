@@ -44,6 +44,8 @@ class ClientController extends Controller
 
     public function store(StoreClientRequest $request): JsonResponse
     {
+        $this->authorize('create', Client::class);
+
         $client = $this->clientService->create($request->validated());
 
         return ApiResponse::success(new ClientResource($client->load('agent')), 'Cliente creado correctamente', Response::HTTP_CREATED);
@@ -56,6 +58,8 @@ class ClientController extends Controller
 
     public function update(UpdateClientRequest $request, Client $client): JsonResponse
     {
+        $this->authorize('update', $client);
+
         $this->clientService->update($client, $request->validated());
 
         return ApiResponse::success(new ClientResource($client->load('agent')), 'Cliente actualizado correctamente');
@@ -63,6 +67,8 @@ class ClientController extends Controller
 
     public function destroy(Client $client): JsonResponse
     {
+        $this->authorize('delete', $client);
+
         $this->clientService->delete($client);
 
         return ApiResponse::success(null, 'Cliente eliminado correctamente');

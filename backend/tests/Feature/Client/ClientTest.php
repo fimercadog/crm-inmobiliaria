@@ -3,6 +3,7 @@
 namespace Tests\Feature\Client;
 
 use App\Enums\ClientStatus;
+use App\Enums\UserRole;
 use App\Models\Client;
 use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
@@ -14,7 +15,7 @@ class ClientTest extends TestCase
 
     private function actingUser(): void
     {
-        $user = User::factory()->create();
+        $user = User::factory()->create(['role' => UserRole::Admin]);
         $this->withHeader('Authorization', 'Bearer '.auth('api')->login($user));
     }
 

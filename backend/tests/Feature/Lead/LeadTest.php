@@ -4,6 +4,7 @@ namespace Tests\Feature\Lead;
 
 use App\Enums\LeadSource;
 use App\Enums\LeadStatus;
+use App\Enums\UserRole;
 use App\Models\Lead;
 use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
@@ -15,7 +16,7 @@ class LeadTest extends TestCase
 
     private function actingUser(): void
     {
-        $user = User::factory()->create();
+        $user = User::factory()->create(['role' => UserRole::Admin]);
         $this->withHeader('Authorization', 'Bearer '.auth('api')->login($user));
     }
 

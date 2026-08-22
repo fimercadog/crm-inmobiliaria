@@ -36,6 +36,8 @@ class ActivityController extends Controller
 
     public function store(StoreActivityRequest $request): JsonResponse
     {
+        $this->authorize('create', Activity::class);
+
         $activity = $this->activityService->create($request->validated());
 
         return ApiResponse::success(new ActivityResource($activity->load('agent')), 'Seguimiento registrado correctamente', Response::HTTP_CREATED);
@@ -48,6 +50,8 @@ class ActivityController extends Controller
 
     public function update(UpdateActivityRequest $request, Activity $activity): JsonResponse
     {
+        $this->authorize('update', $activity);
+
         $this->activityService->update($activity, $request->validated());
 
         return ApiResponse::success(new ActivityResource($activity->load('agent')), 'Seguimiento actualizado correctamente');
@@ -55,6 +59,8 @@ class ActivityController extends Controller
 
     public function destroy(Activity $activity): JsonResponse
     {
+        $this->authorize('delete', $activity);
+
         $this->activityService->delete($activity);
 
         return ApiResponse::success(null, 'Seguimiento eliminado correctamente');

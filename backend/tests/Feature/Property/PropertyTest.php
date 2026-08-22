@@ -5,6 +5,7 @@ namespace Tests\Feature\Property;
 use App\Enums\ListingType;
 use App\Enums\PropertyStatus;
 use App\Enums\PropertyType;
+use App\Enums\UserRole;
 use App\Models\Owner;
 use App\Models\Property;
 use App\Models\User;
@@ -17,7 +18,7 @@ class PropertyTest extends TestCase
 
     private function actingUser(): User
     {
-        $user = User::factory()->create();
+        $user = User::factory()->create(['role' => UserRole::Admin]);
         $this->withHeader('Authorization', 'Bearer '.auth('api')->login($user));
 
         return $user;

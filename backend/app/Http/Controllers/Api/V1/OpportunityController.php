@@ -41,6 +41,8 @@ class OpportunityController extends Controller
 
     public function store(StoreOpportunityRequest $request): JsonResponse
     {
+        $this->authorize('create', Opportunity::class);
+
         $opportunity = $this->opportunityService->create($request->validated());
 
         return ApiResponse::success(
@@ -57,6 +59,8 @@ class OpportunityController extends Controller
 
     public function update(UpdateOpportunityRequest $request, Opportunity $opportunity): JsonResponse
     {
+        $this->authorize('update', $opportunity);
+
         $this->opportunityService->update($opportunity, $request->validated());
 
         return ApiResponse::success(new OpportunityResource($opportunity->load(self::RELATIONS)), 'Oportunidad actualizada correctamente');
@@ -64,6 +68,8 @@ class OpportunityController extends Controller
 
     public function destroy(Opportunity $opportunity): JsonResponse
     {
+        $this->authorize('delete', $opportunity);
+
         $this->opportunityService->delete($opportunity);
 
         return ApiResponse::success(null, 'Oportunidad eliminada correctamente');

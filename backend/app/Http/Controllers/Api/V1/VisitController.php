@@ -39,6 +39,8 @@ class VisitController extends Controller
 
     public function store(StoreVisitRequest $request): JsonResponse
     {
+        $this->authorize('create', Visit::class);
+
         $visit = $this->visitService->create($request->validated());
 
         return ApiResponse::success(new VisitResource($visit->load(self::RELATIONS)), 'Visita agendada correctamente', Response::HTTP_CREATED);
@@ -51,6 +53,8 @@ class VisitController extends Controller
 
     public function update(UpdateVisitRequest $request, Visit $visit): JsonResponse
     {
+        $this->authorize('update', $visit);
+
         $this->visitService->update($visit, $request->validated());
 
         return ApiResponse::success(new VisitResource($visit->load(self::RELATIONS)), 'Visita actualizada correctamente');
@@ -58,6 +62,8 @@ class VisitController extends Controller
 
     public function destroy(Visit $visit): JsonResponse
     {
+        $this->authorize('delete', $visit);
+
         $this->visitService->delete($visit);
 
         return ApiResponse::success(null, 'Visita eliminada correctamente');

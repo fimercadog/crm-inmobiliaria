@@ -3,6 +3,7 @@
 namespace Tests\Feature\Owner;
 
 use App\Enums\OwnerStatus;
+use App\Enums\UserRole;
 use App\Models\Owner;
 use App\Models\Property;
 use App\Models\User;
@@ -15,7 +16,7 @@ class OwnerTest extends TestCase
 
     private function actingUser(): void
     {
-        $user = User::factory()->create();
+        $user = User::factory()->create(['role' => UserRole::Admin]);
         $this->withHeader('Authorization', 'Bearer '.auth('api')->login($user));
     }
 

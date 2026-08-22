@@ -2,6 +2,7 @@
 
 namespace Tests\Feature\Visit;
 
+use App\Enums\UserRole;
 use App\Enums\VisitStatus;
 use App\Models\Client;
 use App\Models\Property;
@@ -16,7 +17,7 @@ class VisitTest extends TestCase
 
     private function actingUser(): void
     {
-        $user = User::factory()->create();
+        $user = User::factory()->create(['role' => UserRole::Admin]);
         $this->withHeader('Authorization', 'Bearer '.auth('api')->login($user));
     }
 
