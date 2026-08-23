@@ -8,6 +8,7 @@ use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Str;
 
 class BlogPost extends Model
@@ -83,5 +84,10 @@ class BlogPost extends Model
         return $this->status === BlogPostStatus::Publicado
             && $this->published_at !== null
             && $this->published_at->lte(now());
+    }
+
+    public function coverImageUrl(): ?string
+    {
+        return $this->cover_image ? Storage::disk('public')->url($this->cover_image) : null;
     }
 }

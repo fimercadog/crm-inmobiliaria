@@ -3,6 +3,7 @@
 namespace App\Providers;
 
 use App\Models\Activity;
+use App\Models\BlogPost;
 use App\Models\Client;
 use App\Models\Document;
 use App\Models\Lead;
@@ -41,7 +42,7 @@ class AppServiceProvider extends ServiceProvider
             'owner' => Owner::class,
         ]);
 
-        foreach ([Property::class, Owner::class, Client::class, Lead::class, Opportunity::class, Visit::class, Activity::class, Task::class, Document::class] as $model) {
+        foreach ([Property::class, Owner::class, Client::class, Lead::class, Opportunity::class, Visit::class, Activity::class, Task::class, Document::class, BlogPost::class] as $model) {
             Gate::policy($model, CrmPolicy::class);
         }
 

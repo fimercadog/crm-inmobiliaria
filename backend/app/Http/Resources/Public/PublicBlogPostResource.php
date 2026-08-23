@@ -17,7 +17,7 @@ class PublicBlogPostResource extends JsonResource
             'title' => $this->title,
             'slug' => $this->slug,
             'excerpt' => $this->excerpt,
-            'cover_image' => $this->cover_image,
+            'cover_image' => $this->coverImageUrl(),
             'author' => $this->whenLoaded('author', fn () => $this->author?->name),
             'published_at' => $this->published_at?->toDateString(),
         ];

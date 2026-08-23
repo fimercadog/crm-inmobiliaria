@@ -3,6 +3,7 @@
 use App\Http\Controllers\Api\V1\ActivityController;
 use App\Http\Controllers\Api\V1\AgentController;
 use App\Http\Controllers\Api\V1\AuthController;
+use App\Http\Controllers\Api\V1\BlogPostController;
 use App\Http\Controllers\Api\V1\ClientController;
 use App\Http\Controllers\Api\V1\DashboardController;
 use App\Http\Controllers\Api\V1\DocumentController;
@@ -103,5 +104,9 @@ Route::prefix('v1')->group(function (): void {
         Route::post('/documents', [DocumentController::class, 'store']);
         Route::get('/documents/{document}/download', [DocumentController::class, 'download']);
         Route::delete('/documents/{document}', [DocumentController::class, 'destroy']);
+
+        Route::get('/blog-posts/export', [BlogPostController::class, 'export']);
+        Route::post('/blog-posts/{post}/cover-image', [BlogPostController::class, 'storeCoverImage']);
+        Route::apiResource('blog-posts', BlogPostController::class)->parameters(['blog-posts' => 'post']);
     });
 });
