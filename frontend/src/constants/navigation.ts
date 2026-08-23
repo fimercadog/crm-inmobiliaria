@@ -1,5 +1,5 @@
 import type { LucideIcon } from "lucide-react";
-import { Building2, Handshake, LayoutDashboard, Settings, Target, Users, UsersRound } from "lucide-react";
+import { Building2, Globe, Handshake, LayoutDashboard, Settings, Target, Users, UsersRound } from "lucide-react";
 
 export interface NavLink {
   title: string;
@@ -47,6 +47,14 @@ export const NAV_GROUPS: NavGroup[] = [
       { title: "Seguimientos", href: "/activities" },
       { title: "Tareas", href: "/tasks" },
       { title: "Cierres", href: "/closings" },
+    ],
+  },
+  {
+    title: "Sitio web",
+    icon: Globe,
+    items: [
+      { title: "Blog", href: "/blog" },
+      { title: "Nuevo artículo", href: "/blog/new", writeOnly: true },
     ],
   },
   {
