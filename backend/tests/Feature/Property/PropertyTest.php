@@ -160,4 +160,64 @@ class PropertyTest extends TestCase
         $response->assertOk();
         $this->assertStringContainsString('application/pdf', $response->headers->get('Content-Type'));
     }
+
+    public function test_a_slug_is_generated_automatically_on_creation(): void
+    {
+        $this->actingUser();
+        $owner = Owner::factory()->create();
+
+        $response = $this->postJson('/api/v1/properties', [
+            'title' => 'Apartamento moderno',
+            'property_type' => PropertyType::Apartamento->value,
+            'listing_type' => ListingType::Venta->value,
+            'status' => PropertyStatus::Disponible->value,
+            'owner_id' => $owner->id,
+            'city' => 'Bogotá',
+            'zone' => 'Chapinero',
+            'price' => 500_000_000,
+        ]);
+
+        $response->assertCreated();
+        $property = Property::latest('id')->first();
+
+        $this->assertNotNull($property->slug);
+        $this->assertStringContainsString('chapinero', $property->slug);
+        $this->assertStringContainsString(strtolower($property->code), $property->slug);
+    }
+
+    public function test_slug_cannot_be_overridden_via_the_api(): void
+    {
+        $this->actingUser();
+        $owner = Owner::factory()->create();
+
+        $response = $this->postJson('/api/v1/properties', [
+            'title' => 'Casa esquinera',
+            'property_type' => PropertyType::Casa->value,
+            'listing_type' => ListingType::Venta->value,
+            'status' => PropertyStatus::Disponible->value,
+            'owner_id' => $owner->id,
+            'city' => 'Cali',
+            'price' => 400_000_000,
+            'slug' => 'slug-arbitrario-inyectado',
+        ]);
+
+        $response->assertCreated();
+        $this->assertDatabaseMissing('properties', ['slug' => 'slug-arbitrario-inyectado']);
+    }
+
+    public function test_is_published_reflects_the_published_at_gate(): void
+    {
+        $unpublished = Property::factory()->create(['published_at' => null]);
+        $published = Property::factory()->create(['published_at' => now()->subDay()]);
+        $scheduled = Property::factory()->create(['published_at' => now()->addDay()]);
+
+        $this->assertFalse($unpublished->isPublished());
+        $this->assertTrue($published->isPublished());
+        $this->assertFalse($scheduled->isPublished());
+
+        $publishedIds = Property::published()->pluck('id');
+        $this->assertTrue($publishedIds->contains($published->id));
+        $this->assertFalse($publishedIds->contains($unpublished->id));
+        $this->assertFalse($publishedIds->contains($scheduled->id));
+    }
 }

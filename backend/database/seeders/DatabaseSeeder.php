@@ -4,6 +4,7 @@ namespace Database\Seeders;
 
 use App\Enums\UserRole;
 use App\Models\Activity;
+use App\Models\BlogPost;
 use App\Models\Client;
 use App\Models\Lead;
 use App\Models\Opportunity;
@@ -51,6 +52,17 @@ class DatabaseSeeder extends Seeder
             ->recycle($agents->push($admin))
             ->create();
 
+        // PropertyFactory sets published_at randomly (informational, pre-dates
+        // its use as a visibility gate); reset it here so exactly two-thirds
+        // are published to the public site, with the rest held back.
+        $properties->each(fn (Property $property) => $property->forceFill(['published_at' => null])->save());
+        $properties->random((int) ($properties->count() * 0.65))->each(
+            fn (Property $property) => $property->forceFill(['published_at' => now()->subDays(random_int(0, 60))])->save()
+        );
+        $properties->where('published_at', '!=', null)->random(6)->each(
+            fn (Property $property) => $property->update(['is_featured' => true])
+        );
+
         $clients = Client::factory(20)->create();
 
         Lead::factory(25)->create();
@@ -70,6 +82,10 @@ class DatabaseSeeder extends Seeder
         Activity::factory(30)->create();
 
         Task::factory(20)
+            ->recycle($agents)
+            ->create();
+
+        BlogPost::factory(8)
             ->recycle($agents)
             ->create();
     }

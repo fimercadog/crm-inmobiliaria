@@ -21,8 +21,10 @@ class Lead extends Model
         'source',
         'status',
         'agent_id',
+        'property_id',
         'converted_to_client_id',
         'notes',
+        'metadata',
     ];
 
     protected function casts(): array
@@ -30,6 +32,7 @@ class Lead extends Model
         return [
             'source' => LeadSource::class,
             'status' => LeadStatus::class,
+            'metadata' => 'array',
         ];
     }
 
@@ -39,6 +42,14 @@ class Lead extends Model
     public function agent(): BelongsTo
     {
         return $this->belongsTo(User::class, 'agent_id');
+    }
+
+    /**
+     * @return BelongsTo<Property, $this>
+     */
+    public function property(): BelongsTo
+    {
+        return $this->belongsTo(Property::class);
     }
 
     /**

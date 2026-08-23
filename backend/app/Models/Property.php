@@ -6,9 +6,12 @@ use App\Enums\ListingType;
 use App\Enums\PropertyStatus;
 use App\Enums\PropertyType;
 use Database\Factories\PropertyFactory;
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Support\Str;
 
 class Property extends Model
 {
@@ -17,11 +20,13 @@ class Property extends Model
 
     protected $fillable = [
         'code',
+        'slug',
         'title',
         'description',
         'property_type',
         'listing_type',
         'status',
+        'is_featured',
         'owner_id',
         'agent_id',
         'city',
@@ -47,6 +52,7 @@ class Property extends Model
             'property_type' => PropertyType::class,
             'listing_type' => ListingType::class,
             'status' => PropertyStatus::class,
+            'is_featured' => 'boolean',
             'price' => 'decimal:2',
             'admin_fee' => 'decimal:2',
             'built_area' => 'decimal:2',
@@ -63,7 +69,20 @@ class Property extends Model
             if (! $property->code) {
                 $property->code = 'PROP-'.str_pad((string) (static::max('id') + 1), 5, '0', STR_PAD_LEFT);
             }
+
+            if (! $property->slug) {
+                $property->slug = static::buildSlug($property);
+            }
         });
+    }
+
+    private static function buildSlug(Property $property): string
+    {
+        $location = $property->zone ?: $property->city;
+        $type = $property->property_type instanceof PropertyType ? $property->property_type->value : $property->property_type;
+        $listing = $property->listing_type instanceof ListingType ? $property->listing_type->value : $property->listing_type;
+
+        return Str::slug("{$type} en {$listing} {$location} {$property->city}").'-'.Str::slug($property->code);
     }
 
     /**
@@ -80,5 +99,27 @@ class Property extends Model
     public function agent(): BelongsTo
     {
         return $this->belongsTo(User::class, 'agent_id');
+    }
+
+    /**
+     * @return HasMany<PropertyImage, $this>
+     */
+    public function images(): HasMany
+    {
+        return $this->hasMany(PropertyImage::class)->orderBy('sort_order');
+    }
+
+    public function isPublished(): bool
+    {
+        return $this->published_at !== null && $this->published_at->lte(now());
+    }
+
+    /**
+     * @param  Builder<Property>  $query
+     * @return Builder<Property>
+     */
+    public function scopePublished(Builder $query): Builder
+    {
+        return $query->whereNotNull('published_at')->where('published_at', '<=', now());
     }
 }
