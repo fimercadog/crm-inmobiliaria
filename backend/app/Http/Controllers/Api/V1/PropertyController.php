@@ -51,12 +51,12 @@ class PropertyController extends Controller
 
         $property = $this->propertyService->create($request->validated());
 
-        return ApiResponse::success(new PropertyResource($property->load(['owner', 'agent'])), 'Propiedad creada correctamente', Response::HTTP_CREATED);
+        return ApiResponse::success(new PropertyResource($property->load(['owner', 'agent', 'images'])), 'Propiedad creada correctamente', Response::HTTP_CREATED);
     }
 
     public function show(Property $property): JsonResponse
     {
-        return ApiResponse::success(new PropertyResource($property->load(['owner', 'agent'])));
+        return ApiResponse::success(new PropertyResource($property->load(['owner', 'agent', 'images'])));
     }
 
     public function update(UpdatePropertyRequest $request, Property $property): JsonResponse
@@ -65,7 +65,7 @@ class PropertyController extends Controller
 
         $this->propertyService->update($property, $request->validated());
 
-        return ApiResponse::success(new PropertyResource($property->load(['owner', 'agent'])), 'Propiedad actualizada correctamente');
+        return ApiResponse::success(new PropertyResource($property->load(['owner', 'agent', 'images'])), 'Propiedad actualizada correctamente');
     }
 
     public function destroy(Property $property): JsonResponse

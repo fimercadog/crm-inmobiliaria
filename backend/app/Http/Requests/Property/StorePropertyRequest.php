@@ -26,6 +26,7 @@ class StorePropertyRequest extends FormRequest
             'property_type' => ['required', Rule::enum(PropertyType::class)],
             'listing_type' => ['required', Rule::enum(ListingType::class)],
             'status' => ['required', Rule::enum(PropertyStatus::class)],
+            'is_featured' => ['nullable', 'boolean'],
             'owner_id' => ['nullable', 'exists:owners,id'],
             'agent_id' => ['nullable', 'exists:users,id'],
             'city' => ['required', 'string', 'max:255'],

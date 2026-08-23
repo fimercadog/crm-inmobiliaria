@@ -10,6 +10,7 @@ use App\Http\Controllers\Api\V1\LeadController;
 use App\Http\Controllers\Api\V1\OpportunityController;
 use App\Http\Controllers\Api\V1\OwnerController;
 use App\Http\Controllers\Api\V1\PropertyController;
+use App\Http\Controllers\Api\V1\PropertyImageController;
 use App\Http\Controllers\Api\V1\Public\PublicBlogController;
 use App\Http\Controllers\Api\V1\Public\PublicLeadController;
 use App\Http\Controllers\Api\V1\Public\PublicPropertyController;
@@ -58,6 +59,10 @@ Route::prefix('v1')->group(function (): void {
         Route::get('/properties/export', [PropertyController::class, 'export']);
         Route::get('/properties/options', [PropertyController::class, 'options']);
         Route::apiResource('properties', PropertyController::class);
+
+        Route::post('/properties/{property}/images', [PropertyImageController::class, 'store']);
+        Route::patch('/properties/{property}/images/{image}', [PropertyImageController::class, 'update']);
+        Route::delete('/properties/{property}/images/{image}', [PropertyImageController::class, 'destroy']);
 
         Route::get('/owners/export', [OwnerController::class, 'export']);
         Route::get('/owners/options', [OwnerController::class, 'options']);
