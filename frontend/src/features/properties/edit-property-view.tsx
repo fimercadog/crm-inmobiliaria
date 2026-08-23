@@ -8,6 +8,7 @@ import { LoadingState } from "@/components/shared/loading-state";
 import { ErrorState } from "@/components/shared/error-state";
 import { PropertyForm, propertyToFormValues } from "@/features/properties/property-form";
 import { fetchProperty, updateProperty } from "@/features/properties/api";
+import { DocumentsPanel } from "@/features/documents/documents-panel";
 import { ApiError } from "@/types/api";
 import type { Property } from "@/types/property";
 import type { PropertyFormOutput } from "@/features/properties/property-form-schema";
@@ -66,10 +67,14 @@ export function EditPropertyView() {
   }
 
   return (
-    <Card>
-      <CardContent className="pt-6">
-        <PropertyForm defaultValues={propertyToFormValues(property)} onSubmit={handleSubmit} submitLabel="Guardar cambios" />
-      </CardContent>
-    </Card>
+    <div className="flex flex-col gap-6">
+      <Card>
+        <CardContent className="pt-6">
+          <PropertyForm defaultValues={propertyToFormValues(property)} onSubmit={handleSubmit} submitLabel="Guardar cambios" />
+        </CardContent>
+      </Card>
+
+      <DocumentsPanel subjectType="property" subjectId={property.id} />
+    </div>
   );
 }

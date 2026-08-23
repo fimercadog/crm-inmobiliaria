@@ -8,6 +8,7 @@ import { LoadingState } from "@/components/shared/loading-state";
 import { ErrorState } from "@/components/shared/error-state";
 import { OwnerForm, ownerToFormValues } from "@/features/owners/owner-form";
 import { fetchOwner, updateOwner } from "@/features/owners/api";
+import { DocumentsPanel } from "@/features/documents/documents-panel";
 import { ApiError } from "@/types/api";
 import type { Owner } from "@/types/owner";
 import type { OwnerFormOutput } from "@/features/owners/owner-form-schema";
@@ -66,10 +67,14 @@ export function EditOwnerView() {
   }
 
   return (
-    <Card>
-      <CardContent className="pt-6">
-        <OwnerForm defaultValues={ownerToFormValues(owner)} onSubmit={handleSubmit} submitLabel="Guardar cambios" />
-      </CardContent>
-    </Card>
+    <div className="flex flex-col gap-6">
+      <Card>
+        <CardContent className="pt-6">
+          <OwnerForm defaultValues={ownerToFormValues(owner)} onSubmit={handleSubmit} submitLabel="Guardar cambios" />
+        </CardContent>
+      </Card>
+
+      <DocumentsPanel subjectType="owner" subjectId={owner.id} />
+    </div>
   );
 }

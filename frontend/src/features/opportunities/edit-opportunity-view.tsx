@@ -8,6 +8,7 @@ import { LoadingState } from "@/components/shared/loading-state";
 import { ErrorState } from "@/components/shared/error-state";
 import { OpportunityForm, opportunityToFormValues } from "@/features/opportunities/opportunity-form";
 import { fetchOpportunity, updateOpportunity } from "@/features/opportunities/api";
+import { DocumentsPanel } from "@/features/documents/documents-panel";
 import { ApiError } from "@/types/api";
 import type { Opportunity } from "@/types/opportunity";
 import type { OpportunityFormOutput } from "@/features/opportunities/opportunity-form-schema";
@@ -66,14 +67,18 @@ export function EditOpportunityView() {
   }
 
   return (
-    <Card>
-      <CardContent className="pt-6">
-        <OpportunityForm
-          defaultValues={opportunityToFormValues(opportunity)}
-          onSubmit={handleSubmit}
-          submitLabel="Guardar cambios"
-        />
-      </CardContent>
-    </Card>
+    <div className="flex flex-col gap-6">
+      <Card>
+        <CardContent className="pt-6">
+          <OpportunityForm
+            defaultValues={opportunityToFormValues(opportunity)}
+            onSubmit={handleSubmit}
+            submitLabel="Guardar cambios"
+          />
+        </CardContent>
+      </Card>
+
+      <DocumentsPanel subjectType="opportunity" subjectId={opportunity.id} />
+    </div>
   );
 }

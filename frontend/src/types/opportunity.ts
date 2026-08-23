@@ -45,6 +45,7 @@ export interface Opportunity {
   value: number | null;
   stage: OpportunityStageValue;
   status: OpportunityStatusValue;
+  closed_at: string | null;
   probability: number | null;
   next_action: string | null;
   estimated_close_date: string | null;

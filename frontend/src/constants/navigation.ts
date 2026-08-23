@@ -46,13 +46,18 @@ export const NAV_GROUPS: NavGroup[] = [
       { title: "Visitas", href: "/visits" },
       { title: "Seguimientos", href: "/activities" },
       { title: "Tareas", href: "/tasks" },
+      { title: "Cierres", href: "/closings" },
     ],
   },
   {
     title: "Equipo",
     icon: UsersRound,
     adminOnly: true,
-    items: [{ title: "Usuarios", href: "/team/users" }],
+    items: [
+      { title: "Agentes", href: "/team/agents" },
+      { title: "Usuarios", href: "/team/users" },
+      { title: "Roles", href: "/team/roles" },
+    ],
   },
 ];
 

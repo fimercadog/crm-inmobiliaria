@@ -19,6 +19,18 @@ export async function fetchCurrentUser(): Promise<AuthUser> {
   return response.data.data;
 }
 
+export interface UpdateProfileValues {
+  name: string;
+  email: string;
+  password?: string;
+  current_password?: string;
+}
+
+export async function updateProfile(values: UpdateProfileValues): Promise<AuthUser> {
+  const response = await api.put<ApiSuccessResponse<AuthUser>>("/auth/profile", values);
+  return response.data.data;
+}
+
 export async function logout(): Promise<void> {
   await api.post("/auth/logout");
 }
