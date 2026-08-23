@@ -19,6 +19,7 @@ import {
   SidebarMenuSubButton,
   SidebarMenuSubItem,
   SidebarRail,
+  useSidebar,
 } from "@/components/ui/sidebar";
 
 function isPathActive(pathname: string, href: string): boolean {
@@ -29,10 +30,15 @@ function isPathActive(pathname: string, href: string): boolean {
 export function AppSidebar() {
   const pathname = usePathname();
   const { isAdmin, canWrite } = usePermissions();
+  const { isMobile, setOpenMobile } = useSidebar();
   const visibleGroups = NAV_GROUPS.filter((group) => !group.adminOnly || isAdmin).map((group) => ({
     ...group,
     items: group.items.filter((item) => !item.writeOnly || canWrite),
   }));
+
+  function closeOnMobile() {
+    if (isMobile) setOpenMobile(false);
+  }
 
   return (
     <Sidebar collapsible="icon">
@@ -40,7 +46,7 @@ export function AppSidebar() {
         <SidebarMenu>
           <SidebarMenuItem>
             <SidebarMenuButton size="lg" asChild>
-              <Link href="/dashboard">
+              <Link href="/dashboard" onClick={closeOnMobile}>
                 <div className="flex aspect-square size-8 items-center justify-center rounded-lg bg-primary text-primary-foreground">
                   <Building2 className="size-4" />
                 </div>
@@ -59,7 +65,7 @@ export function AppSidebar() {
           <SidebarMenu>
             <SidebarMenuItem>
               <SidebarMenuButton asChild isActive={isPathActive(pathname, DASHBOARD_LINK.href)}>
-                <Link href={DASHBOARD_LINK.href}>
+                <Link href={DASHBOARD_LINK.href} onClick={closeOnMobile}>
                   <DASHBOARD_LINK.icon />
                   <span>{DASHBOARD_LINK.title}</span>
                 </Link>
@@ -84,7 +90,7 @@ export function AppSidebar() {
                         {group.items.map((item) => (
                           <SidebarMenuSubItem key={item.href}>
                             <SidebarMenuSubButton asChild isActive={isPathActive(pathname, item.href)}>
-                              <Link href={item.href}>{item.title}</Link>
+                              <Link href={item.href} onClick={closeOnMobile}>{item.title}</Link>
                             </SidebarMenuSubButton>
                           </SidebarMenuSubItem>
                         ))}
@@ -103,7 +109,7 @@ export function AppSidebar() {
           {BOTTOM_LINKS.map((link) => (
             <SidebarMenuItem key={link.href}>
               <SidebarMenuButton asChild isActive={isPathActive(pathname, link.href)}>
-                <Link href={link.href}>
+                <Link href={link.href} onClick={closeOnMobile}>
                   <link.icon />
                   <span>{link.title}</span>
                 </Link>
