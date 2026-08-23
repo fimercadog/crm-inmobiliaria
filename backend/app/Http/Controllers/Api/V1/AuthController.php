@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Api\V1;
 
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Auth\LoginRequest;
+use App\Http\Requests\Auth\UpdateProfileRequest;
 use App\Http\Resources\UserResource;
 use App\Http\Responses\ApiResponse;
 use App\Services\Auth\AuthService;
@@ -33,6 +34,13 @@ class AuthController extends Controller
     public function me(): JsonResponse
     {
         return ApiResponse::success(new UserResource($this->authService->currentUser()));
+    }
+
+    public function updateProfile(UpdateProfileRequest $request): JsonResponse
+    {
+        $user = $this->authService->updateProfile($this->authService->currentUser(), $request->validated());
+
+        return ApiResponse::success(new UserResource($user), 'Perfil actualizado correctamente');
     }
 
     public function refresh(): JsonResponse

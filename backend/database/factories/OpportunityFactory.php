@@ -6,6 +6,7 @@ use App\Enums\OpportunityStage;
 use App\Models\Client;
 use App\Models\Opportunity;
 use App\Models\Property;
+use App\Models\User;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
 /**
@@ -22,7 +23,7 @@ class OpportunityFactory extends Factory
         return [
             'client_id' => Client::factory(),
             'property_id' => fake()->boolean(70) ? Property::factory() : null,
-            'agent_id' => null,
+            'agent_id' => fake()->boolean(80) ? User::factory() : null,
             'owner_id' => null,
             'value' => fake()->numberBetween(80_000_000, 900_000_000),
             'stage' => $stage,

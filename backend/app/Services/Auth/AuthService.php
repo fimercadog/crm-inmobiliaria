@@ -4,6 +4,7 @@ namespace App\Services\Auth;
 
 use App\Models\User;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Hash;
 use PHPOpenSourceSaver\JWTAuth\Facades\JWTAuth;
 
 class AuthService
@@ -21,6 +22,21 @@ class AuthService
     public function currentUser(): ?User
     {
         return Auth::guard('api')->user();
+    }
+
+    public function updateProfile(User $user, array $data): User
+    {
+        unset($data['current_password']);
+
+        if (empty($data['password'])) {
+            unset($data['password']);
+        } else {
+            $data['password'] = Hash::make($data['password']);
+        }
+
+        $user->update($data);
+
+        return $user;
     }
 
     public function logout(): void

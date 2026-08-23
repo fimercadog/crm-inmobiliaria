@@ -58,15 +58,19 @@ class DatabaseSeeder extends Seeder
         Opportunity::factory(30)
             ->recycle($clients)
             ->recycle($properties)
+            ->recycle($agents)
             ->create();
 
         Visit::factory(25)
             ->recycle($clients)
             ->recycle($properties)
+            ->recycle($agents)
             ->create();
 
         Activity::factory(30)->create();
 
-        Task::factory(20)->create();
+        Task::factory(20)
+            ->recycle($agents)
+            ->create();
     }
 }

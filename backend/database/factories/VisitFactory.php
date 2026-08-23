@@ -5,6 +5,7 @@ namespace Database\Factories;
 use App\Enums\VisitStatus;
 use App\Models\Client;
 use App\Models\Property;
+use App\Models\User;
 use App\Models\Visit;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
@@ -20,7 +21,7 @@ class VisitFactory extends Factory
         return [
             'property_id' => Property::factory(),
             'client_id' => Client::factory(),
-            'agent_id' => null,
+            'agent_id' => fake()->boolean(80) ? User::factory() : null,
             'scheduled_at' => fake()->dateTimeBetween('-2 weeks', '+3 weeks'),
             'status' => fake()->randomElement(VisitStatus::cases()),
             'notes' => null,

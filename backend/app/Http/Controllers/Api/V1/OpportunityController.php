@@ -25,6 +25,15 @@ class OpportunityController extends Controller
         'probability' => 'Probabilidad',
     ];
 
+    private const CLOSED_EXPORT_COLUMNS = [
+        'client' => 'Cliente',
+        'property' => 'Propiedad',
+        'agent' => 'Agente',
+        'value' => 'Valor',
+        'status' => 'Resultado',
+        'closed_at' => 'Fecha de cierre',
+    ];
+
     private const RELATIONS = ['client', 'property', 'agent', 'owner'];
 
     public function __construct(
@@ -35,6 +44,13 @@ class OpportunityController extends Controller
     public function index(Request $request): JsonResponse
     {
         $paginator = $this->opportunityService->paginate($request);
+
+        return ApiResponse::paginated(OpportunityResource::collection($paginator));
+    }
+
+    public function closed(Request $request): JsonResponse
+    {
+        $paginator = $this->opportunityService->paginateClosed($request);
 
         return ApiResponse::paginated(OpportunityResource::collection($paginator));
     }
@@ -91,5 +107,23 @@ class OpportunityController extends Controller
         return $format === 'pdf'
             ? $this->exportService->pdf($rows, self::EXPORT_COLUMNS, 'oportunidades', 'Oportunidades')
             : $this->exportService->csv($rows, self::EXPORT_COLUMNS, 'oportunidades');
+    }
+
+    public function exportClosed(Request $request)
+    {
+        $format = $request->string('format', 'csv')->lower()->value();
+
+        $rows = $this->opportunityService->forClosedExport($request)->map(fn (Opportunity $opportunity) => [
+            'client' => $opportunity->client->name,
+            'property' => $opportunity->property->title ?? '—',
+            'agent' => $opportunity->agent->name ?? '—',
+            'value' => $opportunity->value !== null ? number_format((float) $opportunity->value, 0, ',', '.') : '—',
+            'status' => $opportunity->status->value,
+            'closed_at' => $opportunity->closed_at?->format('d/m/Y') ?? '—',
+        ]);
+
+        return $format === 'pdf'
+            ? $this->exportService->pdf($rows, self::CLOSED_EXPORT_COLUMNS, 'cierres', 'Cierres')
+            : $this->exportService->csv($rows, self::CLOSED_EXPORT_COLUMNS, 'cierres');
     }
 }

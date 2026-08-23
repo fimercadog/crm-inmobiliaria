@@ -151,4 +151,43 @@ class OpportunityTest extends TestCase
         $response->assertOk();
         $this->assertStringContainsString('text/csv', $response->headers->get('Content-Type'));
     }
+
+    public function test_closed_endpoint_only_returns_won_or_lost_opportunities(): void
+    {
+        $this->actingUser();
+        Opportunity::factory(2)->create(['stage' => OpportunityStage::Negociacion, 'property_id' => null]);
+        Opportunity::factory(1)->create(['stage' => OpportunityStage::CierreGanado, 'property_id' => null]);
+        Opportunity::factory(1)->create(['stage' => OpportunityStage::CierrePerdido, 'property_id' => null]);
+
+        $response = $this->getJson('/api/v1/opportunities/closed');
+
+        $response->assertOk()->assertJsonCount(2, 'data.items');
+        foreach ($response->json('data.items') as $item) {
+            $this->assertNotSame('abierta', $item['status']);
+        }
+    }
+
+    public function test_closed_endpoint_orders_by_most_recently_closed(): void
+    {
+        $this->actingUser();
+        $older = Opportunity::factory()->create(['stage' => OpportunityStage::CierreGanado, 'property_id' => null]);
+        $older->forceFill(['closed_at' => now()->subDays(5)])->save();
+        $newer = Opportunity::factory()->create(['stage' => OpportunityStage::CierrePerdido, 'property_id' => null]);
+        $newer->forceFill(['closed_at' => now()])->save();
+
+        $response = $this->getJson('/api/v1/opportunities/closed');
+
+        $response->assertOk()->assertJsonPath('data.items.0.id', $newer->id);
+    }
+
+    public function test_can_export_closed_opportunities_as_csv(): void
+    {
+        $this->actingUser();
+        Opportunity::factory(2)->create(['stage' => OpportunityStage::CierreGanado, 'property_id' => null]);
+
+        $response = $this->get('/api/v1/opportunities/closed/export?format=csv');
+
+        $response->assertOk();
+        $this->assertStringContainsString('text/csv', $response->headers->get('Content-Type'));
+    }
 }

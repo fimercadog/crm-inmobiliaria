@@ -4,6 +4,7 @@ namespace Database\Factories;
 
 use App\Enums\TaskStatus;
 use App\Models\Task;
+use App\Models\User;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
 /**
@@ -20,7 +21,7 @@ class TaskFactory extends Factory
             'description' => fake()->optional()->paragraph(),
             'due_date' => fake()->optional(0.8)->dateTimeBetween('-1 week', '+3 weeks')?->format('Y-m-d'),
             'status' => fake()->randomElement(TaskStatus::cases()),
-            'agent_id' => null,
+            'agent_id' => fake()->boolean(80) ? User::factory() : null,
             'subject_type' => null,
             'subject_id' => null,
         ];

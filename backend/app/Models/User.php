@@ -6,6 +6,7 @@ namespace App\Models;
 use App\Enums\UserRole;
 use Database\Factories\UserFactory;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use PHPOpenSourceSaver\JWTAuth\Contracts\JWTSubject;
@@ -59,6 +60,38 @@ class User extends Authenticatable implements JWTSubject
     public function canWrite(): bool
     {
         return in_array($this->role, [UserRole::Admin, UserRole::Agente], true);
+    }
+
+    /**
+     * @return HasMany<Property, $this>
+     */
+    public function properties(): HasMany
+    {
+        return $this->hasMany(Property::class, 'agent_id');
+    }
+
+    /**
+     * @return HasMany<Opportunity, $this>
+     */
+    public function opportunities(): HasMany
+    {
+        return $this->hasMany(Opportunity::class, 'agent_id');
+    }
+
+    /**
+     * @return HasMany<Visit, $this>
+     */
+    public function visits(): HasMany
+    {
+        return $this->hasMany(Visit::class, 'agent_id');
+    }
+
+    /**
+     * @return HasMany<Task, $this>
+     */
+    public function tasks(): HasMany
+    {
+        return $this->hasMany(Task::class, 'agent_id');
     }
 
     public function getJWTIdentifier(): mixed

@@ -2,6 +2,7 @@
 
 namespace App\Services\Opportunity;
 
+use App\Enums\OpportunityStatus;
 use App\Models\Opportunity;
 use Illuminate\Contracts\Pagination\LengthAwarePaginator;
 use Illuminate\Database\Eloquent\Builder;
@@ -24,6 +25,32 @@ class OpportunityService
     public function forExport(Request $request): Collection
     {
         return $this->baseQuery($request)->get();
+    }
+
+    public function paginateClosed(Request $request): LengthAwarePaginator
+    {
+        return $this->closedQuery($request)
+            ->paginate(
+                perPage: (int) $request->integer('per_page', 10),
+                page: (int) $request->integer('page', 1),
+            );
+    }
+
+    public function forClosedExport(Request $request): Collection
+    {
+        return $this->closedQuery($request)->get();
+    }
+
+    private function closedQuery(Request $request): Builder
+    {
+        $query = $this->baseQuery($request)->whereIn('status', [OpportunityStatus::Ganada, OpportunityStatus::Perdida]);
+
+        $sort = $request->string('sort')->value();
+        if (! $sort || ! in_array($sort, self::SORTABLE_COLUMNS, true)) {
+            $query->reorder()->orderByDesc('closed_at');
+        }
+
+        return $query;
     }
 
     private function baseQuery(Request $request): Builder

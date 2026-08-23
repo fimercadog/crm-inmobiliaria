@@ -1,13 +1,16 @@
 <?php
 
 use App\Http\Controllers\Api\V1\ActivityController;
+use App\Http\Controllers\Api\V1\AgentController;
 use App\Http\Controllers\Api\V1\AuthController;
 use App\Http\Controllers\Api\V1\ClientController;
 use App\Http\Controllers\Api\V1\DashboardController;
+use App\Http\Controllers\Api\V1\DocumentController;
 use App\Http\Controllers\Api\V1\LeadController;
 use App\Http\Controllers\Api\V1\OpportunityController;
 use App\Http\Controllers\Api\V1\OwnerController;
 use App\Http\Controllers\Api\V1\PropertyController;
+use App\Http\Controllers\Api\V1\ReportController;
 use App\Http\Controllers\Api\V1\TaskController;
 use App\Http\Controllers\Api\V1\UserController;
 use App\Http\Controllers\Api\V1\VisitController;
@@ -25,6 +28,7 @@ Route::prefix('v1')->group(function (): void {
 
         Route::middleware('auth:api')->group(function (): void {
             Route::get('/me', [AuthController::class, 'me']);
+            Route::put('/profile', [AuthController::class, 'updateProfile']);
             Route::post('/refresh', [AuthController::class, 'refresh']);
             Route::post('/logout', [AuthController::class, 'logout']);
         });
@@ -50,6 +54,8 @@ Route::prefix('v1')->group(function (): void {
         Route::apiResource('leads', LeadController::class);
 
         Route::get('/opportunities/export', [OpportunityController::class, 'export']);
+        Route::get('/opportunities/closed', [OpportunityController::class, 'closed']);
+        Route::get('/opportunities/closed/export', [OpportunityController::class, 'exportClosed']);
         Route::apiResource('opportunities', OpportunityController::class);
 
         Route::get('/visits/export', [VisitController::class, 'export']);
@@ -62,5 +68,17 @@ Route::prefix('v1')->group(function (): void {
         Route::apiResource('tasks', TaskController::class);
 
         Route::apiResource('users', UserController::class);
+        Route::get('/agents', [AgentController::class, 'index']);
+
+        Route::prefix('reports')->group(function (): void {
+            Route::get('/properties-by-status', [ReportController::class, 'propertiesByStatus']);
+            Route::get('/closings-by-period', [ReportController::class, 'closingsByPeriod']);
+            Route::get('/agent-performance', [ReportController::class, 'agentPerformance']);
+        });
+
+        Route::get('/documents', [DocumentController::class, 'index']);
+        Route::post('/documents', [DocumentController::class, 'store']);
+        Route::get('/documents/{document}/download', [DocumentController::class, 'download']);
+        Route::delete('/documents/{document}', [DocumentController::class, 'destroy']);
     });
 });
