@@ -7,10 +7,11 @@ import { Card, CardContent } from "@/components/ui/card";
 import { LoadingState } from "@/components/shared/loading-state";
 import { ErrorState } from "@/components/shared/error-state";
 import { PropertyForm, propertyToFormValues } from "@/features/properties/property-form";
+import { PropertyImagesPanel } from "@/features/properties/property-images-panel";
 import { fetchProperty, updateProperty } from "@/features/properties/api";
 import { DocumentsPanel } from "@/features/documents/documents-panel";
 import { ApiError } from "@/types/api";
-import type { Property } from "@/types/property";
+import type { Property, PropertyImage } from "@/types/property";
 import type { PropertyFormOutput } from "@/features/properties/property-form-schema";
 
 export function EditPropertyView() {
@@ -48,6 +49,10 @@ export function EditPropertyView() {
     setRetryToken((token) => token + 1);
   }
 
+  function handleImagesChange(images: PropertyImage[]) {
+    setProperty((current) => (current ? { ...current, images } : current));
+  }
+
   async function handleSubmit(values: PropertyFormOutput) {
     try {
       await updateProperty(propertyId, values);
@@ -73,6 +78,8 @@ export function EditPropertyView() {
           <PropertyForm defaultValues={propertyToFormValues(property)} onSubmit={handleSubmit} submitLabel="Guardar cambios" />
         </CardContent>
       </Card>
+
+      <PropertyImagesPanel propertyId={property.id} images={property.images ?? []} onChange={handleImagesChange} />
 
       <DocumentsPanel subjectType="property" subjectId={property.id} />
     </div>

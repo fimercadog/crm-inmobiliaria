@@ -10,27 +10,34 @@ function emptyToUndefined(val: unknown) {
 const optionalNumber = z.preprocess(emptyToUndefined, z.coerce.number().min(0).optional());
 const optionalStratum = z.preprocess(emptyToUndefined, z.coerce.number().min(1).max(6).optional());
 
-export const propertyFormSchema = z.object({
-  title: z.string().min(1, "El título es obligatorio").max(255),
-  description: z.string().optional(),
-  property_type: z.enum(PROPERTY_TYPES, { message: "Selecciona un tipo de inmueble" }),
-  listing_type: z.enum(LISTING_TYPES, { message: "Selecciona venta o arriendo" }),
-  status: z.enum(PROPERTY_STATUSES, { message: "Selecciona un estado" }),
-  owner_id: optionalNumber,
-  city: z.string().min(1, "La ciudad es obligatoria").max(255),
-  zone: z.string().optional(),
-  address: z.string().optional(),
-  price: z.coerce.number().min(0, "El precio debe ser mayor o igual a 0"),
-  admin_fee: optionalNumber,
-  stratum: optionalStratum,
-  bedrooms: optionalNumber,
-  bathrooms: optionalNumber,
-  parking_spots: optionalNumber,
-  built_area: optionalNumber,
-  private_area: optionalNumber,
-  year_built: optionalNumber,
-  notes: z.string().optional(),
-});
+export const propertyFormSchema = z
+  .object({
+    title: z.string().min(1, "El título es obligatorio").max(255),
+    description: z.string().optional(),
+    property_type: z.enum(PROPERTY_TYPES, { message: "Selecciona un tipo de inmueble" }),
+    listing_type: z.enum(LISTING_TYPES, { message: "Selecciona venta o arriendo" }),
+    status: z.enum(PROPERTY_STATUSES, { message: "Selecciona un estado" }),
+    owner_id: optionalNumber,
+    city: z.string().min(1, "La ciudad es obligatoria").max(255),
+    zone: z.string().optional(),
+    address: z.string().optional(),
+    price: z.coerce.number().min(0, "El precio debe ser mayor o igual a 0"),
+    admin_fee: optionalNumber,
+    stratum: optionalStratum,
+    bedrooms: optionalNumber,
+    bathrooms: optionalNumber,
+    parking_spots: optionalNumber,
+    built_area: optionalNumber,
+    private_area: optionalNumber,
+    year_built: optionalNumber,
+    notes: z.string().optional(),
+    is_featured: z.boolean().optional(),
+    is_published: z.boolean().optional(),
+  })
+  .transform(({ is_published, ...rest }) => ({
+    ...rest,
+    published_at: is_published ? new Date().toISOString() : null,
+  }));
 
 export type PropertyFormSchema = z.infer<typeof propertyFormSchema>;
 export type PropertyFormInput = z.input<typeof propertyFormSchema>;

@@ -24,14 +24,24 @@ export interface PropertyAgentRef {
   name: string;
 }
 
+export interface PropertyImage {
+  id: number;
+  url: string;
+  alt: string | null;
+  sort_order: number;
+  is_cover: boolean;
+}
+
 export interface Property {
   id: number;
   code: string;
+  slug: string;
   title: string;
   description: string | null;
   property_type: PropertyTypeValue;
   listing_type: ListingTypeValue;
   status: PropertyStatusValue;
+  is_featured: boolean;
   owner: PropertyOwnerRef | null;
   agent: PropertyAgentRef | null;
   owner_id: number | null;
@@ -51,6 +61,7 @@ export interface Property {
   features: string[];
   notes: string | null;
   published_at: string | null;
+  images?: PropertyImage[];
   created_at: string;
   updated_at: string;
 }
@@ -61,6 +72,7 @@ export interface PropertyFormValues {
   property_type: PropertyTypeValue;
   listing_type: ListingTypeValue;
   status: PropertyStatusValue;
+  is_featured?: boolean;
   owner_id?: number;
   agent_id?: number;
   city: string;
@@ -76,6 +88,7 @@ export interface PropertyFormValues {
   private_area?: number;
   year_built?: number;
   notes?: string;
+  published_at?: string | null;
 }
 
 export const PROPERTY_TYPE_LABELS: Record<PropertyTypeValue, string> = {

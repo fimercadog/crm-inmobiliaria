@@ -7,7 +7,8 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
-import { Field, FieldError, FieldGroup, FieldLabel, FieldLegend, FieldSet } from "@/components/ui/field";
+import { Switch } from "@/components/ui/switch";
+import { Field, FieldDescription, FieldError, FieldGroup, FieldLabel, FieldLegend, FieldSet } from "@/components/ui/field";
 import {
   propertyFormSchema,
   type PropertyFormInput,
@@ -58,6 +59,8 @@ export function propertyToFormValues(property: Property): Partial<PropertyFormIn
     private_area: property.private_area ?? undefined,
     year_built: property.year_built ?? undefined,
     notes: property.notes ?? undefined,
+    is_featured: property.is_featured ?? false,
+    is_published: property.published_at !== null,
   };
 }
 
@@ -235,6 +238,34 @@ export function PropertyForm({ defaultValues, onSubmit, submitLabel = "Guardar" 
             <FieldLabel htmlFor="notes">Observaciones</FieldLabel>
             <Textarea id="notes" rows={3} {...register("notes")} />
             <FieldError errors={errors.notes ? [errors.notes] : undefined} />
+          </Field>
+        </FieldGroup>
+      </FieldSet>
+
+      <FieldSet>
+        <FieldLegend>Sitio web</FieldLegend>
+        <FieldGroup>
+          <Field orientation="horizontal">
+            <FieldLabel htmlFor="is_published">Publicar en el sitio web</FieldLabel>
+            <Controller
+              name="is_published"
+              control={control}
+              render={({ field }) => (
+                <Switch id="is_published" checked={field.value ?? false} onCheckedChange={field.onChange} />
+              )}
+            />
+            <FieldDescription>Solo las propiedades publicadas aparecen en el catálogo público.</FieldDescription>
+          </Field>
+          <Field orientation="horizontal">
+            <FieldLabel htmlFor="is_featured">Propiedad destacada</FieldLabel>
+            <Controller
+              name="is_featured"
+              control={control}
+              render={({ field }) => (
+                <Switch id="is_featured" checked={field.value ?? false} onCheckedChange={field.onChange} />
+              )}
+            />
+            <FieldDescription>Se muestra en la sección de propiedades destacadas del inicio.</FieldDescription>
           </Field>
         </FieldGroup>
       </FieldSet>
