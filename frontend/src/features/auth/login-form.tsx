@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -60,7 +61,12 @@ export function LoginForm() {
         </Field>
 
         <Field data-invalid={errors.password ? "true" : undefined}>
-          <FieldLabel htmlFor="password">Contraseña</FieldLabel>
+          <div className="flex items-center justify-between">
+            <FieldLabel htmlFor="password">Contraseña</FieldLabel>
+            <Link href="/forgot-password" className="text-sm text-muted-foreground underline-offset-4 hover:underline">
+              ¿Olvidaste tu contraseña?
+            </Link>
+          </div>
           <Input
             id="password"
             type="password"

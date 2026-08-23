@@ -34,3 +34,11 @@ export async function updateProfile(values: UpdateProfileValues): Promise<AuthUs
 export async function logout(): Promise<void> {
   await api.post("/auth/logout");
 }
+
+export async function forgotPassword(email: string): Promise<void> {
+  await api.post("/auth/forgot-password", { email });
+}
+
+export async function resetPassword(email: string, token: string, password: string): Promise<void> {
+  await api.post("/auth/reset-password", { email, token, password });
+}

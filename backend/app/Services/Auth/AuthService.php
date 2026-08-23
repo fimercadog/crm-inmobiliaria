@@ -5,6 +5,7 @@ namespace App\Services\Auth;
 use App\Models\User;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Password;
 use PHPOpenSourceSaver\JWTAuth\Facades\JWTAuth;
 
 class AuthService
@@ -37,6 +38,21 @@ class AuthService
         $user->update($data);
 
         return $user;
+    }
+
+    public function sendPasswordResetLink(string $email): string
+    {
+        return Password::sendResetLink(['email' => $email]);
+    }
+
+    public function resetPassword(string $email, string $token, string $password): string
+    {
+        return Password::reset(
+            ['email' => $email, 'token' => $token, 'password' => $password],
+            function (User $user, string $password): void {
+                $user->forceFill(['password' => Hash::make($password)])->save();
+            },
+        );
     }
 
     public function logout(): void
