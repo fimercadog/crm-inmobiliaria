@@ -109,9 +109,23 @@ class Property extends Model
         return $this->hasMany(PropertyImage::class)->orderBy('sort_order');
     }
 
+    /**
+     * Commercial statuses that are still eligible for public visibility.
+     * Sold/rented/inactive/draft properties must disappear from the public
+     * site even if published_at was never cleared.
+     *
+     * @return list<PropertyStatus>
+     */
+    private static function publiclyVisibleStatuses(): array
+    {
+        return [PropertyStatus::Disponible, PropertyStatus::Reservado];
+    }
+
     public function isPublished(): bool
     {
-        return $this->published_at !== null && $this->published_at->lte(now());
+        return $this->published_at !== null
+            && $this->published_at->lte(now())
+            && in_array($this->status, self::publiclyVisibleStatuses(), true);
     }
 
     /**
@@ -120,6 +134,8 @@ class Property extends Model
      */
     public function scopePublished(Builder $query): Builder
     {
-        return $query->whereNotNull('published_at')->where('published_at', '<=', now());
+        return $query->whereNotNull('published_at')
+            ->where('published_at', '<=', now())
+            ->whereIn('status', self::publiclyVisibleStatuses());
     }
 }

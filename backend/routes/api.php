@@ -10,6 +10,9 @@ use App\Http\Controllers\Api\V1\LeadController;
 use App\Http\Controllers\Api\V1\OpportunityController;
 use App\Http\Controllers\Api\V1\OwnerController;
 use App\Http\Controllers\Api\V1\PropertyController;
+use App\Http\Controllers\Api\V1\Public\PublicBlogController;
+use App\Http\Controllers\Api\V1\Public\PublicLeadController;
+use App\Http\Controllers\Api\V1\Public\PublicPropertyController;
 use App\Http\Controllers\Api\V1\ReportController;
 use App\Http\Controllers\Api\V1\TaskController;
 use App\Http\Controllers\Api\V1\UserController;
@@ -34,6 +37,19 @@ Route::prefix('v1')->group(function (): void {
             Route::post('/refresh', [AuthController::class, 'refresh']);
             Route::post('/logout', [AuthController::class, 'logout']);
         });
+    });
+
+    Route::prefix('public')->group(function (): void {
+        Route::middleware('throttle:60,1')->group(function (): void {
+            Route::get('/properties/featured', [PublicPropertyController::class, 'featured']);
+            Route::get('/properties/{property:slug}', [PublicPropertyController::class, 'show']);
+            Route::get('/properties', [PublicPropertyController::class, 'index']);
+
+            Route::get('/blog/{post:slug}', [PublicBlogController::class, 'show']);
+            Route::get('/blog', [PublicBlogController::class, 'index']);
+        });
+
+        Route::post('/leads', [PublicLeadController::class, 'store'])->middleware('throttle:10,1');
     });
 
     Route::middleware('auth:api')->group(function (): void {

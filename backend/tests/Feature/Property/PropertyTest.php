@@ -207,9 +207,9 @@ class PropertyTest extends TestCase
 
     public function test_is_published_reflects_the_published_at_gate(): void
     {
-        $unpublished = Property::factory()->create(['published_at' => null]);
-        $published = Property::factory()->create(['published_at' => now()->subDay()]);
-        $scheduled = Property::factory()->create(['published_at' => now()->addDay()]);
+        $unpublished = Property::factory()->create(['published_at' => null, 'status' => PropertyStatus::Disponible]);
+        $published = Property::factory()->create(['published_at' => now()->subDay(), 'status' => PropertyStatus::Disponible]);
+        $scheduled = Property::factory()->create(['published_at' => now()->addDay(), 'status' => PropertyStatus::Disponible]);
 
         $this->assertFalse($unpublished->isPublished());
         $this->assertTrue($published->isPublished());
