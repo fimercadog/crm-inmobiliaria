@@ -11,7 +11,7 @@ export function PropertyCard({ property }: { property: PublicPropertySummary }) 
   return (
     <Link
       href={`/propiedades/${property.slug}`}
-      className="group flex flex-col gap-5"
+      className="realty-hover-lift group flex flex-col gap-5"
     >
       <div className="relative aspect-[1.48/1] w-full overflow-hidden bg-muted">
         <Image

@@ -207,6 +207,98 @@
   color: white;
 }
 
+.public-theme .realty-animate-fade-up {
+  animation: realty-fade-up 700ms ease both;
+}
+
+.public-theme .realty-animate-fade-in {
+  animation: realty-fade-in 700ms ease both;
+}
+
+.public-theme .realty-animate-scale-in {
+  animation: realty-scale-in 650ms ease both;
+}
+
+.public-theme .realty-animate-delay-1 {
+  animation-delay: 120ms;
+}
+
+.public-theme .realty-animate-delay-2 {
+  animation-delay: 240ms;
+}
+
+.public-theme .realty-animate-delay-3 {
+  animation-delay: 360ms;
+}
+
+.public-theme .realty-hover-lift {
+  transition: transform 220ms ease, filter 220ms ease, opacity 220ms ease;
+}
+
+.public-theme .realty-hover-lift:hover {
+  transform: translateY(-6px);
+}
+
+.public-theme .realty-whatsapp-float {
+  animation: realty-float 3s ease-in-out infinite;
+}
+
+@keyframes realty-fade-up {
+  from {
+    opacity: 0;
+    transform: translateY(22px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes realty-fade-in {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+@keyframes realty-scale-in {
+  from {
+    opacity: 0;
+    transform: scale(0.96);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+@keyframes realty-float {
+  0%,
+  100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-6px);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .public-theme .realty-animate-fade-up,
+  .public-theme .realty-animate-fade-in,
+  .public-theme .realty-animate-scale-in,
+  .public-theme .realty-whatsapp-float {
+    animation: none;
+  }
+
+  .public-theme .realty-hover-lift,
+  .public-theme .realty-hover-lift:hover {
+    transform: none;
+    transition: none;
+  }
+}
+
 .public-theme.dark {
   --background: oklch(0.17 0.016 50);
   --foreground: oklch(0.96 0.01 70);

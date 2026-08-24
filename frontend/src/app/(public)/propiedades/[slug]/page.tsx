@@ -72,7 +72,7 @@ export default async function PropertyDetailPage(props: PageProps<"/propiedades/
         dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd).replace(/</g, "\\u003c") }}
       />
 
-      <div className="flex max-w-5xl flex-col gap-4">
+      <div className="realty-animate-fade-up flex max-w-5xl flex-col gap-4">
         <div className="flex flex-wrap items-center gap-2">
           <Badge className="rounded-full bg-[var(--realty-accent)] text-white">{LISTING_TYPE_LABELS[property.listing_type]}</Badge>
           <span className="text-xs font-extrabold tracking-wide text-muted-foreground uppercase">{property.code}</span>
@@ -91,13 +91,13 @@ export default async function PropertyDetailPage(props: PageProps<"/propiedades/
           <PropertyGallery images={property.images} title={property.title} />
 
           {property.description && (
-            <div className="border-t border-black/10 pt-8">
+            <div className="realty-animate-fade-up border-t border-black/10 pt-8">
               <h2 className="text-3xl font-medium">Descripción</h2>
               <p className="mt-6 max-w-4xl whitespace-pre-line text-sm leading-8 text-muted-foreground">{property.description}</p>
             </div>
           )}
 
-          <div className="pt-8">
+          <div className="realty-animate-fade-up pt-8">
             <h2 className="text-3xl font-medium">Detalles de la propiedad</h2>
             <div className="mt-8">
               <PropertyFeatures property={property} />
@@ -105,7 +105,7 @@ export default async function PropertyDetailPage(props: PageProps<"/propiedades/
           </div>
 
           {property.features.length > 0 && (
-            <div className="flex flex-col gap-5">
+            <div className="realty-animate-fade-up flex flex-col gap-5">
               <h2 className="text-3xl font-medium">Características adicionales</h2>
               <ul className="grid grid-cols-2 gap-x-12 gap-y-4 sm:grid-cols-3">
                 {property.features.map((feature) => (
@@ -119,7 +119,7 @@ export default async function PropertyDetailPage(props: PageProps<"/propiedades/
           )}
         </div>
 
-        <aside className="flex flex-col gap-8 lg:sticky lg:top-28 lg:h-fit">
+        <aside className="realty-animate-fade-up realty-animate-delay-1 flex flex-col gap-8 lg:sticky lg:top-28 lg:h-fit">
           <div className="bg-[var(--realty-surface)] p-8">
             <p className="text-3xl font-extrabold text-[var(--realty-primary)]">{currencyFormatter.format(property.price)}</p>
             {property.admin_fee !== null && (

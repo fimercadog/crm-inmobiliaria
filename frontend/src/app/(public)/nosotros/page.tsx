@@ -47,27 +47,32 @@ const PROCESS = [
 export default function NosotrosPage() {
   return (
     <PublicContainer className="flex flex-col gap-16 py-14">
-      <SectionHeading
-        level={1}
-        eyebrow="Nosotros"
-        title="Encontramos el lugar que tú imaginas"
-        description="Somos un equipo inmobiliario enfocado en simplificar la compra, el arriendo y la venta de propiedades, con un proceso claro de principio a fin."
-      />
+      <div className="realty-animate-fade-up">
+        <SectionHeading
+          level={1}
+          eyebrow="Nosotros"
+          title="Encontramos el lugar que tú imaginas"
+          description="Somos un equipo inmobiliario enfocado en simplificar la compra, el arriendo y la venta de propiedades, con un proceso claro de principio a fin."
+        />
+      </div>
 
       <div className="grid gap-10 sm:grid-cols-3">
-        {VALUES.map((value) => (
-          <div key={value.title} className="flex flex-col gap-2 border-t border-border pt-4">
+        {VALUES.map((value, index) => (
+          <div
+            key={value.title}
+            className={`realty-animate-fade-up realty-hover-lift flex flex-col gap-2 border-t border-border pt-4 ${index === 1 ? "realty-animate-delay-1" : index === 2 ? "realty-animate-delay-2" : ""}`}
+          >
             <h3 className="font-(family-name:--font-display) text-lg font-semibold">{value.title}</h3>
             <p className="text-sm text-muted-foreground">{value.description}</p>
           </div>
         ))}
       </div>
 
-      <div className="rounded-3xl bg-secondary/40 p-8 sm:p-12">
+      <div className="realty-animate-scale-in rounded-3xl bg-secondary/40 p-8 sm:p-12">
         <SectionHeading eyebrow="Cómo trabajamos" title="Un proceso simple, en tres pasos" align="center" />
         <div className="mt-10 grid gap-8 sm:grid-cols-3">
           {PROCESS.map((step) => (
-            <div key={step.title} className="flex flex-col items-center gap-3 text-center">
+            <div key={step.title} className="realty-hover-lift flex flex-col items-center gap-3 text-center">
               <span className="flex size-14 items-center justify-center rounded-full bg-primary/10 text-primary">
                 <step.icon className="size-6" />
               </span>
@@ -78,7 +83,7 @@ export default function NosotrosPage() {
         </div>
       </div>
 
-      <div className="flex flex-col items-center gap-6 text-center">
+      <div className="realty-animate-fade-up flex flex-col items-center gap-6 text-center">
         <h2 className="font-(family-name:--font-display) text-2xl font-semibold tracking-tight sm:text-3xl">
           ¿Listo para dar el siguiente paso?
         </h2>

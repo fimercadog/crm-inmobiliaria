@@ -40,18 +40,20 @@ const CONTACT_ITEMS = [
 export default function ContactoPage() {
   return (
     <PublicContainer className="flex flex-col gap-10 py-14">
-      <SectionHeading
-        level={1}
-        eyebrow="Contacto"
-        title="Hablemos de tu próxima propiedad"
-        description="Escríbenos y un asesor te responderá lo antes posible."
-      />
+      <div className="realty-animate-fade-up">
+        <SectionHeading
+          level={1}
+          eyebrow="Contacto"
+          title="Hablemos de tu próxima propiedad"
+          description="Escríbenos y un asesor te responderá lo antes posible."
+        />
+      </div>
 
       <div className="grid gap-10 lg:grid-cols-5">
         <div className="flex flex-col gap-4 lg:col-span-2">
-          {CONTACT_ITEMS.map((item) => {
+          {CONTACT_ITEMS.map((item, index) => {
             const content = (
-              <div className="flex items-start gap-3 rounded-xl border border-border bg-card p-4">
+              <div className={`realty-animate-fade-up realty-hover-lift flex items-start gap-3 rounded-xl border border-border bg-card p-4 ${index === 1 ? "realty-animate-delay-1" : index === 2 ? "realty-animate-delay-2" : index === 3 ? "realty-animate-delay-3" : ""}`}>
                 <span className="flex size-10 shrink-0 items-center justify-center rounded-full bg-primary/10 text-primary">
                   <item.icon className="size-4.5" />
                 </span>
@@ -72,7 +74,7 @@ export default function ContactoPage() {
           })}
         </div>
 
-        <div className="lg:col-span-3">
+        <div className="realty-animate-scale-in realty-animate-delay-1 lg:col-span-3">
           <ContactForm />
         </div>
       </div>

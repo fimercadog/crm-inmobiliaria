@@ -39,7 +39,7 @@ export function ContactForm() {
 
   if (submitted) {
     return (
-      <div className="flex flex-col items-center gap-3 rounded-xl border border-border bg-card p-8 text-center">
+      <div className="realty-animate-scale-in flex flex-col items-center gap-3 rounded-xl border border-border bg-card p-8 text-center">
         <CheckCircle2 className="size-8 text-primary" />
         <p className="font-medium">¡Gracias por escribirnos!</p>
         <p className="text-sm text-muted-foreground">Te responderemos a la brevedad posible.</p>

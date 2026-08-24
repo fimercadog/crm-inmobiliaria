@@ -20,12 +20,14 @@ export default async function BlogPage(props: PageProps<"/blog">) {
 
   return (
     <PublicContainer className="flex flex-col gap-10 py-14">
-      <SectionHeading level={1} title="Blog" description="Ideas y guías útiles para tu próxima decisión inmobiliaria." />
+      <div className="realty-animate-fade-up">
+        <SectionHeading level={1} title="Blog" description="Ideas y guías útiles para tu próxima decisión inmobiliaria." />
+      </div>
 
       {items.length === 0 ? (
         <p className="py-10 text-center text-muted-foreground">Todavía no hay artículos publicados.</p>
       ) : (
-        <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
+        <div className="realty-animate-fade-up realty-animate-delay-1 grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
           {items.map((post) => (
             <BlogCard key={post.id} post={post} />
           ))}

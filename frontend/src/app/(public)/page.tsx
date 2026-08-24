@@ -48,7 +48,7 @@ export default async function HomePage() {
       </HeroSection>
 
       <PublicContainer className="-mt-18 relative z-10">
-        <div className="grid bg-black text-white sm:grid-cols-4">
+        <div className="realty-animate-fade-up grid bg-black text-white sm:grid-cols-4">
           {ACTIONS.map((item, index) => (
             <Link
               key={item.href}
@@ -62,7 +62,7 @@ export default async function HomePage() {
         </div>
       </PublicContainer>
 
-      <section className="py-24">
+      <section className="realty-animate-fade-up py-24">
         <PublicContainer className="flex flex-col gap-12">
           <SectionHeading
             eyebrow="Listings"
@@ -78,7 +78,7 @@ export default async function HomePage() {
         </PublicContainer>
       </section>
 
-      <section className="bg-[var(--realty-surface)] py-24">
+      <section className="realty-animate-fade-up bg-[var(--realty-surface)] py-24">
         <PublicContainer className="grid gap-12 lg:grid-cols-2">
           <SectionHeading eyebrow="Por qué elegirnos" title="Expertos en los que puedes confiar" />
           <div className="grid gap-8">
@@ -100,7 +100,7 @@ export default async function HomePage() {
         </PublicContainer>
       </section>
 
-      <section className="py-24 text-center">
+      <section className="realty-animate-fade-up py-24 text-center">
         <p className="realty-eyebrow">Looking for agent?</p>
         <h2 className="mx-auto mt-6 max-w-4xl text-4xl font-medium text-balance sm:text-5xl lg:text-6xl">
           Deja los detalles en nuestras manos y vive mejor tu próximo paso.

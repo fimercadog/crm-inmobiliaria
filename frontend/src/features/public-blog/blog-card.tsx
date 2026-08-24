@@ -7,7 +7,7 @@ export function BlogCard({ post }: { post: PublicBlogPostSummary }) {
   return (
     <Link
       href={`/blog/${post.slug}`}
-      className="group flex flex-col overflow-hidden rounded-2xl border border-border bg-card transition-shadow hover:shadow-lg"
+      className="realty-hover-lift group flex flex-col overflow-hidden bg-card"
     >
       <div className="relative aspect-16/10 w-full overflow-hidden bg-muted">
         <Image

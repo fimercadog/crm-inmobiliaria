@@ -31,16 +31,21 @@ const REASONS = [
 export default function VenderMiPropiedadPage() {
   return (
     <PublicContainer className="flex flex-col gap-12 py-14">
-      <SectionHeading
-        level={1}
-        eyebrow="Propietarios"
-        title="¿Quieres vender o arrendar tu propiedad?"
-        description="Cuéntanos los detalles de tu inmueble y un asesor se pondrá en contacto contigo para evaluarlo y coordinar su publicación."
-      />
+      <div className="realty-animate-fade-up">
+        <SectionHeading
+          level={1}
+          eyebrow="Propietarios"
+          title="¿Quieres vender o arrendar tu propiedad?"
+          description="Cuéntanos los detalles de tu inmueble y un asesor se pondrá en contacto contigo para evaluarlo y coordinar su publicación."
+        />
+      </div>
 
       <div className="grid gap-10 lg:grid-cols-3">
-        {REASONS.map((reason) => (
-          <div key={reason.title} className="flex flex-col gap-3">
+        {REASONS.map((reason, index) => (
+          <div
+            key={reason.title}
+            className={`realty-animate-fade-up realty-hover-lift flex flex-col gap-3 ${index === 1 ? "realty-animate-delay-1" : index === 2 ? "realty-animate-delay-2" : ""}`}
+          >
             <span className="flex size-12 items-center justify-center rounded-full bg-primary/10 text-primary">
               <reason.icon className="size-5" />
             </span>
@@ -50,7 +55,7 @@ export default function VenderMiPropiedadPage() {
         ))}
       </div>
 
-      <div className="mx-auto w-full max-w-2xl">
+      <div className="realty-animate-scale-in realty-animate-delay-2 mx-auto w-full max-w-2xl">
         <OwnerLeadForm />
       </div>
     </PublicContainer>

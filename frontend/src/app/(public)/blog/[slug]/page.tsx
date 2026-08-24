@@ -44,7 +44,7 @@ export default async function BlogPostPage(props: PageProps<"/blog/[slug]">) {
 
   return (
     <PublicContainer className="flex flex-col gap-8 py-14">
-      <div className="mx-auto flex w-full max-w-3xl flex-col gap-4 text-center">
+      <div className="realty-animate-fade-up mx-auto flex w-full max-w-3xl flex-col gap-4 text-center">
         {post.published_at && (
           <p className="text-sm text-muted-foreground uppercase">
             {new Date(post.published_at).toLocaleDateString("es-CO", { year: "numeric", month: "long", day: "numeric" })}
@@ -56,7 +56,7 @@ export default async function BlogPostPage(props: PageProps<"/blog/[slug]">) {
         </h1>
       </div>
 
-      <div className="relative mx-auto aspect-16/9 w-full max-w-4xl overflow-hidden rounded-2xl bg-muted">
+      <div className="realty-animate-scale-in realty-animate-delay-1 relative mx-auto aspect-16/9 w-full max-w-4xl overflow-hidden rounded-2xl bg-muted">
         <Image
           src={post.cover_image ?? SAMPLE_PROPERTY_IMAGE}
           alt={post.cover_image ? post.title : "Interior moderno de propiedad"}
@@ -67,7 +67,9 @@ export default async function BlogPostPage(props: PageProps<"/blog/[slug]">) {
         />
       </div>
 
-      <div className="mx-auto w-full max-w-3xl whitespace-pre-line text-muted-foreground">{post.content}</div>
+      <div className="realty-animate-fade-up realty-animate-delay-2 mx-auto w-full max-w-3xl whitespace-pre-line text-muted-foreground">
+        {post.content}
+      </div>
     </PublicContainer>
   );
 }

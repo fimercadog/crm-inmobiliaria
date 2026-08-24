@@ -41,13 +41,17 @@ export async function PropertyCatalog({
 
   return (
     <PublicContainer className="flex flex-col gap-12 py-20 sm:py-24">
-      <SectionHeading level={1} title={title} description={description} align="center" />
+      <div className="realty-animate-fade-up">
+        <SectionHeading level={1} title={title} description={description} align="center" />
+      </div>
 
       <Suspense>
-        <PropertyFilters basePath={basePath} hideListingType={Boolean(lockedListingType)} />
+        <div className="realty-animate-fade-up realty-animate-delay-1">
+          <PropertyFilters basePath={basePath} hideListingType={Boolean(lockedListingType)} />
+        </div>
       </Suspense>
 
-      <p className="text-center text-xs font-extrabold tracking-wide text-[var(--realty-blue)] uppercase">
+      <p className="realty-animate-fade-up realty-animate-delay-2 text-center text-xs font-extrabold tracking-wide text-[var(--realty-blue)] uppercase">
         {meta.total} propiedades encontradas
       </p>
 
