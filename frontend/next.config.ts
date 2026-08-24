@@ -13,6 +13,9 @@ const nextConfig: NextConfig = {
         pathname: "/storage/**",
       },
     ],
+    // The dev backend runs on localhost, which Next's SSRF guard blocks by default.
+    // Only relaxed outside production, where the API host is never loopback.
+    dangerouslyAllowLocalIP: process.env.NODE_ENV !== "production",
   },
 };
 
