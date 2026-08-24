@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import Image from "next/image";
 import { notFound } from "next/navigation";
 import { PublicContainer } from "@/components/public/public-container";
+import { SAMPLE_PROPERTY_IMAGE } from "@/constants/images";
 import { fetchPublicBlogPostBySlug } from "@/lib/api/public";
 import { SITE_CONFIG } from "@/constants/site";
 
@@ -55,11 +56,16 @@ export default async function BlogPostPage(props: PageProps<"/blog/[slug]">) {
         </h1>
       </div>
 
-      {post.cover_image && (
-        <div className="relative mx-auto aspect-16/9 w-full max-w-4xl overflow-hidden rounded-2xl bg-muted">
-          <Image src={post.cover_image} alt={post.title} fill priority className="object-cover" sizes="(min-width: 1024px) 896px, 100vw" />
-        </div>
-      )}
+      <div className="relative mx-auto aspect-16/9 w-full max-w-4xl overflow-hidden rounded-2xl bg-muted">
+        <Image
+          src={post.cover_image ?? SAMPLE_PROPERTY_IMAGE}
+          alt={post.cover_image ? post.title : "Interior moderno de propiedad"}
+          fill
+          priority
+          className="object-cover"
+          sizes="(min-width: 1024px) 896px, 100vw"
+        />
+      </div>
 
       <div className="mx-auto w-full max-w-3xl whitespace-pre-line text-muted-foreground">{post.content}</div>
     </PublicContainer>

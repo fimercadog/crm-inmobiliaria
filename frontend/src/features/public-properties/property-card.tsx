@@ -1,7 +1,8 @@
 import Image from "next/image";
 import Link from "next/link";
-import { Bath, BedDouble, Car, ImageOff, MapPin, Ruler } from "lucide-react";
+import { Bath, BedDouble, Car, MapPin, Ruler } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
+import { SAMPLE_PROPERTY_IMAGE } from "@/constants/images";
 import { LISTING_TYPE_LABELS, PROPERTY_TYPE_LABELS } from "@/types/property";
 import type { PublicPropertySummary } from "@/types/public";
 import { currencyFormatter } from "@/features/public-properties/format";
@@ -15,19 +16,13 @@ export function PropertyCard({ property }: { property: PublicPropertySummary }) 
       className="group flex flex-col overflow-hidden rounded-2xl border border-border bg-card transition-shadow hover:shadow-lg"
     >
       <div className="relative aspect-4/3 w-full overflow-hidden bg-muted">
-        {property.cover_image ? (
-          <Image
-            src={property.cover_image}
-            alt={property.title}
-            fill
-            className="object-cover transition-transform duration-300 group-hover:scale-105"
-            sizes="(min-width: 1024px) 25vw, (min-width: 640px) 50vw, 100vw"
-          />
-        ) : (
-          <div className="flex size-full items-center justify-center text-muted-foreground">
-            <ImageOff className="size-8" />
-          </div>
-        )}
+        <Image
+          src={property.cover_image ?? SAMPLE_PROPERTY_IMAGE}
+          alt={property.cover_image ? property.title : "Interior moderno de propiedad"}
+          fill
+          className="object-cover transition-transform duration-300 group-hover:scale-105"
+          sizes="(min-width: 1024px) 25vw, (min-width: 640px) 50vw, 100vw"
+        />
         <div className="absolute top-3 left-3 flex gap-2">
           <Badge className="bg-primary text-primary-foreground">{LISTING_TYPE_LABELS[property.listing_type]}</Badge>
           {property.is_featured && <Badge variant="secondary">Destacada</Badge>}

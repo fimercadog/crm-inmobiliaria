@@ -2,9 +2,10 @@
 
 import { useState } from "react";
 import Image from "next/image";
-import { ChevronLeft, ChevronRight, Expand, ImageOff } from "lucide-react";
+import { ChevronLeft, ChevronRight, Expand } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Dialog, DialogContent, DialogTitle } from "@/components/ui/dialog";
+import { SAMPLE_PROPERTY_IMAGE } from "@/constants/images";
 import { cn } from "@/lib/utils";
 import type { PublicPropertyImage } from "@/types/public";
 
@@ -14,8 +15,15 @@ export function PropertyGallery({ images, title }: { images: PublicPropertyImage
 
   if (images.length === 0) {
     return (
-      <div className="flex aspect-16/10 w-full items-center justify-center rounded-2xl bg-muted text-muted-foreground">
-        <ImageOff className="size-10" />
+      <div className="relative aspect-16/10 w-full overflow-hidden rounded-2xl bg-muted">
+        <Image
+          src={SAMPLE_PROPERTY_IMAGE}
+          alt={`Imagen de ejemplo para ${title}`}
+          fill
+          priority
+          className="object-cover"
+          sizes="(min-width: 1024px) 66vw, 100vw"
+        />
       </div>
     );
   }

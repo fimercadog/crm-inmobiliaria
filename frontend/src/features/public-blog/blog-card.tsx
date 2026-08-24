@@ -1,6 +1,6 @@
 import Image from "next/image";
 import Link from "next/link";
-import { ImageOff } from "lucide-react";
+import { SAMPLE_PROPERTY_IMAGE } from "@/constants/images";
 import type { PublicBlogPostSummary } from "@/types/public";
 
 export function BlogCard({ post }: { post: PublicBlogPostSummary }) {
@@ -10,19 +10,13 @@ export function BlogCard({ post }: { post: PublicBlogPostSummary }) {
       className="group flex flex-col overflow-hidden rounded-2xl border border-border bg-card transition-shadow hover:shadow-lg"
     >
       <div className="relative aspect-16/10 w-full overflow-hidden bg-muted">
-        {post.cover_image ? (
-          <Image
-            src={post.cover_image}
-            alt={post.title}
-            fill
-            className="object-cover transition-transform duration-300 group-hover:scale-105"
-            sizes="(min-width: 1024px) 33vw, (min-width: 640px) 50vw, 100vw"
-          />
-        ) : (
-          <div className="flex size-full items-center justify-center text-muted-foreground">
-            <ImageOff className="size-8" />
-          </div>
-        )}
+        <Image
+          src={post.cover_image ?? SAMPLE_PROPERTY_IMAGE}
+          alt={post.cover_image ? post.title : "Interior moderno de propiedad"}
+          fill
+          className="object-cover transition-transform duration-300 group-hover:scale-105"
+          sizes="(min-width: 1024px) 33vw, (min-width: 640px) 50vw, 100vw"
+        />
       </div>
 
       <div className="flex flex-1 flex-col gap-2 p-5">
