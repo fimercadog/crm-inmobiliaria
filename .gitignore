@@ -1,0 +1,4 @@
+# AI agent / skills tooling — installed locally, not part of the product
+.agents/
+.claude/
+skills-lock.json
