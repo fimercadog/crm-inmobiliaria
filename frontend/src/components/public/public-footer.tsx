@@ -1,5 +1,6 @@
 import Link from "next/link";
 import Image from "next/image";
+import { PublicLogo } from "@/components/public/public-logo";
 import { PUBLIC_NAV_LINKS } from "@/constants/public-navigation";
 import { SAMPLE_PROPERTY_IMAGE } from "@/constants/images";
 import { SITE_CONFIG } from "@/constants/site";
@@ -12,9 +13,7 @@ export function PublicFooter() {
       <div className="mx-auto max-w-[1320px] px-6 py-18 lg:px-10">
         <div className="grid gap-12 lg:grid-cols-[1.5fr_1fr_1.4fr]">
           <div className="flex flex-col gap-4">
-            <Link href="/" className="text-3xl font-medium tracking-tight">
-              {SITE_CONFIG.name}
-            </Link>
+            <PublicLogo inverted markClassName="size-12" textClassName="text-white" />
             <p className="max-w-xs text-sm leading-7 text-white/65">
               Encuentra el espacio que estás buscando. Compra, arrienda o vende con acompañamiento profesional en
               cada paso.

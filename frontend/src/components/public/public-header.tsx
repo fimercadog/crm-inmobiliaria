@@ -5,9 +5,9 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { Menu } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import { PublicLogo } from "@/components/public/public-logo";
 import { Sheet, SheetClose, SheetContent, SheetHeader, SheetTitle, SheetTrigger } from "@/components/ui/sheet";
 import { PUBLIC_NAV_LINKS } from "@/constants/public-navigation";
-import { SITE_CONFIG } from "@/constants/site";
 import { cn } from "@/lib/utils";
 
 function isActive(pathname: string, href: string): boolean {
@@ -22,9 +22,7 @@ export function PublicHeader() {
   return (
     <header className="sticky top-0 z-40 border-b border-black/5 bg-white/95 backdrop-blur supports-[backdrop-filter]:bg-white/85">
       <div className="mx-auto flex h-20 max-w-[1320px] items-center justify-between gap-6 px-6 lg:px-10">
-        <Link href="/" className="flex shrink-0 items-center gap-2">
-          <span className="text-lg font-semibold tracking-tight">{SITE_CONFIG.name}</span>
-        </Link>
+        <PublicLogo textClassName="hidden sm:flex" />
 
         <nav className="hidden items-center gap-8 lg:flex">
           {PUBLIC_NAV_LINKS.map((link) => (
@@ -55,7 +53,9 @@ export function PublicHeader() {
           </SheetTrigger>
           <SheetContent side="right" className="public-theme flex w-full flex-col gap-0 sm:max-w-xs">
             <SheetHeader>
-              <SheetTitle className="font-(family-name:--font-display)">{SITE_CONFIG.name}</SheetTitle>
+              <SheetTitle asChild>
+                <PublicLogo markClassName="size-10" textClassName="items-start" />
+              </SheetTitle>
             </SheetHeader>
             <nav className="flex flex-col gap-1 px-4">
               {PUBLIC_NAV_LINKS.map((link) => (
