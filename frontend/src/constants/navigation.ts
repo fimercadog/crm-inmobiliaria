@@ -53,8 +53,8 @@ export const NAV_GROUPS: NavGroup[] = [
     title: "Sitio web",
     icon: Globe,
     items: [
-      { title: "Blog", href: "/blog" },
-      { title: "Nuevo artículo", href: "/blog/new", writeOnly: true },
+      { title: "Blog", href: "/blog-posts" },
+      { title: "Nuevo artículo", href: "/blog-posts/new", writeOnly: true },
     ],
   },
   {

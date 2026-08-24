@@ -13,7 +13,7 @@ export default function EditBlogPostPage() {
           title="Editar artículo"
           breadcrumbs={[
             { title: "Dashboard", href: "/dashboard" },
-            { title: "Blog", href: "/blog" },
+            { title: "Blog", href: "/blog-posts" },
             { title: "Editar" },
           ]}
         />

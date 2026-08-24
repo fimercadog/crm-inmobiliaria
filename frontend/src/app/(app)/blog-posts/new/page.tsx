@@ -18,7 +18,7 @@ export default function NewBlogPostPage() {
     try {
       const post = await createBlogPost(values);
       toast.success("Artículo creado correctamente");
-      router.push(`/blog/${post.id}/edit`);
+      router.push(`/blog-posts/${post.id}/edit`);
     } catch (error) {
       toast.error(error instanceof ApiError ? error.message : "No fue posible crear el artículo");
     }
@@ -32,7 +32,7 @@ export default function NewBlogPostPage() {
           description="Completa el contenido del artículo."
           breadcrumbs={[
             { title: "Dashboard", href: "/dashboard" },
-            { title: "Blog", href: "/blog" },
+            { title: "Blog", href: "/blog-posts" },
             { title: "Nuevo" },
           ]}
         />

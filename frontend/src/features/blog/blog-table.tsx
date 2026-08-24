@@ -127,7 +127,7 @@ export function BlogTable() {
         actions={
           canWrite ? (
             <Button size="sm" asChild>
-              <Link href="/blog/new">
+              <Link href="/blog-posts/new">
                 <Plus />
                 Nuevo artículo
               </Link>
@@ -149,7 +149,7 @@ export function BlogTable() {
         getRowId={(row) => String(row.id)}
         meta={{
           requestDelete: setPendingDelete,
-          navigateToEdit: (id: number) => router.push(`/blog/${id}/edit`),
+          navigateToEdit: (id: number) => router.push(`/blog-posts/${id}/edit`),
         }}
       />
 

@@ -58,7 +58,7 @@ export function EditBlogView() {
     try {
       await updateBlogPost(postId, values);
       toast.success("Artículo actualizado correctamente");
-      router.push("/blog");
+      router.push("/blog-posts");
     } catch (err) {
       toast.error(err instanceof ApiError ? err.message : "No fue posible actualizar el artículo");
     }
