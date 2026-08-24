@@ -1,6 +1,6 @@
 import type { Metadata } from "next";
 import Link from "next/link";
-import { Award, Handshake, ShieldCheck } from "lucide-react";
+import { Home, KeyRound, Search, Star } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { PublicContainer } from "@/components/public/public-container";
 import { SectionHeading } from "@/components/public/section-heading";
@@ -15,21 +15,26 @@ export const metadata: Metadata = {
   description: "Compra, arrienda o vende tu propiedad con el acompañamiento de un equipo inmobiliario profesional.",
 };
 
-const VALUE_PROPS = [
+const ACTIONS = [
   {
-    icon: ShieldCheck,
-    title: "Acompañamiento confiable",
-    description: "Te guiamos en cada paso del proceso, desde la primera visita hasta la firma final.",
+    icon: Home,
+    title: "Comprar",
+    href: "/comprar",
   },
   {
-    icon: Handshake,
-    title: "Negociación a tu favor",
-    description: "Conocemos el mercado local y trabajamos para conseguir las mejores condiciones.",
+    icon: KeyRound,
+    title: "Arrendar",
+    href: "/arrendar",
   },
   {
-    icon: Award,
-    title: "Propiedades verificadas",
-    description: "Cada inmueble publicado pasa por un proceso de validación antes de salir al mercado.",
+    icon: Search,
+    title: "Vender",
+    href: "/vender-mi-propiedad",
+  },
+  {
+    icon: Star,
+    title: "Nuevas",
+    href: "/propiedades",
   },
 ];
 
@@ -42,57 +47,67 @@ export default async function HomePage() {
         <PropertySearch />
       </HeroSection>
 
-      <section className="py-20">
-        <PublicContainer className="flex flex-col gap-10">
+      <PublicContainer className="-mt-18 relative z-10">
+        <div className="grid bg-black text-white sm:grid-cols-4">
+          {ACTIONS.map((item, index) => (
+            <Link
+              key={item.href}
+              href={item.href}
+              className={`flex min-h-36 flex-col items-center justify-center gap-4 text-center text-[0.68rem] font-extrabold uppercase tracking-wide transition-colors hover:bg-[var(--realty-accent)] ${index === 3 ? "bg-[var(--realty-accent)]" : ""}`}
+            >
+              <item.icon className="size-7" />
+              {item.title}
+            </Link>
+          ))}
+        </div>
+      </PublicContainer>
+
+      <section className="py-24">
+        <PublicContainer className="flex flex-col gap-12">
           <SectionHeading
-            eyebrow="Selección del equipo"
+            eyebrow="Listings"
             title="Propiedades destacadas"
             description="Una muestra de los inmuebles más solicitados esta semana."
           />
           <PropertyGrid properties={featured} />
           <div className="flex justify-center">
-            <Button asChild variant="outline" size="lg">
+            <Button asChild variant="outline" size="lg" className="rounded-full border-2 border-[var(--realty-accent)] px-6 text-[0.68rem] font-extrabold uppercase text-[var(--realty-accent)] hover:bg-[var(--realty-accent)] hover:text-white">
               <Link href="/propiedades">Ver todas las propiedades</Link>
             </Button>
           </div>
         </PublicContainer>
       </section>
 
-      <section className="bg-secondary/40 py-20">
-        <PublicContainer className="flex flex-col gap-12">
-          <SectionHeading
-            eyebrow="Por qué elegirnos"
-            title="Una experiencia inmobiliaria sin fricciones"
-            align="center"
-          />
-          <div className="grid gap-8 sm:grid-cols-3">
-            {VALUE_PROPS.map((item) => (
-              <div key={item.title} className="flex flex-col items-center gap-3 text-center">
-                <span className="flex size-14 items-center justify-center rounded-full bg-primary/10 text-primary">
-                  <item.icon className="size-6" />
-                </span>
-                <h3 className="font-(family-name:--font-display) text-lg font-semibold">{item.title}</h3>
-                <p className="text-sm text-muted-foreground">{item.description}</p>
-              </div>
-            ))}
+      <section className="bg-[var(--realty-surface)] py-24">
+        <PublicContainer className="grid gap-12 lg:grid-cols-2">
+          <SectionHeading eyebrow="Por qué elegirnos" title="Expertos en los que puedes confiar" />
+          <div className="grid gap-8">
+            <div>
+              <h3 className="text-xl font-semibold">Explora propiedades con acompañamiento real</h3>
+              <p className="mt-3 max-w-xl text-sm leading-7 text-muted-foreground">
+                Te guiamos en cada paso del proceso, desde la primera visita hasta la firma final.
+              </p>
+              <Link href="/propiedades" className="realty-button mt-5">Ver propiedades</Link>
+            </div>
+            <div>
+              <h3 className="text-xl font-semibold">Publica tu inmueble con mayor claridad</h3>
+              <p className="mt-3 max-w-xl text-sm leading-7 text-muted-foreground">
+                Conocemos el mercado local y trabajamos para conseguir las mejores condiciones.
+              </p>
+              <Link href="/vender-mi-propiedad" className="realty-button mt-5">Empezar</Link>
+            </div>
           </div>
         </PublicContainer>
       </section>
 
-      <section className="py-20">
-        <PublicContainer>
-          <div className="flex flex-col items-center gap-6 rounded-3xl bg-primary px-6 py-16 text-center text-primary-foreground sm:px-16">
-            <h2 className="font-(family-name:--font-display) text-3xl font-semibold tracking-tight text-balance sm:text-4xl">
-              ¿Quieres vender o arrendar tu propiedad?
-            </h2>
-            <p className="max-w-xl text-primary-foreground/85">
-              Cuéntanos sobre tu inmueble y un asesor se pondrá en contacto contigo para coordinar la publicación.
-            </p>
-            <Button asChild size="lg" variant="secondary">
-              <Link href="/vender-mi-propiedad">Publica tu propiedad</Link>
-            </Button>
-          </div>
-        </PublicContainer>
+      <section className="py-24 text-center">
+        <p className="realty-eyebrow">Looking for agent?</p>
+        <h2 className="mx-auto mt-6 max-w-4xl text-4xl font-medium text-balance sm:text-5xl lg:text-6xl">
+          Deja los detalles en nuestras manos y vive mejor tu próximo paso.
+        </h2>
+        <Link href="/contacto" className="mt-10 inline-flex min-h-10 items-center justify-center rounded-full bg-[var(--realty-accent)] px-7 text-[0.68rem] font-extrabold uppercase text-white transition-colors hover:bg-[var(--realty-accent)]/90">
+          Contactar asesor
+        </Link>
       </section>
     </>
   );

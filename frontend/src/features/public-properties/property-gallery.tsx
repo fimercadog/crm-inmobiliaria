@@ -15,7 +15,7 @@ export function PropertyGallery({ images, title }: { images: PublicPropertyImage
 
   if (images.length === 0) {
     return (
-      <div className="relative aspect-16/10 w-full overflow-hidden rounded-2xl bg-muted">
+      <div className="relative aspect-16/10 w-full overflow-hidden bg-muted">
         <Image
           src={SAMPLE_PROPERTY_IMAGE}
           alt={`Imagen de ejemplo para ${title}`}
@@ -39,9 +39,9 @@ export function PropertyGallery({ images, title }: { images: PublicPropertyImage
       <button
         type="button"
         onClick={() => setLightboxOpen(true)}
-        className="group relative aspect-16/10 w-full overflow-hidden rounded-2xl bg-muted"
+        className="group relative aspect-16/10 w-full overflow-hidden bg-muted"
       >
-        <Image src={active.url} alt={active.alt ?? title} fill priority className="object-cover" sizes="(min-width: 1024px) 66vw, 100vw" />
+        <Image src={active.url} alt={active.alt ?? title} fill priority className="object-cover grayscale" sizes="(min-width: 1024px) 66vw, 100vw" />
         <span className="absolute right-3 bottom-3 flex items-center gap-1.5 rounded-full bg-foreground/80 px-3 py-1.5 text-xs font-medium text-background opacity-0 transition-opacity group-hover:opacity-100">
           <Expand className="size-3.5" />
           Ampliar
@@ -56,7 +56,7 @@ export function PropertyGallery({ images, title }: { images: PublicPropertyImage
               type="button"
               onClick={() => goTo(index)}
               className={cn(
-                "relative aspect-square overflow-hidden rounded-lg ring-2 ring-transparent transition-all",
+                "relative aspect-square overflow-hidden ring-2 ring-transparent transition-all",
                 index === activeIndex && "ring-primary",
               )}
             >

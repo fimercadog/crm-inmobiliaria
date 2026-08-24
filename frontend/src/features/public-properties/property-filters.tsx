@@ -52,7 +52,7 @@ export function PropertyFilters({ basePath = "/propiedades", hideListingType = f
   }
 
   return (
-    <form onSubmit={handleSubmit} className="flex flex-col gap-4 rounded-2xl border border-border bg-card p-5">
+    <form onSubmit={handleSubmit} className="flex flex-col gap-4 bg-[var(--realty-surface)] p-5">
       <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-4">
         {!hideListingType && (
           <Select value={selectValue(searchParams.get("listing_type"))} onValueChange={(v) => updateParam("listing_type", v)}>
@@ -116,7 +116,7 @@ export function PropertyFilters({ basePath = "/propiedades", hideListingType = f
         <Input type="number" min={0} placeholder="Precio máximo" value={priceMax} onChange={(e) => setPriceMax(e.target.value)} />
       </div>
 
-      <Button type="submit" className="sm:w-fit">
+      <Button type="submit" className="h-9 rounded-full bg-[var(--realty-accent)] px-5 text-[0.68rem] font-extrabold uppercase text-white hover:bg-[var(--realty-accent)]/90 sm:w-fit">
         <Search />
         Aplicar filtros
       </Button>

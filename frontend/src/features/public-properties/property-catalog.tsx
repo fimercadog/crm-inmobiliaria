@@ -40,14 +40,16 @@ export async function PropertyCatalog({
   const { items, meta } = await fetchPublicProperties(page, filters, search);
 
   return (
-    <PublicContainer className="flex flex-col gap-8 py-14">
-      <SectionHeading level={1} title={title} description={description} />
+    <PublicContainer className="flex flex-col gap-12 py-20 sm:py-24">
+      <SectionHeading level={1} title={title} description={description} align="center" />
 
       <Suspense>
         <PropertyFilters basePath={basePath} hideListingType={Boolean(lockedListingType)} />
       </Suspense>
 
-      <p className="text-sm text-muted-foreground">{meta.total} propiedades encontradas</p>
+      <p className="text-center text-xs font-extrabold tracking-wide text-[var(--realty-blue)] uppercase">
+        {meta.total} propiedades encontradas
+      </p>
 
       <PropertyGrid properties={items} />
 

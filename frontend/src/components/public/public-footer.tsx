@@ -1,36 +1,32 @@
 import Link from "next/link";
-import { Building2, Mail, MapPin, Phone } from "lucide-react";
+import Image from "next/image";
 import { PUBLIC_NAV_LINKS } from "@/constants/public-navigation";
+import { SAMPLE_PROPERTY_IMAGE } from "@/constants/images";
 import { SITE_CONFIG } from "@/constants/site";
 
 const currentYear = new Date().getFullYear();
 
 export function PublicFooter() {
   return (
-    <footer className="border-t border-border bg-secondary/40">
-      <div className="mx-auto max-w-7xl px-4 py-14 sm:px-6 lg:px-8">
-        <div className="grid gap-10 sm:grid-cols-2 lg:grid-cols-4">
+    <footer className="bg-[var(--realty-footer)] text-white">
+      <div className="mx-auto max-w-[1320px] px-6 py-18 lg:px-10">
+        <div className="grid gap-12 lg:grid-cols-[1.5fr_1fr_1.4fr]">
           <div className="flex flex-col gap-4">
-            <Link href="/" className="flex items-center gap-2">
-              <span className="flex size-9 items-center justify-center rounded-full bg-primary text-primary-foreground">
-                <Building2 className="size-4.5" />
-              </span>
-              <span className="font-(family-name:--font-display) text-lg font-semibold tracking-tight">
-                {SITE_CONFIG.name}
-              </span>
+            <Link href="/" className="text-3xl font-medium tracking-tight">
+              {SITE_CONFIG.name}
             </Link>
-            <p className="max-w-xs text-sm text-muted-foreground">
+            <p className="max-w-xs text-sm leading-7 text-white/65">
               Encuentra el espacio que estás buscando. Compra, arrienda o vende con acompañamiento profesional en
               cada paso.
             </p>
           </div>
 
           <div className="flex flex-col gap-3">
-            <h3 className="font-(family-name:--font-display) text-sm font-semibold">Navegación</h3>
+            <h3 className="text-xs font-extrabold tracking-wide text-white uppercase">Navegación</h3>
             <ul className="flex flex-col gap-2">
               {PUBLIC_NAV_LINKS.map((link) => (
                 <li key={link.href}>
-                  <Link href={link.href} className="text-sm text-muted-foreground transition-colors hover:text-primary">
+                  <Link href={link.href} className="text-sm text-white/65 transition-colors hover:text-white">
                     {link.title}
                   </Link>
                 </li>
@@ -39,61 +35,24 @@ export function PublicFooter() {
           </div>
 
           <div className="flex flex-col gap-3">
-            <h3 className="font-(family-name:--font-display) text-sm font-semibold">Propiedades</h3>
-            <ul className="flex flex-col gap-2">
-              <li>
-                <Link href="/comprar" className="text-sm text-muted-foreground transition-colors hover:text-primary">
-                  Comprar
-                </Link>
-              </li>
-              <li>
-                <Link href="/arrendar" className="text-sm text-muted-foreground transition-colors hover:text-primary">
-                  Arrendar
-                </Link>
-              </li>
-              <li>
-                <Link href="/vender-mi-propiedad" className="text-sm text-muted-foreground transition-colors hover:text-primary">
-                  Vender mi propiedad
-                </Link>
-              </li>
-            </ul>
-          </div>
-
-          <div className="flex flex-col gap-3">
-            <h3 className="font-(family-name:--font-display) text-sm font-semibold">Contacto</h3>
-            <ul className="flex flex-col gap-3">
-              <li className="flex items-start gap-2 text-sm text-muted-foreground">
-                <MapPin className="mt-0.5 size-4 shrink-0" />
-                <span>{SITE_CONFIG.address}</span>
-              </li>
-              <li className="flex items-center gap-2 text-sm text-muted-foreground">
-                <Phone className="size-4 shrink-0" />
-                <a href={`tel:${SITE_CONFIG.phone.replace(/\s+/g, "")}`} className="transition-colors hover:text-primary">
-                  {SITE_CONFIG.phone}
-                </a>
-              </li>
-              <li className="flex items-center gap-2 text-sm text-muted-foreground">
-                <Mail className="size-4 shrink-0" />
-                <a href={`mailto:${SITE_CONFIG.email}`} className="transition-colors hover:text-primary">
-                  {SITE_CONFIG.email}
-                </a>
-              </li>
-            </ul>
+            <h3 className="text-xs font-extrabold tracking-wide text-white uppercase">Contacto</h3>
+            <a href={`tel:${SITE_CONFIG.phone.replace(/\s+/g, "")}`} className="text-3xl font-medium tracking-tight transition-colors hover:text-[var(--realty-accent)]">
+              {SITE_CONFIG.phone}
+            </a>
+            <p className="max-w-xs text-sm leading-7 text-white/65">{SITE_CONFIG.address}</p>
+            <a href={`mailto:${SITE_CONFIG.email}`} className="text-sm text-white/65 transition-colors hover:text-white">
+              {SITE_CONFIG.email}
+            </a>
           </div>
         </div>
 
-        <div className="mt-12 flex flex-col items-center justify-between gap-4 border-t border-border pt-6 text-xs text-muted-foreground sm:flex-row">
-          <p>
-            © {currentYear} {SITE_CONFIG.name}. Todos los derechos reservados.
-          </p>
-          <div className="flex gap-4">
-            <Link href="/contacto" className="transition-colors hover:text-primary">
-              Términos
-            </Link>
-            <Link href="/contacto" className="transition-colors hover:text-primary">
-              Privacidad
-            </Link>
-          </div>
+        <div className="relative mt-14 h-36 overflow-hidden bg-white/5 lg:aspect-[6/1] lg:h-auto lg:min-h-36">
+          <Image src={SAMPLE_PROPERTY_IMAGE} alt="" fill className="object-cover opacity-45 grayscale" sizes="(min-width: 1024px) 1200px, 100vw" />
+          <div className="absolute inset-0 bg-black/30" />
+        </div>
+
+        <div className="mt-10 text-center text-xs text-white/35">
+          © {currentYear} {SITE_CONFIG.name}. Todos los derechos reservados.
         </div>
       </div>
     </footer>

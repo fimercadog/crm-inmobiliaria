@@ -37,7 +37,7 @@ export function PropertySearch() {
   return (
     <form
       onSubmit={handleSearch}
-      className="flex flex-col gap-4 rounded-2xl border border-border bg-card p-5 shadow-xl sm:p-6"
+      className="flex flex-col gap-3 border border-white/35 bg-white/10 p-4 text-left backdrop-blur-sm"
     >
       <Tabs value={listingType} onValueChange={(value) => setListingType(value as ListingTypeValue)}>
         <TabsList>
@@ -81,9 +81,9 @@ export function PropertySearch() {
           onChange={(event) => setPriceMax(event.target.value)}
         />
 
-        <Button type="submit" className="w-full">
+        <Button type="submit" className="w-full rounded-none bg-white px-3 text-[0.62rem] font-extrabold uppercase text-[var(--realty-primary)] hover:bg-white/90">
           <Search />
-          Buscar propiedades
+          Buscar
         </Button>
       </div>
     </form>

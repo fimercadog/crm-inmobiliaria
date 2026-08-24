@@ -66,18 +66,18 @@ export default async function PropertyDetailPage(props: PageProps<"/propiedades/
   };
 
   return (
-    <PublicContainer className="flex flex-col gap-8 py-10">
+    <PublicContainer className="flex flex-col gap-16 py-16 sm:py-20">
       <script
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd).replace(/</g, "\\u003c") }}
       />
 
-      <div className="flex flex-col gap-2">
+      <div className="flex max-w-5xl flex-col gap-4">
         <div className="flex flex-wrap items-center gap-2">
-          <Badge className="bg-primary text-primary-foreground">{LISTING_TYPE_LABELS[property.listing_type]}</Badge>
-          <span className="text-xs text-muted-foreground">{property.code}</span>
+          <Badge className="rounded-full bg-[var(--realty-accent)] text-white">{LISTING_TYPE_LABELS[property.listing_type]}</Badge>
+          <span className="text-xs font-extrabold tracking-wide text-muted-foreground uppercase">{property.code}</span>
         </div>
-        <h1 className="font-(family-name:--font-display) text-3xl font-semibold tracking-tight sm:text-4xl">
+        <h1 className="font-sans text-4xl font-medium tracking-normal text-balance sm:text-5xl lg:text-6xl">
           {property.title}
         </h1>
         <p className="flex items-center gap-1.5 text-muted-foreground">
@@ -86,35 +86,31 @@ export default async function PropertyDetailPage(props: PageProps<"/propiedades/
         </p>
       </div>
 
-      <div className="grid gap-10 lg:grid-cols-3">
-        <div className="flex flex-col gap-8 lg:col-span-2">
+      <div className="grid gap-16 lg:grid-cols-[minmax(0,2fr)_380px]">
+        <div className="flex flex-col gap-8">
           <PropertyGallery images={property.images} title={property.title} />
 
-          <div className="flex flex-col gap-1">
-            <p className="font-(family-name:--font-display) text-3xl font-semibold text-primary">
-              {currencyFormatter.format(property.price)}
-            </p>
-            {property.admin_fee !== null && (
-              <p className="text-sm text-muted-foreground">+ {currencyFormatter.format(property.admin_fee)} de administración</p>
-            )}
-          </div>
-
-          <PropertyFeatures property={property} />
-
           {property.description && (
-            <div className="flex flex-col gap-3">
-              <h2 className="font-(family-name:--font-display) text-xl font-semibold">Descripción</h2>
-              <p className="whitespace-pre-line text-muted-foreground">{property.description}</p>
+            <div className="border-t border-black/10 pt-8">
+              <h2 className="text-3xl font-medium">Descripción</h2>
+              <p className="mt-6 max-w-4xl whitespace-pre-line text-sm leading-8 text-muted-foreground">{property.description}</p>
             </div>
           )}
 
+          <div className="pt-8">
+            <h2 className="text-3xl font-medium">Detalles de la propiedad</h2>
+            <div className="mt-8">
+              <PropertyFeatures property={property} />
+            </div>
+          </div>
+
           {property.features.length > 0 && (
-            <div className="flex flex-col gap-3">
-              <h2 className="font-(family-name:--font-display) text-xl font-semibold">Características adicionales</h2>
-              <ul className="grid grid-cols-2 gap-2 sm:grid-cols-3">
+            <div className="flex flex-col gap-5">
+              <h2 className="text-3xl font-medium">Características adicionales</h2>
+              <ul className="grid grid-cols-2 gap-x-12 gap-y-4 sm:grid-cols-3">
                 {property.features.map((feature) => (
                   <li key={feature} className="flex items-center gap-2 text-sm text-muted-foreground">
-                    <span className="size-1.5 shrink-0 rounded-full bg-primary" />
+                    <span className="size-1.5 shrink-0 rounded-full bg-[var(--realty-accent)]" />
                     {feature}
                   </li>
                 ))}
@@ -123,9 +119,23 @@ export default async function PropertyDetailPage(props: PageProps<"/propiedades/
           )}
         </div>
 
-        <div className="lg:sticky lg:top-24 lg:h-fit">
+        <aside className="flex flex-col gap-8 lg:sticky lg:top-28 lg:h-fit">
+          <div className="bg-[var(--realty-surface)] p-8">
+            <p className="text-3xl font-extrabold text-[var(--realty-primary)]">{currencyFormatter.format(property.price)}</p>
+            {property.admin_fee !== null && (
+              <p className="mt-3 text-sm text-muted-foreground">+ {currencyFormatter.format(property.admin_fee)} de administración</p>
+            )}
+            <div className="mt-8 border-t border-black/10 pt-6 text-sm font-extrabold text-[var(--realty-primary)]">
+              {[
+                property.bedrooms !== null ? `${property.bedrooms} habitaciones` : null,
+                property.bathrooms !== null ? `${property.bathrooms} baños` : null,
+                (property.built_area ?? property.private_area) !== null ? `${property.built_area ?? property.private_area} m²` : null,
+              ].filter(Boolean).join(", ")}
+            </div>
+            <p className="mt-3 text-sm text-muted-foreground">{location}</p>
+          </div>
           <PropertyCTA propertyId={property.id} title={property.title} code={property.code} />
-        </div>
+        </aside>
       </div>
     </PublicContainer>
   );

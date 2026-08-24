@@ -3,7 +3,7 @@
 import { useState } from "react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { Building2, Menu } from "lucide-react";
+import { Menu } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Sheet, SheetClose, SheetContent, SheetHeader, SheetTitle, SheetTrigger } from "@/components/ui/sheet";
 import { PUBLIC_NAV_LINKS } from "@/constants/public-navigation";
@@ -20,25 +20,20 @@ export function PublicHeader() {
   const [mobileOpen, setMobileOpen] = useState(false);
 
   return (
-    <header className="sticky top-0 z-40 border-b border-border bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/80">
-      <div className="mx-auto flex h-18 max-w-7xl items-center justify-between gap-4 px-4 sm:px-6 lg:px-8">
-        <Link href="/" className="flex items-center gap-2 shrink-0">
-          <span className="flex size-9 items-center justify-center rounded-full bg-primary text-primary-foreground">
-            <Building2 className="size-4.5" />
-          </span>
-          <span className="font-(family-name:--font-display) text-lg font-semibold tracking-tight">
-            {SITE_CONFIG.name}
-          </span>
+    <header className="sticky top-0 z-40 border-b border-black/5 bg-white/95 backdrop-blur supports-[backdrop-filter]:bg-white/85">
+      <div className="mx-auto flex h-20 max-w-[1320px] items-center justify-between gap-6 px-6 lg:px-10">
+        <Link href="/" className="flex shrink-0 items-center gap-2">
+          <span className="text-lg font-semibold tracking-tight">{SITE_CONFIG.name}</span>
         </Link>
 
-        <nav className="hidden items-center gap-1 lg:flex">
+        <nav className="hidden items-center gap-8 lg:flex">
           {PUBLIC_NAV_LINKS.map((link) => (
             <Link
               key={link.href}
               href={link.href}
               className={cn(
-                "rounded-full px-4 py-2 text-sm font-medium transition-colors hover:bg-accent hover:text-accent-foreground",
-                isActive(pathname, link.href) ? "text-primary" : "text-foreground/80",
+                "text-xs font-bold tracking-wide text-foreground/75 uppercase transition-colors hover:text-foreground",
+                isActive(pathname, link.href) ? "text-foreground" : "text-foreground/70",
               )}
             >
               {link.title}
@@ -47,7 +42,7 @@ export function PublicHeader() {
         </nav>
 
         <div className="hidden shrink-0 lg:block">
-          <Button asChild size="sm">
+          <Button asChild size="sm" className="h-9 rounded-full bg-[var(--realty-accent)] px-5 text-[0.68rem] font-extrabold uppercase text-white hover:bg-[var(--realty-accent)]/90">
             <Link href="/vender-mi-propiedad">Vende tu propiedad</Link>
           </Button>
         </div>

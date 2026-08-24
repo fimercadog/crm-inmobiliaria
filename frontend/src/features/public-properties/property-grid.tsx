@@ -15,7 +15,7 @@ export function PropertyGrid({ properties }: { properties: PublicPropertySummary
   }
 
   return (
-    <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3">
+    <div className="grid grid-cols-1 gap-x-12 gap-y-18 sm:grid-cols-2 lg:grid-cols-3">
       {properties.map((property) => (
         <PropertyCard key={property.id} property={property} />
       ))}
