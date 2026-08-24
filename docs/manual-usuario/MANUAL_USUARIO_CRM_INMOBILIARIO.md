@@ -529,6 +529,20 @@ El CRM privado requiere iniciar sesión.
 
 Si las credenciales son correctas, el sistema abre el dashboard.
 
+## 15.4 Usuarios de prueba
+
+Para capacitación, demostraciones o revisión inicial del sistema, se pueden usar los siguientes usuarios de prueba.
+
+> **Importante:** todos los usuarios de prueba tienen la contraseña `password`.
+
+| Email | Rol |
+| --- | --- |
+| `admin@crm.test` | admin |
+| `agente@crm.test` | agente |
+| `asistente@crm.test` | asistente |
+
+> **Consejo:** use el usuario administrador para revisar todo el sistema, el agente para practicar operación comercial y el asistente para validar la experiencia de consulta.
+
 ---
 
 # Capítulo 16 - Recuperar contraseña
@@ -1549,4 +1563,3 @@ Antes de entregar este documento se verificó:
 - No se incluyeron contraseñas en capturas.
 - No se documentaron endpoints ni detalles técnicos para usuario final.
 - Las funciones no observadas como independientes se describieron según su ubicación real.
-
