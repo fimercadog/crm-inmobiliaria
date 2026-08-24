@@ -1,0 +1,1772 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8" />
+<title>Manual de Usuario — Sistema Inmobiliario</title>
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<style>
+:root {
+  --navy: #10213f;
+  --navy-deep: #0a1730;
+  --gold: #b8863f;
+  --gold-light: #d9ac6b;
+  --ink: #1c2430;
+  --ink-soft: #4b5563;
+  --line: #e2e5ea;
+  --paper: #ffffff;
+  --paper-soft: #f6f7f9;
+  --success: #16794f;
+  --warn-bg: #fdf3e7;
+  --warn-border: #c8862c;
+  --tip-bg: #eef6f2;
+  --tip-border: #1f8a5f;
+  --pin-bg: #eef2fb;
+  --pin-border: #33538f;
+}
+
+* { box-sizing: border-box; }
+
+html, body {
+  margin: 0;
+  padding: 0;
+  background: var(--paper);
+  color: var(--ink);
+  font-family: "Segoe UI", "Helvetica Neue", Arial, sans-serif;
+  font-size: 11.5pt;
+  line-height: 1.55;
+}
+
+h1, h2, h3, h4 {
+  font-family: Georgia, "Iowan Old Style", "Times New Roman", serif;
+  color: var(--navy-deep);
+  font-weight: 700;
+  line-height: 1.25;
+}
+
+h1 { font-size: 22pt; margin: 0 0 6mm 0; padding-bottom: 3mm; border-bottom: 2.5pt solid var(--gold); }
+h2 { font-size: 15pt; margin: 10mm 0 4mm 0; color: var(--navy); }
+h3 { font-size: 12.5pt; margin: 7mm 0 3mm 0; color: var(--navy); }
+h4 { font-size: 11.5pt; margin: 6mm 0 2mm 0; color: var(--ink); }
+
+p { margin: 0 0 3.2mm 0; }
+ul, ol { margin: 0 0 3.2mm 0; padding-left: 6mm; }
+li { margin-bottom: 1mm; }
+
+a { color: var(--navy); text-decoration: none; border-bottom: 0.5pt solid var(--gold-light); }
+
+strong { color: var(--navy-deep); }
+
+code, pre {
+  font-family: "Consolas", "SFMono-Regular", Menlo, monospace;
+  font-size: 9.5pt;
+}
+pre {
+  background: var(--paper-soft);
+  border: 0.5pt solid var(--line);
+  border-radius: 3px;
+  padding: 4mm;
+  overflow-x: auto;
+  white-space: pre-wrap;
+  line-height: 1.45;
+  margin: 0 0 4mm 0;
+}
+p code { background: var(--paper-soft); padding: 0.5pt 1.2mm; border-radius: 2px; }
+
+hr { border: none; border-top: 0.5pt solid var(--line); margin: 6mm 0; }
+
+/* ---------- Tables ---------- */
+.table-wrap { overflow-x: auto; margin: 0 0 5mm 0; }
+table {
+  border-collapse: collapse;
+  width: 100%;
+  font-size: 10pt;
+}
+th, td {
+  border: 0.5pt solid var(--line);
+  padding: 2.2mm 3mm;
+  text-align: left;
+  vertical-align: top;
+}
+thead th {
+  background: var(--navy);
+  color: #fff;
+  font-family: Georgia, serif;
+  font-weight: 700;
+  font-size: 9.8pt;
+}
+tbody tr:nth-child(even) { background: var(--paper-soft); }
+
+/* ---------- Callouts ---------- */
+blockquote.callout {
+  margin: 0 0 4.5mm 0;
+  padding: 3.2mm 5mm;
+  border-left: 3pt solid var(--line);
+  border-radius: 3px;
+  background: var(--paper-soft);
+  font-size: 10.5pt;
+}
+blockquote.callout p { margin: 0; }
+blockquote.callout-warning { background: var(--warn-bg); border-left-color: var(--warn-border); }
+blockquote.callout-tip { background: var(--tip-bg); border-left-color: var(--tip-border); }
+blockquote.callout-pin { background: var(--pin-bg); border-left-color: var(--pin-border); }
+blockquote.callout-note { background: var(--paper-soft); border-left-color: var(--ink-soft); }
+
+/* ---------- Figures / screenshots ---------- */
+figure.screenshot {
+  margin: 0 0 6mm 0;
+  padding: 2.5mm;
+  border: 0.75pt solid var(--line);
+  border-radius: 4px;
+  background: var(--paper-soft);
+  page-break-inside: avoid;
+  break-inside: avoid;
+}
+figure.screenshot img {
+  display: block;
+  width: auto;
+  height: auto;
+  max-width: 100%;
+  /* A4 content height is ~261mm (297mm - 20mm top - 16mm bottom margin);
+     cap well under that so a very tall full-page screenshot always fits
+     on a single page instead of being pushed to a blank page and then
+     re-flowed onto the next one. */
+  max-height: 225mm;
+  margin: 0 auto;
+  border-radius: 2px;
+  border: 0.5pt solid var(--line);
+}
+figure.screenshot figcaption {
+  margin-top: 2mm;
+  font-size: 9pt;
+  color: var(--ink-soft);
+  font-style: italic;
+  text-align: center;
+}
+
+/* ---------- Page breaks ----------
+   Every chapter heading is already preceded by an explicit \pagebreak
+   marker (rendered below as .pagebreak) in the source markdown, so h1
+   itself must NOT also force a break — doing both stacks two forced
+   breaks back to back and Chromium renders that as a genuinely blank
+   page between them. */
+.pagebreak { break-before: page; page-break-before: always; }
+section.cover, section.control-sheet, section.toc { page-break-before: avoid; break-before: avoid; }
+
+/* ---------- Cover ---------- */
+section.cover {
+  height: 250mm;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: radial-gradient(circle at 30% 20%, #16294d 0%, var(--navy-deep) 55%, #060d1e 100%);
+  color: #fff;
+  text-align: center;
+  border-radius: 0;
+  break-after: page;
+  page-break-after: always;
+}
+.cover-inner { padding: 0 20mm; }
+.cover-badge { font-size: 34pt; margin-bottom: 6mm; }
+.cover-eyebrow {
+  text-transform: uppercase;
+  letter-spacing: 4pt;
+  font-size: 10pt;
+  color: var(--gold-light);
+  margin: 0 0 4mm 0;
+  font-weight: 600;
+}
+.cover-title {
+  font-family: Georgia, serif;
+  font-size: 40pt;
+  margin: 0 0 4mm 0;
+  color: #fff;
+  border: none;
+  padding: 0;
+}
+.cover-subtitle { font-size: 14pt; color: #cfd7e8; margin: 0 0 12mm 0; }
+.cover-meta { font-size: 10pt; color: #9fadc9; letter-spacing: 0.5pt; }
+.cover-meta .dot { margin: 0 3mm; color: var(--gold); }
+
+/* ---------- Control sheet ---------- */
+section.control-sheet { break-after: page; page-break-after: always; padding-top: 6mm; }
+.section-kicker {
+  font-family: Georgia, serif;
+  font-size: 16pt;
+  color: var(--navy-deep);
+  border-bottom: 2.5pt solid var(--gold);
+  padding-bottom: 3mm;
+  margin: 0 0 6mm 0;
+}
+.control-table th {
+  background: var(--paper-soft);
+  width: 45mm;
+  font-family: "Segoe UI", sans-serif;
+  color: var(--navy-deep);
+}
+
+/* ---------- TOC ---------- */
+section.toc { break-after: page; page-break-after: always; }
+.toc-list { list-style: none; padding-left: 0; column-count: 1; }
+.toc-list li { margin-bottom: 1.5mm; font-size: 10.5pt; }
+.toc-list li a { border-bottom: none; color: var(--ink); }
+.toc-list li a:hover { color: var(--navy-deep); }
+.toc-part {
+  font-family: Georgia, serif;
+  font-weight: 700;
+  color: var(--gold-light);
+  background: var(--navy-deep);
+  padding: 2mm 3mm;
+  border-radius: 3px;
+  margin: 4mm 0 2mm 0 !important;
+  color: #fff;
+  font-size: 10.5pt;
+  letter-spacing: 0.5pt;
+}
+
+/* screen-only niceties (ignored in print) */
+@media screen {
+  body { max-width: 900px; margin: 0 auto; padding: 0 6mm 20mm 6mm; }
+  section.cover { border-radius: 10px; margin-top: 10mm; }
+}
+</style>
+</head>
+<body>
+
+<section class="cover">
+  <div class="cover-inner">
+    <div class="cover-badge">📘</div>
+    <p class="cover-eyebrow">Manual de Usuario</p>
+    <h1 class="cover-title">Sistema Inmobiliario</h1>
+    <p class="cover-subtitle">Sitio Web Público + CRM Inmobiliario</p>
+    <div class="cover-meta">
+      <span>Inmobiliaria Prime</span>
+      <span class="dot">•</span>
+      <span>Versión 1.0</span>
+      <span class="dot">•</span>
+      <span>23 de agosto de 2026</span>
+    </div>
+  </div>
+</section>
+
+<section class="control-sheet">
+  <h2 class="section-kicker">Ficha de control del documento</h2>
+  <table class="control-table">
+    <tbody>
+      <tr><th>Nombre del sistema</th><td>Sistema Inmobiliario (Web pública + CRM)</td></tr>
+      <tr><th>Documento</th><td>Manual de Usuario</td></tr>
+      <tr><th>Versión del manual</th><td>1.0</td></tr>
+      <tr><th>Fecha de emisión</th><td>23 de agosto de 2026</td></tr>
+      <tr><th>Estado</th><td>Definitivo — basado en inspección directa del sistema real</td></tr>
+      <tr><th>Audiencia</th><td>Administradores, agentes inmobiliarios, asistentes y personal nuevo</td></tr>
+      <tr><th>Idioma</th><td>Español</td></tr>
+    </tbody>
+  </table>
+  <blockquote class="callout callout-pin">
+    <p>📌 <strong>Nota de veracidad:</strong> todo el contenido de este manual —pantallas, campos, botones, filtros, estados y permisos— fue verificado directamente sobre el código y la aplicación en ejecución. Cuando una función descrita en un requerimiento no existe en la versión actual del sistema, este manual lo indica explícitamente en un recuadro de advertencia, en lugar de inventar un comportamiento.</p>
+  </blockquote>
+</section>
+
+<section class="toc">
+  <h2 class="section-kicker">Índice</h2>
+  <ol class="toc-list">
+    <li><a href="#capítulo-1--introducción">Capítulo 1 — Introducción</a></li>
+<li><a href="#capítulo-2--roles-del-sistema">Capítulo 2 — Roles del sistema</a></li>
+<li class="toc-part">Parte A — Sitio web público</li>
+<li><a href="#capítulo-3--inicio">Capítulo 3 — Inicio</a></li>
+<li><a href="#capítulo-4--catálogo-de-propiedades">Capítulo 4 — Catálogo de propiedades</a></li>
+<li><a href="#capítulo-5--buscar-y-filtrar-propiedades">Capítulo 5 — Buscar y filtrar propiedades</a></li>
+<li><a href="#capítulo-6--propiedades-en-venta">Capítulo 6 — Propiedades en venta</a></li>
+<li><a href="#capítulo-7--propiedades-en-arriendo">Capítulo 7 — Propiedades en arriendo</a></li>
+<li><a href="#capítulo-8--detalle-de-propiedad">Capítulo 8 — Detalle de propiedad</a></li>
+<li><a href="#capítulo-9--solicitar-información">Capítulo 9 — Solicitar información</a></li>
+<li><a href="#capítulo-10--vender-mi-propiedad">Capítulo 10 — Vender mi propiedad</a></li>
+<li><a href="#capítulo-11--contacto">Capítulo 11 — Contacto</a></li>
+<li><a href="#capítulo-12--nosotros">Capítulo 12 — Nosotros</a></li>
+<li><a href="#capítulo-13--blog">Capítulo 13 — Blog</a></li>
+<li><a href="#capítulo-14--whatsapp">Capítulo 14 — WhatsApp</a></li>
+<li class="toc-part">Parte B — CRM inmobiliario</li>
+<li><a href="#capítulo-15--acceso-al-crm">Capítulo 15 — Acceso al CRM</a></li>
+<li><a href="#capítulo-16--recuperar-contraseña">Capítulo 16 — Recuperar contraseña</a></li>
+<li><a href="#capítulo-17--dashboard-">Capítulo 17 — Dashboard 🟢</a></li>
+<li><a href="#capítulo-18--propiedades">Capítulo 18 — Propiedades</a></li>
+<li><a href="#capítulo-19--imágenes-de-propiedades">Capítulo 19 — Imágenes de propiedades</a></li>
+<li><a href="#capítulo-20--propietarios">Capítulo 20 — Propietarios</a></li>
+<li><a href="#capítulo-21--clientes">Capítulo 21 — Clientes</a></li>
+<li><a href="#capítulo-22--leads">Capítulo 22 — Leads</a></li>
+<li><a href="#capítulo-23--convertir-un-lead-en-cliente-">Capítulo 23 — Convertir un lead en cliente 🔵</a></li>
+<li><a href="#capítulo-24--oportunidades">Capítulo 24 — Oportunidades</a></li>
+<li><a href="#capítulo-25--visitas">Capítulo 25 — Visitas</a></li>
+<li><a href="#capítulo-26--seguimientos--actividades">Capítulo 26 — Seguimientos / Actividades</a></li>
+<li><a href="#capítulo-27--tareas">Capítulo 27 — Tareas</a></li>
+<li><a href="#capítulo-28--cierres">Capítulo 28 — Cierres</a></li>
+<li><a href="#capítulo-29--documentos">Capítulo 29 — Documentos</a></li>
+<li><a href="#capítulo-30--blog-desde-el-crm">Capítulo 30 — Blog desde el CRM</a></li>
+<li><a href="#capítulo-31--usuarios-">Capítulo 31 — Usuarios 🔴</a></li>
+<li><a href="#capítulo-32--agentes-">Capítulo 32 — Agentes 🔴</a></li>
+<li><a href="#capítulo-33--roles-y-permisos-">Capítulo 33 — Roles y permisos 🔴</a></li>
+<li><a href="#capítulo-34--reportes-">Capítulo 34 — Reportes 🟢</a></li>
+<li><a href="#capítulo-35--exportaciones-">Capítulo 35 — Exportaciones 🟢</a></li>
+<li><a href="#capítulo-36--configuración-y-perfil-">Capítulo 36 — Configuración y perfil 🟢</a></li>
+<li class="toc-part">Parte C — Flujos y referencia</li>
+<li><a href="#capítulo-37--flujos-completos">Capítulo 37 — Flujos completos</a></li>
+<li><a href="#capítulo-38--búsqueda-filtros-y-paginación">Capítulo 38 — Búsqueda, filtros y paginación</a></li>
+<li><a href="#capítulo-39--estados-del-sistema">Capítulo 39 — Estados del sistema</a></li>
+<li><a href="#capítulo-40--mensajes-del-sistema">Capítulo 40 — Mensajes del sistema</a></li>
+<li><a href="#capítulo-41--solución-de-problemas">Capítulo 41 — Solución de problemas</a></li>
+<li><a href="#capítulo-42--preguntas-frecuentes">Capítulo 42 — Preguntas frecuentes</a></li>
+<li><a href="#capítulo-43--buenas-prácticas">Capítulo 43 — Buenas prácticas</a></li>
+<li><a href="#capítulo-44--glosario">Capítulo 44 — Glosario</a></li>
+<li><a href="#capítulo-45--soporte">Capítulo 45 — Soporte</a></li>
+<li><a href="#anexo-a--arquitectura-general-del-sistema">Anexo A — Arquitectura general del sistema</a></li>
+  </ol>
+</section>
+
+<div class="pagebreak"></div>
+
+<html><head></head><body><h1 id="capítulo-1--introducción">Capítulo 1 — Introducción</h1>
+<h2 id="11-qué-es-el-sistema">1.1 ¿Qué es el sistema?</h2>
+<p>El sistema <strong>Inmobiliaria Prime</strong> está compuesto por dos aplicaciones que trabajan juntas:</p>
+<h3 id="sitio-web-público">Sitio web público</h3>
+<p>Es la cara visible de la inmobiliaria en internet. Cualquier persona, sin necesidad de una cuenta, puede:</p>
+<ul>
+<li>Ver el catálogo de propiedades en venta y en arriendo.</li>
+<li>Buscar y filtrar propiedades por ciudad, tipo, precio, habitaciones y baños.</li>
+<li>Consultar el detalle completo de una propiedad.</li>
+<li>Solicitar información sobre una propiedad específica.</li>
+<li>Dejar sus datos para vender o arrendar su propio inmueble.</li>
+<li>Leer artículos del blog.</li>
+<li>Contactar a la inmobiliaria por formulario, teléfono, correo o WhatsApp.</li>
+</ul>
+<h3 id="crm-privado">CRM privado</h3>
+<p>Es la herramienta interna de trabajo del equipo. Con una cuenta y contraseña, el personal de la inmobiliaria puede:</p>
+<ul>
+<li>Administrar propiedades, propietarios y clientes.</li>
+<li>Dar seguimiento a leads (personas interesadas) y convertirlos en clientes.</li>
+<li>Gestionar oportunidades comerciales (el “pipeline” de negocios).</li>
+<li>Agendar y registrar visitas.</li>
+<li>Registrar seguimientos (llamadas, WhatsApp, correos, reuniones).</li>
+<li>Administrar tareas del equipo.</li>
+<li>Consultar negocios cerrados (ganados y perdidos).</li>
+<li>Publicar artículos de blog.</li>
+<li>Generar reportes y exportar información.</li>
+<li>Administrar usuarios del sistema (solo administradores).</li>
+</ul>
+<h2 id="12-cómo-se-relacionan-ambas-partes">1.2 ¿Cómo se relacionan ambas partes?</h2>
+<p>Toda la información que ve un visitante en el sitio web nace en el CRM. El flujo conceptual es el siguiente:</p>
+<pre><code class="language-text">CRM
+ ↓
+Se crea una propiedad
+ ↓
+Se marca como "Publicar en el sitio web"
+ ↓
+Aparece en el catálogo público (/propiedades, /comprar, /arrendar)
+ ↓
+Un visitante solicita información o escribe por WhatsApp
+ ↓
+Se registra automáticamente un Lead en el CRM (origen: "Página web")
+ ↓
+El equipo comercial da seguimiento, agenda visitas y trabaja la oportunidad
+ ↓
+El negocio se cierra (ganado o perdido)
+</code></pre>
+<blockquote class="callout callout-tip">
+<p>💡 <strong>Consejo:</strong> si una propiedad no aparece en el sitio público, casi siempre es porque no tiene activado el interruptor <strong>“Publicar en el sitio web”</strong>, o porque su estado no es <em>Disponible</em> ni <em>Reservado</em>. Ver <a href="#cap%C3%ADtulo-18--propiedades">Capítulo 18</a>.</p>
+</blockquote>
+<div class="pagebreak"></div>
+<h1 id="capítulo-2--roles-del-sistema">Capítulo 2 — Roles del sistema</h1>
+<p>El sistema define <strong>tres roles fijos</strong>, asignados por un administrador desde el módulo de Usuarios. No existe un editor de permisos personalizado: los permisos de cada rol están fijos en el sistema.</p>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th>Rol</th>
+<th>Descripción</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Administrador</strong></td>
+<td>Acceso completo. Es el único rol que puede eliminar registros, y el único que puede gestionar usuarios, agentes y ver la matriz de roles.</td>
+</tr>
+<tr>
+<td><strong>Agente</strong></td>
+<td>Puede ver, crear y editar prácticamente todos los registros comerciales (propiedades, propietarios, clientes, leads, oportunidades, visitas, seguimientos, tareas, blog). No puede eliminar registros ni administrar usuarios.</td>
+</tr>
+<tr>
+<td><strong>Asistente</strong></td>
+<td>Acceso de <strong>solo consulta</strong>: puede ver y exportar información, pero no puede crear, editar ni eliminar nada.</td>
+</tr>
+</tbody>
+</table></div>
+<h2 id="21-matriz-de-permisos">2.1 Matriz de permisos</h2>
+<p>Esta tabla refleja el comportamiento <strong>real</strong> verificado en el sistema (backend y frontend), no una intención de diseño:</p>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th>Función</th>
+<th style="text-align:center">Admin</th>
+<th style="text-align:center">Agente</th>
+<th style="text-align:center">Asistente</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Ver propiedades, propietarios, clientes, leads, oportunidades, visitas, seguimientos, tareas, cierres, blog</td>
+<td style="text-align:center">✅</td>
+<td style="text-align:center">✅</td>
+<td style="text-align:center">✅</td>
+</tr>
+<tr>
+<td>Exportar (CSV/PDF) esos mismos módulos</td>
+<td style="text-align:center">✅</td>
+<td style="text-align:center">✅</td>
+<td style="text-align:center">✅</td>
+</tr>
+<tr>
+<td>Ver y exportar reportes</td>
+<td style="text-align:center">✅</td>
+<td style="text-align:center">✅</td>
+<td style="text-align:center">✅</td>
+</tr>
+<tr>
+<td>Crear registros en esos módulos</td>
+<td style="text-align:center">✅</td>
+<td style="text-align:center">✅</td>
+<td style="text-align:center">❌</td>
+</tr>
+<tr>
+<td>Editar registros en esos módulos</td>
+<td style="text-align:center">✅</td>
+<td style="text-align:center">✅</td>
+<td style="text-align:center">❌</td>
+</tr>
+<tr>
+<td>Convertir un lead en cliente</td>
+<td style="text-align:center">✅</td>
+<td style="text-align:center">✅</td>
+<td style="text-align:center">❌</td>
+</tr>
+<tr>
+<td>Subir imágenes o documentos</td>
+<td style="text-align:center">✅</td>
+<td style="text-align:center">✅</td>
+<td style="text-align:center">❌</td>
+</tr>
+<tr>
+<td>Marcar una imagen como portada</td>
+<td style="text-align:center">✅</td>
+<td style="text-align:center">✅</td>
+<td style="text-align:center">❌</td>
+</tr>
+<tr>
+<td>Eliminar registros de cualquier módulo</td>
+<td style="text-align:center">✅</td>
+<td style="text-align:center">❌</td>
+<td style="text-align:center">❌</td>
+</tr>
+<tr>
+<td>Eliminar imágenes de propiedad</td>
+<td style="text-align:center">✅</td>
+<td style="text-align:center">❌</td>
+<td style="text-align:center">❌</td>
+</tr>
+<tr>
+<td>Eliminar documentos adjuntos</td>
+<td style="text-align:center">✅</td>
+<td style="text-align:center">❌</td>
+<td style="text-align:center">❌</td>
+</tr>
+<tr>
+<td>Ver el módulo <strong>Equipo</strong> (Usuarios / Agentes / Roles)</td>
+<td style="text-align:center">✅</td>
+<td style="text-align:center">❌</td>
+<td style="text-align:center">❌</td>
+</tr>
+<tr>
+<td>Crear, editar o eliminar usuarios</td>
+<td style="text-align:center">✅</td>
+<td style="text-align:center">❌</td>
+<td style="text-align:center">❌</td>
+</tr>
+<tr>
+<td>Asignar o cambiar el rol de otro usuario</td>
+<td style="text-align:center">✅</td>
+<td style="text-align:center">❌</td>
+<td style="text-align:center">❌</td>
+</tr>
+</tbody>
+</table></div>
+<blockquote class="callout callout-warning">
+<p>⚠️ <strong>Importante:</strong> un administrador <strong>no puede eliminarse a sí mismo</strong> ni <strong>cambiar su propio rol</strong>, aunque sí puede eliminar o modificar a otros administradores. El sistema <strong>no</strong> impide que, si solo queda un administrador, este sea eliminado por otro administrador distinto — no existe una protección de “último administrador”. Tenga esto en cuenta al gestionar cuentas (ver <a href="#cap%C3%ADtulo-43--buenas-pr%C3%A1cticas">Capítulo 43 — Buenas prácticas</a>).</p>
+</blockquote>
+<blockquote class="callout callout-pin">
+<p>📌 <strong>Nota sobre “ver”:</strong> los tres roles pueden ver y listar todos los módulos comerciales; la restricción real ocurre al intentar <strong>crear, editar o eliminar</strong>, no al consultar.</p>
+</blockquote>
+<p>Este manual usa iconos junto a cada procedimiento para indicar qué rol puede ejecutarlo:</p>
+<ul>
+<li>🟢 <strong>Todos los roles</strong></li>
+<li>🔵 <strong>Admin y Agente</strong></li>
+<li>🔴 <strong>Solo Admin</strong></li>
+</ul>
+<div class="pagebreak"></div>
+<h1 id="parte-a--sitio-web-público">Parte A — Sitio web público</h1>
+<h1 id="capítulo-3--inicio">Capítulo 3 — Inicio</h1>
+<p>La página de inicio (<code>/</code>) es la puerta de entrada pública del sitio.</p>
+<figure class="screenshot"><img src="images/web/web-01-home.png" alt="Página de inicio"><figcaption>Página de inicio</figcaption></figure>
+<h2 id="31-elementos-de-la-página">3.1 Elementos de la página</h2>
+<ol>
+<li><strong>Encabezado</strong>: logo de la inmobiliaria, menú de navegación (Inicio, Propiedades, Comprar, Arrendar, Nosotros, Blog, Contacto), botón destacado <strong>“Vende tu propiedad”</strong>, y en el menú móvil un enlace <strong>“Acceso agentes”</strong> que lleva al login del CRM.</li>
+<li><strong>Sección principal (hero)</strong>: imagen de fondo tomada de una propiedad destacada, título “Encuentra el espacio que estás buscando”, y el buscador rápido de propiedades.</li>
+<li><strong>Accesos rápidos</strong>: cuatro tarjetas — <em>Comprar</em>, <em>Arrendar</em>, <em>Vender</em>, <em>Nuevas</em> — que enlazan directamente a <code>/comprar</code>, <code>/arrendar</code>, <code>/vender-mi-propiedad</code> y <code>/propiedades</code>.</li>
+<li><strong>Propiedades destacadas</strong>: cuadrícula con las propiedades marcadas como destacadas desde el CRM, y un botón <strong>“Ver todas las propiedades”</strong>.</li>
+<li><strong>Por qué elegirnos</strong>: bloque de confianza con enlaces <strong>“Ver propiedades”</strong> y <strong>“Empezar”</strong>.</li>
+<li><strong>Llamado final</strong>: botón <strong>“Contactar asesor”</strong> que lleva a la página de contacto.</li>
+<li><strong>Pie de página</strong>: repite la navegación e incluye teléfono, dirección y correo de contacto.</li>
+<li><strong>Botón flotante de WhatsApp</strong> (ver <a href="#cap%C3%ADtulo-14--whatsapp">Capítulo 14</a>).</li>
+</ol>
+<h2 id="32-qué-puede-hacer-un-visitante-desde-aquí">3.2 ¿Qué puede hacer un visitante desde aquí?</h2>
+<ul>
+<li>Buscar una propiedad directamente desde el buscador principal (ver <a href="#cap%C3%ADtulo-5--buscar-y-filtrar-propiedades">Capítulo 5</a>).</li>
+<li>Navegar al catálogo completo, a “Comprar” o a “Arrendar”.</li>
+<li>Ir directamente a dejar sus datos para vender su propiedad.</li>
+<li>Escribir por WhatsApp con un solo clic.</li>
+<li>Ir al blog o a la página de contacto.</li>
+</ul>
+<div class="pagebreak"></div>
+<h1 id="capítulo-4--catálogo-de-propiedades">Capítulo 4 — Catálogo de propiedades</h1>
+<p>Ruta: <code>/propiedades</code>.</p>
+<figure class="screenshot"><img src="images/web/web-02-propiedades.png" alt="Catálogo de propiedades"><figcaption>Catálogo de propiedades</figcaption></figure>
+<h2 id="41-elementos-de-la-página">4.1 Elementos de la página</h2>
+<ul>
+<li>Encabezado de sección con el título <strong>“Propiedades”</strong>.</li>
+<li>Bloque de filtros (ver <a href="#cap%C3%ADtulo-5--buscar-y-filtrar-propiedades">Capítulo 5</a>).</li>
+<li>Contador de resultados: <strong>“{n} propiedades encontradas”</strong>.</li>
+<li>Cuadrícula de tarjetas de propiedad, cada una con: imagen principal, precio (formateado en pesos colombianos), tipo de operación (venta/arriendo), ciudad/zona, y características resumidas (habitaciones, baños, área).</li>
+<li>Paginación en la parte inferior.</li>
+</ul>
+<h2 id="42-paginación">4.2 Paginación</h2>
+<p>La paginación solo aparece cuando hay más de una página de resultados. Incluye botones de página anterior/siguiente, números de página (con puntos suspensivos <code>…</code> si hay muchas páginas), y conserva los filtros aplicados al cambiar de página. A diferencia del CRM, el catálogo público <strong>no</strong> tiene un selector de cantidad de resultados por página.</p>
+<div class="pagebreak"></div>
+<h1 id="capítulo-5--buscar-y-filtrar-propiedades">Capítulo 5 — Buscar y filtrar propiedades</h1>
+<p>Existen <strong>dos buscadores distintos</strong> en el sitio, con campos ligeramente diferentes.</p>
+<h2 id="51-buscador-rápido-página-de-inicio">5.1 Buscador rápido (página de Inicio)</h2>
+<p>Ubicado en la sección principal del Home. Campos:</p>
+<ol>
+<li>Pestañas <strong>“Comprar”</strong> / <strong>“Arrendar”</strong>.</li>
+<li>Select <strong>“Tipo de inmueble”</strong>.</li>
+<li>Campo de texto <strong>“Ciudad”</strong>.</li>
+<li>Campo de texto <strong>“Barrio / zona”</strong>.</li>
+<li>Campo numérico <strong>“Precio mínimo”</strong>.</li>
+<li>Campo numérico <strong>“Precio máximo”</strong>.</li>
+<li>Botón <strong>“Buscar”</strong>.</li>
+</ol>
+<p>Al presionar “Buscar”, el sitio lo lleva al catálogo (<code>/propiedades</code>) con los filtros ya aplicados en la URL.</p>
+<h2 id="52-filtros-del-catálogo-propiedades-comprar-arrendar">5.2 Filtros del catálogo (<code>/propiedades</code>, <code>/comprar</code>, <code>/arrendar</code>)</h2>
+<figure class="screenshot"><img src="images/web/web-03-propiedades-filtros.png" alt="Filtros de propiedades"><figcaption>Filtros de propiedades</figcaption></figure>
+<p>Campos disponibles:</p>
+<ol>
+<li>Select <strong>“Comprar o arrendar”</strong> — no aparece en <code>/comprar</code> ni en <code>/arrendar</code>, porque en esas páginas la operación ya viene fija.</li>
+<li>Select <strong>“Tipo de inmueble”</strong> — Apartamento, Casa, Oficina, Local, Lote, Bodega, Finca, Otro.</li>
+<li>Select <strong>“Habitaciones”</strong> — “1+ habitaciones” hasta “5+ habitaciones”.</li>
+<li>Select <strong>“Baños”</strong> — “1+ baños” hasta “4+ baños”.</li>
+<li>Campo de texto <strong>“Ciudad”</strong>.</li>
+<li>Campo numérico <strong>“Precio mínimo”</strong>.</li>
+<li>Campo numérico <strong>“Precio máximo”</strong>.</li>
+<li>Botón <strong>“Aplicar filtros”</strong>.</li>
+</ol>
+<h3 id="procedimiento">Procedimiento</h3>
+<ol>
+<li>Ingrese a <strong>Propiedades</strong>, <strong>Comprar</strong> o <strong>Arrendar</strong> según lo que busca.</li>
+<li>Seleccione el tipo de inmueble (opcional).</li>
+<li>Indique la ciudad (opcional).</li>
+<li>Seleccione habitaciones y/o baños mínimos (opcional).</li>
+<li>Ajuste el rango de precio (opcional).</li>
+<li>Presione <strong>“Aplicar filtros”</strong>.</li>
+</ol>
+<blockquote class="callout callout-warning">
+<p>⚠️ <strong>Esta función no está disponible en la versión actual:</strong> el catálogo (<code>/propiedades</code>, <code>/comprar</code>, <code>/arrendar</code>) no tiene un campo de filtro por <strong>barrio/zona</strong>, aunque el buscador rápido del Home sí lo tiene. Tampoco existe un filtro de rango de baños/habitaciones (solo “mínimo”).</p>
+</blockquote>
+<div class="pagebreak"></div>
+<h1 id="capítulo-6--propiedades-en-venta">Capítulo 6 — Propiedades en venta</h1>
+<p>Ruta: <code>/comprar</code>.</p>
+<figure class="screenshot"><img src="images/web/web-04-comprar.png" alt="Propiedades en venta"><figcaption>Propiedades en venta</figcaption></figure>
+<p>Esta página reutiliza el mismo catálogo del Capítulo 4, pero:</p>
+<ul>
+<li>El título de la sección es <strong>“Propiedades en venta”</strong>.</li>
+<li>El tipo de operación queda fijo en “Venta”: el selector “Comprar o arrendar” no aparece, porque no aplica.</li>
+<li>Solo se muestran propiedades cuyo tipo de operación es <strong>venta</strong>.</li>
+</ul>
+<p>El resto del comportamiento (filtros de tipo, ciudad, precio, habitaciones, baños, paginación) es idéntico al catálogo general.</p>
+<div class="pagebreak"></div>
+<h1 id="capítulo-7--propiedades-en-arriendo">Capítulo 7 — Propiedades en arriendo</h1>
+<p>Ruta: <code>/arrendar</code>.</p>
+<figure class="screenshot"><img src="images/web/web-05-arrendar.png" alt="Propiedades en arriendo"><figcaption>Propiedades en arriendo</figcaption></figure>
+<p>Igual que el capítulo anterior, pero mostrando únicamente propiedades en <strong>arriendo</strong>, con título <strong>“Propiedades en arriendo”</strong>.</p>
+<div class="pagebreak"></div>
+<h1 id="capítulo-8--detalle-de-propiedad">Capítulo 8 — Detalle de propiedad</h1>
+<p>Al hacer clic en cualquier tarjeta del catálogo, se abre la página de detalle (<code>/propiedades/[slug]</code>).</p>
+<figure class="screenshot"><img src="images/web/web-06-detalle-propiedad.png" alt="Detalle de propiedad"><figcaption>Detalle de propiedad</figcaption></figure>
+<h2 id="81-elementos-de-la-página">8.1 Elementos de la página</h2>
+<ol>
+<li><strong>Distintivo de operación</strong> (Venta/Arriendo) y <strong>código de la propiedad</strong> (ej. <code>PROP-00001</code>).</li>
+<li><strong>Título</strong> de la propiedad y <strong>ubicación</strong> (zona, ciudad).</li>
+<li><strong>Galería de fotografías.</strong></li>
+<li><strong>Descripción</strong> (si el agente la escribió al crear la propiedad).</li>
+<li><strong>Detalles de la propiedad</strong>: Tipo, Habitaciones, Baños, Parqueaderos, Área construida (m²), Área privada (m²), Estrato, Administración, Año de construcción. Solo se muestran los datos que realmente se cargaron; los campos vacíos no aparecen.</li>
+<li><strong>Características adicionales</strong>: lista libre de características, si el agente las registró.</li>
+<li><strong>Panel lateral fijo</strong>: precio (y valor de administración si aplica), resumen de habitaciones/baños/área, ubicación, y el bloque de contacto (“Solicitar información”).</li>
+</ol>
+<h2 id="82-ver-fotografías">8.2 Ver fotografías</h2>
+<p>Recorra la galería para ver todas las imágenes cargadas de la propiedad. La primera imagen (o la marcada como “portada” desde el CRM) es la que se usa como imagen principal en el catálogo.</p>
+<h2 id="83-revisar-características">8.3 Revisar características</h2>
+<p>Toda la información técnica del inmueble está en el bloque “Detalles de la propiedad” y, si aplica, en “Características adicionales”.</p>
+<h2 id="84-solicitar-información">8.4 Solicitar información</h2>
+<p>Ver <a href="#cap%C3%ADtulo-9--solicitar-informaci%C3%B3n">Capítulo 9</a>.</p>
+<h2 id="85-contactar-por-whatsapp">8.5 Contactar por WhatsApp</h2>
+<p>El panel de contacto incluye un botón <strong>“Escribir por WhatsApp”</strong> que abre WhatsApp con un mensaje prellenado:</p>
+<blockquote class="callout callout-note">
+<p><em>“Hola, estoy interesado en la propiedad {código} - {título}.”</em></p>
+</blockquote>
+<div class="pagebreak"></div>
+<h1 id="capítulo-9--solicitar-información">Capítulo 9 — Solicitar información</h1>
+<p>Este formulario aparece en la página de detalle de cada propiedad, debajo del botón de WhatsApp.</p>
+<figure class="screenshot"><img src="images/web/web-07-solicitar-informacion.png" alt="Formulario de solicitar información"><figcaption>Formulario de solicitar información</figcaption></figure>
+<h2 id="91-campos-del-formulario">9.1 Campos del formulario</h2>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th>Campo</th>
+<th style="text-align:center">Obligatorio</th>
+<th>Notas</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Nombre</td>
+<td style="text-align:center">Sí</td>
+<td>—</td>
+</tr>
+<tr>
+<td>Correo electrónico</td>
+<td style="text-align:center">Condicional</td>
+<td>Debe indicar correo <strong>o</strong> teléfono (al menos uno)</td>
+</tr>
+<tr>
+<td>Teléfono</td>
+<td style="text-align:center">Condicional</td>
+<td>Debe indicar correo <strong>o</strong> teléfono (al menos uno)</td>
+</tr>
+<tr>
+<td>Mensaje</td>
+<td style="text-align:center">No</td>
+<td>Placeholder: “Cuéntanos qué te gustaría saber sobre esta propiedad”</td>
+</tr>
+</tbody>
+</table></div>
+<p>Botón: <strong>“Solicitar información”</strong>.</p>
+<h2 id="92-qué-ocurre-después-de-enviarlo">9.2 ¿Qué ocurre después de enviarlo?</h2>
+<p>Al enviar el formulario correctamente aparece un mensaje de confirmación: <strong>“¡Gracias por tu mensaje!”</strong> / <em>“Un asesor se pondrá en contacto contigo muy pronto.”</em></p>
+<p><strong>El contacto se registra automáticamente como un Lead dentro del CRM</strong>, con origen <strong>“Página web”</strong> y estado inicial <strong>“Nuevo”</strong>, quedando disponible para que el equipo comercial le dé seguimiento (ver <a href="#cap%C3%ADtulo-22--leads">Capítulo 22 — Leads</a>).</p>
+<div class="pagebreak"></div>
+<h1 id="capítulo-10--vender-mi-propiedad">Capítulo 10 — Vender mi propiedad</h1>
+<p>Ruta: <code>/vender-mi-propiedad</code>. Pensada para propietarios que quieren <strong>vender o arrendar</strong> su inmueble a través de la inmobiliaria.</p>
+<figure class="screenshot"><img src="images/web/web-08-vender-mi-propiedad.png" alt="Vender mi propiedad"><figcaption>Vender mi propiedad</figcaption></figure>
+<h2 id="101-cómo-acceder">10.1 Cómo acceder</h2>
+<p>Desde cualquier página pública, use el botón <strong>“Vende tu propiedad”</strong> del encabezado, o cualquiera de los enlaces “Vender” repartidos por el sitio.</p>
+<h2 id="102-campos-del-formulario">10.2 Campos del formulario</h2>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th>Campo</th>
+<th style="text-align:center">Obligatorio</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Nombre</td>
+<td style="text-align:center">Sí</td>
+</tr>
+<tr>
+<td>Teléfono</td>
+<td style="text-align:center">Condicional (correo o teléfono)</td>
+</tr>
+<tr>
+<td>Correo electrónico</td>
+<td style="text-align:center">Condicional (correo o teléfono)</td>
+</tr>
+<tr>
+<td>Tipo de inmueble</td>
+<td style="text-align:center">Sí</td>
+</tr>
+<tr>
+<td>¿Venta o arriendo?</td>
+<td style="text-align:center">Sí</td>
+</tr>
+<tr>
+<td>Ciudad</td>
+<td style="text-align:center">Sí</td>
+</tr>
+<tr>
+<td>Barrio / zona</td>
+<td style="text-align:center">No</td>
+</tr>
+<tr>
+<td>Dirección</td>
+<td style="text-align:center">No</td>
+</tr>
+<tr>
+<td>Precio aproximado</td>
+<td style="text-align:center">No</td>
+</tr>
+<tr>
+<td>Cuéntanos más sobre tu inmueble</td>
+<td style="text-align:center">No</td>
+</tr>
+</tbody>
+</table></div>
+<p>Botón: <strong>“Enviar información”</strong>.</p>
+<h2 id="103-confirmación">10.3 Confirmación</h2>
+<p>Al enviarse correctamente: <strong>“¡Gracias por tu información!”</strong> / <em>“Un asesor revisará los datos de tu inmueble y se pondrá en contacto contigo muy pronto.”</em></p>
+<h2 id="104-qué-sucede-en-el-crm">10.4 ¿Qué sucede en el CRM?</h2>
+<p>Se crea un <strong>Lead</strong> con origen “Página web” y estado “Nuevo”, igual que en el Capítulo 9, pero marcado internamente con la intención “Vender propiedad” para que el equipo sepa que se trata de un propietario captado, no de un comprador/arrendatario.</p>
+<div class="pagebreak"></div>
+<h1 id="capítulo-11--contacto">Capítulo 11 — Contacto</h1>
+<p>Ruta: <code>/contacto</code>.</p>
+<figure class="screenshot"><img src="images/web/web-09-contacto.png" alt="Página de contacto"><figcaption>Página de contacto</figcaption></figure>
+<h2 id="111-información-de-contacto">11.1 Información de contacto</h2>
+<p>La página muestra tarjetas con: WhatsApp, Teléfono, Correo electrónico y Ubicación de la inmobiliaria.</p>
+<h2 id="112-formulario-de-contacto">11.2 Formulario de contacto</h2>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th>Campo</th>
+<th style="text-align:center">Obligatorio</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Nombre</td>
+<td style="text-align:center">Sí</td>
+</tr>
+<tr>
+<td>Teléfono</td>
+<td style="text-align:center">Condicional (correo o teléfono)</td>
+</tr>
+<tr>
+<td>Correo electrónico</td>
+<td style="text-align:center">Condicional (correo o teléfono)</td>
+</tr>
+<tr>
+<td>Asunto</td>
+<td style="text-align:center">No</td>
+</tr>
+<tr>
+<td>Mensaje</td>
+<td style="text-align:center">Sí</td>
+</tr>
+</tbody>
+</table></div>
+<p>Botón: <strong>“Enviar mensaje”</strong>.</p>
+<p>Confirmación: <strong>“¡Gracias por escribirnos!”</strong> / <em>“Te responderemos a la brevedad posible.”</em> También genera un Lead en el CRM (intención “Contacto general”).</p>
+<div class="pagebreak"></div>
+<h1 id="capítulo-12--nosotros">Capítulo 12 — Nosotros</h1>
+<p>Ruta: <code>/nosotros</code>.</p>
+<figure class="screenshot"><img src="images/web/web-10-nosotros.png" alt="Página nosotros"><figcaption>Página nosotros</figcaption></figure>
+<p>Página informativa, sin formularios. Incluye:</p>
+<ul>
+<li>Encabezado de presentación de la inmobiliaria.</li>
+<li>Tres valores: <em>Cercanía</em>, <em>Transparencia</em>, <em>Acompañamiento</em>.</li>
+<li>Bloque <strong>“Cómo trabajamos”</strong> en tres pasos: <em>Buscas → Visitas → Cierras</em>.</li>
+<li>Llamado final con botones <strong>“Ver propiedades”</strong> y <strong>“Hablar con un asesor”</strong>.</li>
+</ul>
+<div class="pagebreak"></div>
+<h1 id="capítulo-13--blog">Capítulo 13 — Blog</h1>
+<h2 id="131-listado-de-artículos">13.1 Listado de artículos</h2>
+<p>Ruta: <code>/blog</code>.</p>
+<figure class="screenshot"><img src="images/web/web-11-blog-listado.png" alt="Blog — listado"><figcaption>Blog — listado</figcaption></figure>
+<p>Cuadrícula de tarjetas de artículo, cada una con imagen, fecha de publicación, título, extracto y autor (“Por {nombre}”). Si todavía no hay artículos publicados, se muestra el mensaje <strong>“Todavía no hay artículos publicados.”</strong> Incluye la misma paginación del catálogo de propiedades.</p>
+<h2 id="132-detalle-de-artículo">13.2 Detalle de artículo</h2>
+<p>Ruta: <code>/blog/[slug]</code>.</p>
+<figure class="screenshot"><img src="images/web/web-12-blog-detalle.png" alt="Blog — detalle de artículo"><figcaption>Blog — detalle de artículo</figcaption></figure>
+<p>Muestra fecha y autor, título, imagen de portada, y el contenido completo del artículo. No tiene sección de comentarios.</p>
+<div class="pagebreak"></div>
+<h1 id="capítulo-14--whatsapp">Capítulo 14 — WhatsApp</h1>
+<p>El botón flotante de WhatsApp aparece en <strong>todas</strong> las páginas públicas, generalmente en la esquina inferior derecha.</p>
+<figure class="screenshot"><img src="images/web/web-01b-home-whatsapp.png" alt="Botón flotante de WhatsApp"><figcaption>Botón flotante de WhatsApp</figcaption></figure>
+<h2 id="141-cómo-funciona">14.1 Cómo funciona</h2>
+<ol>
+<li>Presione el botón flotante <strong>“WhatsApp”</strong>.</li>
+<li>Se abre WhatsApp (aplicación o web) con el número de contacto de la inmobiliaria.</li>
+<li>El mensaje aparece <strong>prellenado</strong>, aunque el texto exacto cambia según dónde se presione el botón:
+<ul>
+<li>Botón flotante general: <em>“Hola, quiero más información sobre las propiedades.”</em></li>
+<li>Botón de WhatsApp en el detalle de una propiedad: <em>“Hola, estoy interesado en la propiedad {código} - {título}.”</em></li>
+<li>Tarjeta de WhatsApp en Contacto: <em>“Hola, quiero más información.”</em></li>
+</ul>
+</li>
+</ol>
+<blockquote class="callout callout-pin">
+<p>📌 El número de WhatsApp se configura una sola vez a nivel de todo el sitio; no se cambia por página.</p>
+</blockquote>
+<div class="pagebreak"></div>
+<h1 id="parte-b--crm-inmobiliario">Parte B — CRM inmobiliario</h1>
+<h1 id="capítulo-15--acceso-al-crm">Capítulo 15 — Acceso al CRM</h1>
+<p>Ruta: <code>/login</code>.</p>
+<figure class="screenshot"><img src="images/crm/crm-01-login-vacio.png" alt="Pantalla de login"><figcaption>Pantalla de login</figcaption></figure>
+<h2 id="151-campos">15.1 Campos</h2>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th>Campo</th>
+<th>Tipo</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Correo electrónico</td>
+<td>Texto (email)</td>
+</tr>
+<tr>
+<td>Contraseña</td>
+<td>Contraseña</td>
+</tr>
+</tbody>
+</table></div>
+<p>Botón: <strong>“Iniciar sesión”</strong>. Junto al campo de contraseña hay un enlace <strong>“¿Olvidaste tu contraseña?”</strong> (ver <a href="#cap%C3%ADtulo-16--recuperar-contrase%C3%B1a">Capítulo 16</a>).</p>
+<p>Si las credenciales son incorrectas, se muestra un mensaje de error en rojo (el texto exacto depende del backend; si no hay uno específico, se muestra <strong>“No fue posible iniciar sesión”</strong>).</p>
+<h2 id="152-usuarios-de-prueba">15.2 Usuarios de prueba</h2>
+<p>El seeder de datos de demostración crea estas cuentas (todas con la misma contraseña):</p>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th>Correo</th>
+<th>Rol</th>
+<th>Contraseña</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>admin@crm.test</code></td>
+<td>admin</td>
+<td><code>password</code></td>
+</tr>
+<tr>
+<td><code>agente@crm.test</code></td>
+<td>agente</td>
+<td><code>password</code></td>
+</tr>
+<tr>
+<td><code>asistente@crm.test</code></td>
+<td>asistente</td>
+<td><code>password</code></td>
+</tr>
+</tbody>
+</table></div>
+<blockquote class="callout callout-warning">
+<p>⚠️ <strong>Importante:</strong> estas credenciales son exclusivamente para el entorno de pruebas/demostración. En un entorno de producción real, cada usuario del equipo debe tener su propia cuenta y contraseña personal (ver <a href="#cap%C3%ADtulo-31--usuarios">Capítulo 31 — Usuarios</a> y <a href="#cap%C3%ADtulo-43--buenas-pr%C3%A1cticas">Capítulo 43 — Buenas prácticas</a>).</p>
+</blockquote>
+<h2 id="153-procedimiento-de-acceso">15.3 Procedimiento de acceso</h2>
+<ol>
+<li>Abra <code>/login</code> en el navegador.</li>
+<li>Ingrese su correo electrónico y contraseña.</li>
+<li>Presione <strong>“Iniciar sesión”</strong>.</li>
+<li>Será redirigido automáticamente al <a href="#cap%C3%ADtulo-17--dashboard">Dashboard</a>.</li>
+</ol>
+<div class="pagebreak"></div>
+<h1 id="capítulo-16--recuperar-contraseña">Capítulo 16 — Recuperar contraseña</h1>
+<p>Esta función <strong>sí existe</strong> en el sistema, con un flujo de dos pasos.</p>
+<h2 id="161-solicitar-el-enlace-de-recuperación">16.1 Solicitar el enlace de recuperación</h2>
+<p>Ruta: <code>/forgot-password</code> (se llega desde el enlace “¿Olvidaste tu contraseña?” del login).</p>
+<ol>
+<li>Ingrese su <strong>correo electrónico</strong>.</li>
+<li>Presione <strong>“Enviar enlace de recuperación”</strong>.</li>
+<li>El sistema siempre muestra el mismo mensaje de éxito, exista o no esa cuenta (medida de seguridad para no revelar qué correos están registrados): <em>“Si el correo está registrado, te enviamos un enlace para restablecer tu contraseña. Revisa tu bandeja de entrada.”</em></li>
+<li>Puede volver al login con el enlace <strong>“Volver a iniciar sesión”</strong>.</li>
+</ol>
+<p>Si el correo existe, llega un email con un enlace que <strong>expira en 60 minutos</strong>.</p>
+<h2 id="162-restablecer-la-contraseña">16.2 Restablecer la contraseña</h2>
+<p>Ruta: <code>/reset-password?token=...&amp;email=...</code> (se abre desde el enlace del correo).</p>
+<ol>
+<li>Complete <strong>“Nueva contraseña”</strong> (mínimo 8 caracteres).</li>
+<li>Complete <strong>“Confirmar contraseña”</strong> (debe coincidir con la anterior).</li>
+<li>Presione <strong>“Restablecer contraseña”</strong>.</li>
+<li>Verá el mensaje <strong>“Contraseña actualizada correctamente”</strong> y será redirigido al login.</li>
+</ol>
+<blockquote class="callout callout-warning">
+<p>⚠️ Si el enlace ya expiró o es inválido (falta el token o el correo en la URL), el sistema muestra: <em>“Este enlace no es válido o ya expiró. Solicita uno nuevo para continuar.”</em>, con un botón <strong>“Solicitar nuevo enlace”</strong>.</p>
+</blockquote>
+<blockquote class="callout callout-pin">
+<p>📌 Este flujo es distinto al cambio de contraseña estando <strong>ya conectado</strong>, que se hace desde <a href="#cap%C3%ADtulo-36--configuraci%C3%B3n-y-perfil">Configuración y perfil</a> y sí pide la contraseña actual.</p>
+</blockquote>
+<div class="pagebreak"></div>
+<h1 id="capítulo-17--dashboard-">Capítulo 17 — Dashboard 🟢</h1>
+<p>Ruta: <code>/dashboard</code>. Es la primera pantalla que ve cualquier usuario tras iniciar sesión, sin importar su rol.</p>
+<figure class="screenshot"><img src="images/crm/crm-02-dashboard.png" alt="Dashboard"><figcaption>Dashboard</figcaption></figure>
+<h2 id="171-bloque-propiedades">17.1 Bloque “Propiedades”</h2>
+<p>Cinco indicadores: <strong>Activas</strong>, <strong>Disponibles</strong>, <strong>Reservadas</strong>, <strong>Vendidas</strong>, <strong>Arrendadas</strong>.</p>
+<h2 id="172-bloque-personas-y-comercial">17.2 Bloque “Personas y comercial”</h2>
+<p>Ocho indicadores: <strong>Leads nuevos</strong>, <strong>Clientes activos</strong>, <strong>Visitas de hoy</strong>, <strong>Visitas próximas</strong>, <strong>Oportunidades abiertas</strong>, <strong>En negociación</strong>, <strong>Cierres del mes</strong>, <strong>Tareas pendientes</strong>.</p>
+<h2 id="173-valor-del-pipeline">17.3 Valor del pipeline</h2>
+<p>Tarjeta destacada: <strong>“Valor estimado del pipeline (oportunidades abiertas)”</strong>, con la suma de todas las oportunidades abiertas, en pesos colombianos.</p>
+<h2 id="174-embudo-inmobiliario">17.4 Embudo inmobiliario</h2>
+<p>Gráfico de barras horizontales titulado <strong>“Embudo inmobiliario”</strong>, que representa el recorrido: <em>Lead → Contactado → Propiedad recomendada → Visita → Negociación → Cierre</em>, mostrando cuántos registros hay en cada etapa.</p>
+<blockquote class="callout callout-pin">
+<p>📌 El Dashboard es idéntico para los tres roles: no cambia según quién inicia sesión, ya que solo consulta información (ver <a href="#cap%C3%ADtulo-2--roles-del-sistema">Capítulo 2</a>).</p>
+</blockquote>
+<div class="pagebreak"></div>
+<h1 id="capítulo-18--propiedades">Capítulo 18 — Propiedades</h1>
+<p>Ruta: <code>/properties</code>. Es uno de los módulos centrales del CRM.</p>
+<figure class="screenshot"><img src="images/crm/crm-03-propiedades-listado.png" alt="Listado de propiedades"><figcaption>Listado de propiedades</figcaption></figure>
+<h2 id="181-listar-propiedades-">18.1 Listar propiedades 🟢</h2>
+<p>Columnas de la tabla: <strong>Código</strong>, <strong>Propiedad</strong> (título), <strong>Ciudad</strong>, <strong>Propietario</strong>, <strong>Precio</strong>, <strong>Estado</strong>, y una columna de acciones.</p>
+<h2 id="182-buscar-y-filtrar-">18.2 Buscar y filtrar 🟢</h2>
+<ul>
+<li>Buscador de texto libre (“Buscar propiedades…”).</li>
+<li>Filtro <strong>“Estado”</strong>: Borrador, Disponible, Reservado, Vendido, Arrendado, Inactivo.</li>
+<li>Filtro <strong>“Venta/Arriendo”</strong>: Venta, Arriendo.</li>
+</ul>
+<h2 id="183-paginación-">18.3 Paginación 🟢</h2>
+<p>Selector de tamaño de página (10 / 25 / 50 / 100 registros).</p>
+<h2 id="184-exportar-">18.4 Exportar 🟢</h2>
+<p>Botones <strong>CSV</strong> y <strong>PDF</strong> en la parte superior del listado, que exportan exactamente los resultados filtrados en pantalla.</p>
+<h2 id="185-crear-propiedad-">18.5 Crear propiedad 🔵</h2>
+<figure class="screenshot"><img src="images/crm/crm-04-propiedades-nueva.png" alt="Nueva propiedad"><figcaption>Nueva propiedad</figcaption></figure>
+<p>Botón <strong>“Nueva propiedad”</strong> (solo visible para admin/agente).</p>
+<h3 id="tutorial-completo--crear-una-propiedad">Tutorial completo — crear una propiedad</h3>
+<ol>
+<li>Vaya a <strong>Propiedades</strong> en el menú lateral.</li>
+<li>Presione <strong>“Nueva propiedad”</strong>.</li>
+<li>En <strong>Información general</strong>, complete: Título (obligatorio), Descripción, Tipo de inmueble, Venta/Arriendo, Estado (por defecto “Borrador”), Propietario (opcional).</li>
+<li>En <strong>Ubicación</strong>, complete: Ciudad (obligatoria), Barrio/Zona, Dirección.</li>
+<li>En <strong>Precio</strong>, complete: Precio (obligatorio), Administración.</li>
+<li>En <strong>Características</strong>, complete lo que aplique: Estrato, Habitaciones, Baños, Parqueaderos, Área construida, Área privada, Año de construcción, Observaciones.</li>
+<li>En <strong>Sitio web</strong>, active el interruptor <strong>“Publicar en el sitio web”</strong> si desea que aparezca públicamente, y <strong>“Propiedad destacada”</strong> si quiere que salga en el home.</li>
+<li>Presione <strong>“Guardar”</strong>.</li>
+</ol>
+<blockquote class="callout callout-warning">
+<p>⚠️ <strong>Esta función no está disponible en la versión actual:</strong> el formulario de propiedad no tiene un campo de “características adicionales” de texto libre, aunque ese dato sí puede llegar a mostrarse en la web pública si fue cargado por otra vía. Desde el formulario del CRM no se puede editar directamente.</p>
+</blockquote>
+<h3 id="cómo-publicarla-en-la-web">Cómo publicarla en la web</h3>
+<p>Con el interruptor <strong>“Publicar en el sitio web”</strong> activado y el <strong>Estado</strong> en <em>Disponible</em> o <em>Reservado</em>, la propiedad aparece automáticamente en <code>/propiedades</code>, <code>/comprar</code> o <code>/arrendar</code> según su tipo de operación.</p>
+<h2 id="186-editar-propiedad-">18.6 Editar propiedad 🔵</h2>
+<figure class="screenshot"><img src="images/crm/crm-05-propiedades-detalle.png" alt="Detalle / edición de propiedad"><figcaption>Detalle / edición de propiedad</figcaption></figure>
+<p>Abra la propiedad desde el listado (clic sobre la fila o “Editar” en el menú de acciones). Los mismos campos del formulario de creación quedan disponibles para modificar. Botón: <strong>“Guardar cambios”</strong>.</p>
+<h2 id="187-publicar--despublicar">18.7 Publicar / despublicar</h2>
+<p>Se controla con el interruptor <strong>“Publicar en el sitio web”</strong> dentro del formulario de edición — no existen botones independientes de “Publicar” y “Despublicar” en el listado.</p>
+<h2 id="188-destacar">18.8 Destacar</h2>
+<p>Se controla con el interruptor <strong>“Propiedad destacada”</strong> dentro del formulario de edición.</p>
+<h2 id="189-estados-de-una-propiedad">18.9 Estados de una propiedad</h2>
+<p>Ver la lista completa en <a href="#cap%C3%ADtulo-39--estados-del-sistema">Capítulo 39 — Estados del sistema</a>.</p>
+<h2 id="1810-eliminar-">18.10 Eliminar 🔴</h2>
+<p>Solo el rol <strong>Administrador</strong> ve la opción <strong>“Eliminar”</strong> en el menú de acciones de cada fila. Al presionar, se abre un cuadro de confirmación: <em>“¿Eliminar este registro?”</em> / <em>“Esta acción eliminará ‘{título}’ de forma permanente. No se puede deshacer.”</em>, con botón de confirmación <strong>“Eliminar”</strong>.</p>
+<div class="pagebreak"></div>
+<h1 id="capítulo-19--imágenes-de-propiedades">Capítulo 19 — Imágenes de propiedades</h1>
+<p>Dentro de la vista de edición de una propiedad existe el panel <strong>“Fotos”</strong>.</p>
+<h2 id="191-subir-imágenes-">19.1 Subir imágenes 🔵</h2>
+<p>Botón <strong>“Subir foto”</strong> (solo admin/agente). Formatos permitidos: JPG, JPEG, PNG, WEBP, máximo 5 MB por imagen.</p>
+<h2 id="192-imagen-principal-portada">19.2 Imagen principal (portada)</h2>
+<p>Cada imagen puede marcarse como portada con el botón de estrella <strong>“Marcar como portada”</strong> (admin/agente). La imagen marcada como portada muestra la insignia <strong>“Portada”</strong> y es la que se usa como imagen principal en el catálogo público.</p>
+<h2 id="193-orden">19.3 Orden</h2>
+<p>No se documentó en este manual un control visual de arrastrar-y-soltar para reordenar imágenes manualmente en la interfaz revisada; el orden de visualización depende del campo interno <code>sort_order</code> de cada imagen.</p>
+<h2 id="194-eliminar-imágenes-">19.4 Eliminar imágenes 🔴</h2>
+<p>Solo el rol <strong>Administrador</strong> ve el botón de eliminar (ícono de papelera) sobre cada imagen. Agente y Asistente pueden ver las imágenes pero no eliminarlas.</p>
+<h2 id="195-visualización-pública">19.5 Visualización pública</h2>
+<p>Las imágenes cargadas aparecen en la galería de la página de detalle pública de la propiedad (<a href="#cap%C3%ADtulo-8--detalle-de-propiedad">Capítulo 8</a>), en el orden configurado, con la portada como primera imagen.</p>
+<div class="pagebreak"></div>
+<h1 id="capítulo-20--propietarios">Capítulo 20 — Propietarios</h1>
+<p>Ruta: <code>/owners</code>.</p>
+<figure class="screenshot"><img src="images/crm/crm-06-propietarios-listado.png" alt="Listado de propietarios"><figcaption>Listado de propietarios</figcaption></figure>
+<h2 id="201-listar-">20.1 Listar 🟢</h2>
+<p>Columnas: <strong>Nombre</strong>, <strong>Documento</strong>, <strong>Teléfono</strong>, <strong>Correo</strong>, <strong>Propiedades</strong> (cantidad asociada), <strong>Estado</strong>, acciones.</p>
+<h2 id="202-buscar-y-filtrar-">20.2 Buscar y filtrar 🟢</h2>
+<p>Buscador “Buscar propietarios…”, filtro <strong>“Estado”</strong> (Activo/Inactivo).</p>
+<h2 id="203-crear-">20.3 Crear 🔵</h2>
+<p>Botón <strong>“Nuevo propietario”</strong>. Campos: Nombre (obligatorio), Documento, Teléfono, WhatsApp, Correo electrónico, Estado (Activo/Inactivo), Dirección, Notas.</p>
+<h2 id="204-editar---eliminar-">20.4 Editar 🔵 / Eliminar 🔴</h2>
+<p>Mismo patrón que Propiedades: “Editar” para admin/agente, “Eliminar” solo para admin.</p>
+<h2 id="205-relacionar-propiedades">20.5 Relacionar propiedades</h2>
+<p>La columna <strong>“Propiedades”</strong> del listado muestra cuántas propiedades tiene asociadas cada propietario. La relación se establece desde el formulario de la propiedad (campo <strong>“Propietario”</strong>), no desde la ficha del propietario.</p>
+<h2 id="206-exportar-">20.6 Exportar 🟢</h2>
+<p>Botones CSV/PDF.</p>
+<div class="pagebreak"></div>
+<h1 id="capítulo-21--clientes">Capítulo 21 — Clientes</h1>
+<p>Ruta: <code>/clients</code>.</p>
+<figure class="screenshot"><img src="images/crm/crm-07-clientes-listado.png" alt="Listado de clientes"><figcaption>Listado de clientes</figcaption></figure>
+<h2 id="211-listar-">21.1 Listar 🟢</h2>
+<p>Columnas: <strong>Nombre</strong>, <strong>Teléfono</strong>, <strong>Correo</strong>, <strong>Presupuesto máx.</strong>, <strong>Estado</strong>, acciones.</p>
+<h2 id="212-buscar-">21.2 Buscar 🟢</h2>
+<p>Buscador “Buscar clientes…”. Este módulo no tiene un filtro adicional por dropdown (solo búsqueda de texto).</p>
+<h2 id="213-crear-">21.3 Crear 🔵</h2>
+<p>Botón <strong>“Nuevo cliente”</strong>. Formulario agrupado en tres bloques:</p>
+<ul>
+<li><strong>Contacto</strong>: Nombre (obligatorio), Documento, Teléfono, WhatsApp, Correo.</li>
+<li><strong>Interés</strong>: Tipo de interés (Compra/Arriendo), Tipo de inmueble buscado, Habitaciones, Presupuesto mínimo, Presupuesto máximo (debe ser mayor o igual al mínimo), Zonas de interés (texto separado por comas, ej. “Chapinero, Usaquén, Norte”).</li>
+<li><strong>Seguimiento</strong>: Estado (Activo/Inactivo), Notas.</li>
+</ul>
+<h2 id="214-editar---eliminar-">21.4 Editar 🔵 / Eliminar 🔴</h2>
+<p>Mismo patrón que los módulos anteriores.</p>
+<h2 id="215-estado">21.5 Estado</h2>
+<p><strong>Activo</strong> (success) / <strong>Inactivo</strong> (secondary).</p>
+<h2 id="216-exportar-">21.6 Exportar 🟢</h2>
+<p>Botones CSV/PDF.</p>
+<div class="pagebreak"></div>
+<h1 id="capítulo-22--leads">Capítulo 22 — Leads</h1>
+<p>Ruta: <code>/leads</code>.</p>
+<p><strong>Un lead es una persona que ha mostrado interés pero que todavía no necesariamente se ha convertido en cliente.</strong> Por ejemplo, alguien que solicitó información sobre una propiedad desde el sitio web.</p>
+<figure class="screenshot"><img src="images/crm/crm-08-leads-listado.png" alt="Listado de leads"><figcaption>Listado de leads</figcaption></figure>
+<h2 id="221-listar-">22.1 Listar 🟢</h2>
+<p>Columnas: <strong>Nombre</strong>, <strong>Teléfono</strong>, <strong>Origen</strong>, <strong>Estado</strong>, acciones.</p>
+<h2 id="222-origen">22.2 Origen</h2>
+<p>Un lead puede provenir de: Página web, WhatsApp, Llamada, Referido, Redes sociales, Portal inmobiliario, Manual, Otro.</p>
+<h2 id="223-estado">22.3 Estado</h2>
+<p>Un lead puede estar en: <strong>Nuevo</strong>, <strong>Contactado</strong>, <strong>Calificado</strong>, <strong>Descartado</strong>, <strong>Convertido</strong>.</p>
+<h2 id="224-filtro-">22.4 Filtro 🟢</h2>
+<p>Dropdown <strong>“Origen”</strong>.</p>
+<h2 id="225-crear--editar-">22.5 Crear / editar 🔵</h2>
+<p>Botón <strong>“Nuevo lead”</strong>. Campos: Nombre (obligatorio), Teléfono, Correo, Origen (obligatorio), Estado (obligatorio), Notas.</p>
+<h2 id="226-eliminar-">22.6 Eliminar 🔴</h2>
+<p>Solo Admin.</p>
+<h2 id="227-exportar-">22.7 Exportar 🟢</h2>
+<p>Botones CSV/PDF.</p>
+<div class="pagebreak"></div>
+<h1 id="capítulo-23--convertir-un-lead-en-cliente-">Capítulo 23 — Convertir un lead en cliente 🔵</h1>
+<h2 id="231-cuándo-utilizarlo">23.1 ¿Cuándo utilizarlo?</h2>
+<p>Cuando un lead deja de ser solo un interesado y ya está listo para trabajarse formalmente como cliente comercial (por ejemplo, después de confirmar su interés real por teléfono).</p>
+<figure class="screenshot"><img src="images/crm/crm-09-leads-detalle.png" alt="Detalle de un lead"><figcaption>Detalle de un lead</figcaption></figure>
+<h2 id="232-botón-exacto">23.2 Botón exacto</h2>
+<p>En el menú de acciones de la fila del lead (o en su detalle), presione el botón <strong>“Convertir a cliente”</strong> (ícono de una persona con un check). Este botón <strong>no aparece</strong> si el lead ya tiene estado “Convertido”, ni para el rol Asistente.</p>
+<h2 id="233-procedimiento">23.3 Procedimiento</h2>
+<ol>
+<li>Ubique el lead en <code>/leads</code>.</li>
+<li>Presione <strong>“Convertir a cliente”</strong>.</li>
+<li>Confirme en el cuadro de diálogo: <em>“¿Convertir este lead a cliente?”</em> / <em>“Se creará un cliente a partir de ‘{nombre}’ y el lead quedará marcado como convertido.”</em></li>
+<li>Presione <strong>“Convertir”</strong>.</li>
+<li>Verá el mensaje de éxito: <strong>“‘{nombre}’ convertido a cliente”</strong>.</li>
+</ol>
+<h2 id="234-qué-sucede-con-los-datos">23.4 ¿Qué sucede con los datos?</h2>
+<ul>
+<li>Se crea un <strong>nuevo Cliente</strong> copiando: nombre, teléfono, correo, agente asignado y notas del lead. El cliente queda con estado <strong>“Activo”</strong>.</li>
+<li>El <strong>Lead original no se borra</strong>: queda marcado con estado “Convertido” y enlazado al cliente creado, como historial.</li>
+<li>Un lead <strong>no puede convertirse dos veces</strong>: si ya está convertido, el sistema responde con un error de validación.</li>
+</ul>
+<blockquote class="callout callout-warning">
+<p>⚠️ <strong>Esta función no está disponible en la versión actual:</strong> los campos de interés comercial del nuevo cliente (tipo de interés, presupuesto, zonas de interés, tipo de inmueble buscado) <strong>no se completan automáticamente</strong> desde el lead, porque el lead no guarda esos datos. Deberá completarlos manualmente en la ficha del cliente si lo desea.</p>
+</blockquote>
+<div class="pagebreak"></div>
+<h1 id="capítulo-24--oportunidades">Capítulo 24 — Oportunidades</h1>
+<p>Ruta: <code>/opportunities</code>. Representa el <strong>pipeline</strong> comercial: cada negocio potencial con un cliente.</p>
+<figure class="screenshot"><img src="images/crm/crm-10-oportunidades-listado.png" alt="Listado de oportunidades"><figcaption>Listado de oportunidades</figcaption></figure>
+<h2 id="241-listar-">24.1 Listar 🟢</h2>
+<p>Columnas: <strong>Cliente</strong>, <strong>Propiedad</strong>, <strong>Valor</strong>, <strong>Etapa</strong>, <strong>Estado</strong>, <strong>Prob.</strong> (probabilidad %), acciones.</p>
+<h2 id="242-etapas-del-pipeline-stage">24.2 Etapas del pipeline (<code>stage</code>)</h2>
+<p>Nuevo → Contactado → Calificado → Propiedades enviadas → Visita agendada → Visita realizada → Negociación → Cierre ganado / Cierre perdido.</p>
+<h2 id="243-estado-status">24.3 Estado (<code>status</code>)</h2>
+<p>Se calcula <strong>automáticamente</strong> a partir de la etapa: mientras la etapa no sea un cierre, el estado es <strong>“Abierta”</strong>; si la etapa pasa a “Cierre ganado”, el estado cambia a <strong>“Ganada”</strong>; si pasa a “Cierre perdido”, cambia a <strong>“Perdida”</strong>. No existe un campo de estado editable de forma independiente — se mueve cambiando la etapa.</p>
+<h2 id="244-filtro-">24.4 Filtro 🟢</h2>
+<p>Dropdown <strong>“Etapa”</strong>.</p>
+<h2 id="245-crear--editar-">24.5 Crear / editar 🔵</h2>
+<p>Botón <strong>“Nueva oportunidad”</strong>. Campos: Cliente (obligatorio), Propiedad (opcional — al elegirla, autocompleta el propietario), Etapa (obligatoria), Valor estimado, Probabilidad % (0-100), Próxima acción, Fecha estimada de cierre, Notas.</p>
+<h2 id="246-eliminar-">24.6 Eliminar 🔴</h2>
+<p>Solo Admin.</p>
+<h2 id="247-exportar-">24.7 Exportar 🟢</h2>
+<p>Botones CSV/PDF (también existe una exportación específica para oportunidades <strong>cerradas</strong>, ver <a href="#cap%C3%ADtulo-28--cierres">Capítulo 28 — Cierres</a>).</p>
+<div class="pagebreak"></div>
+<h1 id="capítulo-25--visitas">Capítulo 25 — Visitas</h1>
+<p>Ruta: <code>/visits</code>.</p>
+<figure class="screenshot"><img src="images/crm/crm-11-visitas-listado.png" alt="Listado de visitas"><figcaption>Listado de visitas</figcaption></figure>
+<h2 id="251-listar-">25.1 Listar 🟢</h2>
+<p>Columnas: <strong>Propiedad</strong>, <strong>Cliente</strong>, <strong>Fecha y hora</strong>, <strong>Estado</strong>, acciones.</p>
+<h2 id="252-estados-de-una-visita">25.2 Estados de una visita</h2>
+<p>Pendiente, Confirmada, Realizada, Cancelada, Reprogramada, No asistió.</p>
+<h2 id="253-filtro-">25.3 Filtro 🟢</h2>
+<p>Dropdown <strong>“Estado”</strong>.</p>
+<h2 id="254-crear-una-visita-">25.4 Crear una visita 🔵</h2>
+<p>Botón <strong>“Nueva visita”</strong>. Campos:</p>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th>Campo</th>
+<th style="text-align:center">Obligatorio</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Propiedad</td>
+<td style="text-align:center">Sí</td>
+</tr>
+<tr>
+<td>Cliente</td>
+<td style="text-align:center">Sí</td>
+</tr>
+<tr>
+<td>Fecha y hora</td>
+<td style="text-align:center">Sí</td>
+</tr>
+<tr>
+<td>Estado</td>
+<td style="text-align:center">Sí (por defecto “Pendiente”)</td>
+</tr>
+<tr>
+<td>Observaciones</td>
+<td style="text-align:center">No</td>
+</tr>
+<tr>
+<td>Resultado</td>
+<td style="text-align:center">No</td>
+</tr>
+<tr>
+<td>Seguimiento posterior</td>
+<td style="text-align:center">No</td>
+</tr>
+</tbody>
+</table></div>
+<h2 id="255-registrar-resultado-y-seguimiento">25.5 Registrar resultado y seguimiento</h2>
+<p>Después de realizada la visita, edite el registro y complete los campos <strong>“Resultado”</strong> y <strong>“Seguimiento posterior”</strong>, y actualice el <strong>Estado</strong> a “Realizada”, “Cancelada”, “Reprogramada” o “No asistió” según corresponda.</p>
+<h2 id="256-eliminar---exportar-">25.6 Eliminar 🔴 / Exportar 🟢</h2>
+<p>Solo Admin elimina; CSV/PDF disponibles para todos los roles.</p>
+<div class="pagebreak"></div>
+<h1 id="capítulo-26--seguimientos--actividades">Capítulo 26 — Seguimientos / Actividades</h1>
+<p>Ruta: <code>/activities</code>. Registra el historial de contacto con clientes, leads u oportunidades.</p>
+<figure class="screenshot"><img src="images/crm/crm-12-actividades-listado.png" alt="Listado de seguimientos"><figcaption>Listado de seguimientos</figcaption></figure>
+<h2 id="261-tipos-de-seguimiento">26.1 Tipos de seguimiento</h2>
+<p>Llamada, WhatsApp, Correo, Reunión, Nota, Seguimiento.</p>
+<h2 id="262-listar--y-filtrar-">26.2 Listar 🟢 y filtrar 🟢</h2>
+<p>Columnas: <strong>Tipo</strong>, <strong>Notas</strong> (resumen), <strong>Fecha</strong>, acciones. Filtro dropdown <strong>“Tipo”</strong>.</p>
+<h2 id="263-crear-">26.3 Crear 🔵</h2>
+<p>Botón <strong>“Nuevo seguimiento”</strong>. Campos: Tipo (obligatorio, por defecto “Nota”), Fecha (obligatoria), Notas (obligatorias).</p>
+<h2 id="264-para-qué-sirve-el-historial">26.4 Para qué sirve el historial</h2>
+<p>El historial de seguimientos permite reconstruir toda la conversación que ha tenido el equipo con un cliente, lead u oportunidad: qué se habló, cuándo y por qué medio, para no repetir gestiones ni perder contexto entre agentes.</p>
+<h2 id="265-eliminar---exportar-">26.5 Eliminar 🔴 / Exportar 🟢</h2>
+<div class="pagebreak"></div>
+<h1 id="capítulo-27--tareas">Capítulo 27 — Tareas</h1>
+<p>Ruta: <code>/tasks</code>.</p>
+<figure class="screenshot"><img src="images/crm/crm-13-tareas-listado.png" alt="Listado de tareas"><figcaption>Listado de tareas</figcaption></figure>
+<h2 id="271-listar--y-filtrar-">27.1 Listar 🟢 y filtrar 🟢</h2>
+<p>Columnas: <strong>Título</strong>, <strong>Fecha límite</strong>, <strong>Estado</strong>, acciones. Filtro dropdown <strong>“Estado”</strong>.</p>
+<h2 id="272-estados">27.2 Estados</h2>
+<p>Pendiente, En progreso, Completada, Cancelada.</p>
+<h2 id="273-crear--asignar-">27.3 Crear / asignar 🔵</h2>
+<p>Botón <strong>“Nueva tarea”</strong>. Campos: Título (obligatorio), Fecha límite, Estado (por defecto “Pendiente”), Descripción.</p>
+<blockquote class="callout callout-warning">
+<p>⚠️ <strong>Esta función no está disponible en la versión actual:</strong> las tareas <strong>no tienen campo de prioridad</strong>. No existe un indicador visual de “alta/media/baja prioridad” en ningún lugar del sistema.</p>
+</blockquote>
+<h2 id="274-completar-una-tarea">27.4 Completar una tarea</h2>
+<p>Edite la tarea y cambie su <strong>Estado</strong> a “Completada”.</p>
+<h2 id="275-eliminar---exportar-">27.5 Eliminar 🔴 / Exportar 🟢</h2>
+<div class="pagebreak"></div>
+<h1 id="capítulo-28--cierres">Capítulo 28 — Cierres</h1>
+<p>Ruta: <code>/closings</code>. <strong>Módulo de solo lectura.</strong></p>
+<figure class="screenshot"><img src="images/crm/crm-14-cierres-listado.png" alt="Listado de cierres"><figcaption>Listado de cierres</figcaption></figure>
+<h2 id="281-qué-muestra">28.1 ¿Qué muestra?</h2>
+<p>No existe un módulo de “Cierre” independiente: esta pantalla es una vista derivada de las <strong>Oportunidades</strong> cuya etapa llegó a “Cierre ganado” o “Cierre perdido” (ver <a href="#cap%C3%ADtulo-24--oportunidades">Capítulo 24</a>). Por eso no tiene botón de crear, ni opciones de editar o eliminar por fila.</p>
+<h2 id="282-columnas">28.2 Columnas</h2>
+<p><strong>Cliente</strong>, <strong>Propiedad</strong>, <strong>Agente</strong>, <strong>Valor</strong>, <strong>Resultado</strong> (Ganada/Perdida), <strong>Fecha de cierre</strong>.</p>
+<h2 id="283-filtro-">28.3 Filtro 🟢</h2>
+<p>Dropdown <strong>“Resultado”</strong> (Ganada / Perdida).</p>
+<h2 id="284-exportar-">28.4 Exportar 🟢</h2>
+<p>Botones CSV/PDF, independientes de la exportación general de oportunidades.</p>
+<div class="pagebreak"></div>
+<h1 id="capítulo-29--documentos">Capítulo 29 — Documentos</h1>
+<p>No existe una sección de menú llamada “Documentos” por sí sola. Los documentos se administran <strong>dentro</strong> de la ficha de cada registro, mediante un panel llamado <strong>“Documentos”</strong>.</p>
+<h2 id="291-dónde-aparecen">29.1 Dónde aparecen</h2>
+<p>El panel de documentos está disponible únicamente en la vista de edición de: <strong>Propiedades</strong>, <strong>Propietarios</strong>, <strong>Clientes</strong> y <strong>Oportunidades</strong>.</p>
+<blockquote class="callout callout-warning">
+<p>⚠️ <strong>Esta función no está disponible en la versión actual:</strong> Leads, Visitas, Tareas, Seguimientos y Blog <strong>no</strong> tienen panel de documentos adjuntos.</p>
+</blockquote>
+<h2 id="292-cargar-un-documento-">29.2 Cargar un documento 🔵</h2>
+<p>Botón <strong>“Subir documento”</strong>. Formatos permitidos: PDF, JPG, JPEG, PNG, DOC, DOCX, XLS, XLSX, hasta 10 MB.</p>
+<h2 id="293-descargar-">29.3 Descargar 🟢</h2>
+<p>Cualquier rol puede descargar los documentos ya cargados.</p>
+<h2 id="294-eliminar-">29.4 Eliminar 🔴</h2>
+<p>Solo el rol Administrador puede eliminar un documento.</p>
+<blockquote class="callout callout-warning">
+<p>⚠️ <strong>Advertencia:</strong> no cargue en el sistema información que no deba quedar almacenada permanentemente (por ejemplo, documentos con datos personales sensibles que no sean estrictamente necesarios para la gestión comercial o legal del inmueble).</p>
+</blockquote>
+<div class="pagebreak"></div>
+<h1 id="capítulo-30--blog-desde-el-crm">Capítulo 30 — Blog desde el CRM</h1>
+<p>Ruta: <code>/blog-posts</code>.</p>
+<figure class="screenshot"><img src="images/crm/crm-15-blog-listado.png" alt="Blog — listado en el CRM"><figcaption>Blog — listado en el CRM</figcaption></figure>
+<h2 id="301-listar-">30.1 Listar 🟢</h2>
+<p>Columnas: <strong>Título</strong>, <strong>Autor</strong>, <strong>Estado</strong>, <strong>Publicado</strong> (fecha), acciones. Filtro dropdown <strong>“Estado”</strong> (Borrador/Publicado).</p>
+<h2 id="302-crear-un-artículo-">30.2 Crear un artículo 🔵</h2>
+<figure class="screenshot"><img src="images/crm/crm-16-blog-nuevo.png" alt="Nuevo artículo"><figcaption>Nuevo artículo</figcaption></figure>
+<p>Botón <strong>“Nuevo artículo”</strong>. Campos agrupados:</p>
+<ul>
+<li><strong>Contenido</strong>: Título (obligatorio), Extracto, Contenido (obligatorio), Estado (Borrador/Publicado).</li>
+<li><strong>SEO</strong>: Meta título, Meta descripción.</li>
+</ul>
+<blockquote class="callout callout-warning">
+<p>⚠️ <strong>Esta función no está disponible en la versión actual, tal como está redactada en el requerimiento:</strong> no es posible cargar la <strong>imagen destacada durante la creación</strong> del artículo. El flujo real es: primero se crea el artículo (sin imagen) y, una vez creado, se abre automáticamente su edición, donde sí aparece la tarjeta <strong>“Portada”</strong> con el botón <strong>“Subir imagen”</strong> / <strong>“Cambiar imagen”</strong>.</p>
+</blockquote>
+<h2 id="303-publicar">30.3 Publicar</h2>
+<p>Al cambiar el <strong>Estado</strong> a “Publicado” y guardar, el sistema fija automáticamente la fecha de publicación al momento actual.</p>
+<h2 id="304-imagen-destacada">30.4 Imagen destacada</h2>
+<p>Disponible solo en la vista de edición del artículo (no en la de creación), mediante la tarjeta <strong>“Portada”</strong>.</p>
+<h2 id="305-cómo-termina-apareciendo-en-la-web-pública">30.5 Cómo termina apareciendo en la web pública</h2>
+<p>Un artículo aparece en <code>/blog</code> únicamente cuando su estado es <strong>“Publicado”</strong> y su fecha de publicación ya pasó.</p>
+<h2 id="306-eliminar---exportar-">30.6 Eliminar 🔴 / Exportar 🟢</h2>
+<div class="pagebreak"></div>
+<h1 id="capítulo-31--usuarios-">Capítulo 31 — Usuarios 🔴</h1>
+<p>Ruta: <code>/team/users</code>. <strong>Visible solo para el rol Administrador.</strong></p>
+<figure class="screenshot"><img src="images/crm/crm-18-usuarios.png" alt="Listado de usuarios"><figcaption>Listado de usuarios</figcaption></figure>
+<h2 id="311-listar">31.1 Listar</h2>
+<p>Columnas: <strong>Nombre</strong>, <strong>Correo</strong>, <strong>Rol</strong> (insignia), acciones. Filtro dropdown <strong>“Rol”</strong> (Administrador/Agente/Asistente).</p>
+<h2 id="312-crear-un-usuario">31.2 Crear un usuario</h2>
+<p>Botón <strong>“Nuevo usuario”</strong>. Campos: Nombre (obligatorio), Correo electrónico (obligatorio, único), Contraseña (obligatoria, mínimo 8 caracteres), Rol (Administrador/Agente/Asistente, por defecto “Agente”). Botón: <strong>“Crear usuario”</strong>.</p>
+<h2 id="313-editar-un-usuario">31.3 Editar un usuario</h2>
+<p>Campos: Nombre, Correo electrónico, Nueva contraseña (opcional — déjela vacía para no cambiarla), Rol. Botón: <strong>“Guardar cambios”</strong>.</p>
+<h2 id="314-eliminar-un-usuario">31.4 Eliminar un usuario</h2>
+<p>Disponible para cualquier usuario excepto <strong>usted mismo</strong>: el botón “Eliminar” no aparece en la fila correspondiente a su propia cuenta, para evitar que un administrador se elimine a sí mismo accidentalmente.</p>
+<blockquote class="callout callout-warning">
+<p>⚠️ <strong>Importante:</strong> aunque no puede eliminarse ni cambiar su propio rol, <strong>sí puede eliminar o cambiar el rol de otros administradores</strong> — el sistema no impide dejar la inmobiliaria sin ningún administrador si hay más de uno y se eliminan entre sí. Gestione estas cuentas con cuidado.</p>
+</blockquote>
+<div class="pagebreak"></div>
+<h1 id="capítulo-32--agentes-">Capítulo 32 — Agentes 🔴</h1>
+<p>Ruta: <code>/team/agents</code>. Visible solo para Administrador. <strong>Es una vista de solo lectura</strong>, no un formulario.</p>
+<figure class="screenshot"><img src="images/crm/crm-19-agentes.png" alt="Listado de agentes"><figcaption>Listado de agentes</figcaption></figure>
+<h2 id="321-columnas">32.1 Columnas</h2>
+<p><strong>Nombre</strong>, <strong>Correo</strong>, <strong>Rol</strong>, <strong>Propiedades</strong> (cantidad asignada), <strong>Oportunidades abiertas</strong>, <strong>Tareas pendientes</strong>.</p>
+<h2 id="322-nota">32.2 Nota</h2>
+<p>Esta pantalla no tiene botones de crear/editar/eliminar. El mensaje que muestra el propio sistema cuando la lista está vacía lo confirma: <em>“Los agentes se crean desde la sección Usuarios.”</em> Es decir, un “agente” aquí es simplemente cualquier usuario con rol Admin o Agente — no existe una entidad “Agente” separada de “Usuario”.</p>
+<div class="pagebreak"></div>
+<h1 id="capítulo-33--roles-y-permisos-">Capítulo 33 — Roles y permisos 🔴</h1>
+<p>Ruta: <code>/team/roles</code>. Visible solo para Administrador. Es una <strong>pantalla informativa</strong>, no un editor: no se pueden modificar permisos desde aquí.</p>
+<figure class="screenshot"><img src="images/crm/crm-20-roles.png" alt="Matriz de roles"><figcaption>Matriz de roles</figcaption></figure>
+<h2 id="331-módulos-inmobiliarios">33.1 Módulos inmobiliarios</h2>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th>Permiso</th>
+<th style="text-align:center">Admin</th>
+<th style="text-align:center">Agente</th>
+<th style="text-align:center">Asistente</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Ver propiedades, personas, comercial</td>
+<td style="text-align:center">✅</td>
+<td style="text-align:center">✅</td>
+<td style="text-align:center">✅</td>
+</tr>
+<tr>
+<td>Crear y editar registros</td>
+<td style="text-align:center">✅</td>
+<td style="text-align:center">✅</td>
+<td style="text-align:center">❌</td>
+</tr>
+<tr>
+<td>Eliminar registros</td>
+<td style="text-align:center">✅</td>
+<td style="text-align:center">❌</td>
+<td style="text-align:center">❌</td>
+</tr>
+<tr>
+<td>Convertir leads a clientes</td>
+<td style="text-align:center">✅</td>
+<td style="text-align:center">✅</td>
+<td style="text-align:center">❌</td>
+</tr>
+</tbody>
+</table></div>
+<h2 id="332-equipo">33.2 Equipo</h2>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th>Permiso</th>
+<th style="text-align:center">Admin</th>
+<th style="text-align:center">Agente</th>
+<th style="text-align:center">Asistente</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Ver el módulo Equipo (Usuarios, Agentes, Roles)</td>
+<td style="text-align:center">✅</td>
+<td style="text-align:center">❌</td>
+<td style="text-align:center">❌</td>
+</tr>
+<tr>
+<td>Crear, editar y eliminar usuarios</td>
+<td style="text-align:center">✅</td>
+<td style="text-align:center">❌</td>
+<td style="text-align:center">❌</td>
+</tr>
+<tr>
+<td>Asignar roles a otros usuarios</td>
+<td style="text-align:center">✅</td>
+<td style="text-align:center">❌</td>
+<td style="text-align:center">❌</td>
+</tr>
+</tbody>
+</table></div>
+<p>Esta matriz coincide exactamente con el comportamiento real verificado del sistema (ver <a href="#cap%C3%ADtulo-2--roles-del-sistema">Capítulo 2</a>).</p>
+<div class="pagebreak"></div>
+<h1 id="capítulo-34--reportes-">Capítulo 34 — Reportes 🟢</h1>
+<p>Ruta: <code>/reports</code>. Los tres reportes son de solo lectura, cada uno con su propia tabla y sus propios botones de exportación.</p>
+<figure class="screenshot"><img src="images/crm/crm-17-reportes.png" alt="Reportes"><figcaption>Reportes</figcaption></figure>
+<h2 id="341-propiedades-por-estado">34.1 Propiedades por estado</h2>
+<p><strong>Qué mide:</strong> cantidad y valor total del inventario, agrupado por estado (Borrador, Disponible, Reservado, Vendido, Arrendado, Inactivo).
+<strong>Cuándo usarlo:</strong> para saber cuánto inventario activo tiene la inmobiliaria y su valor total en cada etapa.
+<strong>Filtros:</strong> ninguno.
+<strong>Cómo interpretarlo:</strong> compare la columna “Cantidad” con “Valor total” para identificar en qué estado se concentra el mayor valor del portafolio.</p>
+<h2 id="342-cierres-por-periodo">34.2 Cierres por periodo</h2>
+<p><strong>Qué mide:</strong> negocios ganados y perdidos de los <strong>últimos 6 meses</strong> (ventana fija).
+<strong>Cuándo usarlo:</strong> para evaluar la tendencia reciente de cierre de negocios.
+<strong>Filtros:</strong> ninguno visible en la interfaz (el backend admite un parámetro de meses, pero la pantalla actual no expone ese control).
+<strong>Cómo interpretarlo:</strong> compare “Ganados” contra “Perdidos” mes a mes, y observe la columna “Valor ganado” para el impacto económico real.</p>
+<h2 id="343-desempeño-de-agentes">34.3 Desempeño de agentes</h2>
+<p><strong>Qué mide:</strong> por cada usuario con rol Admin o Agente — propiedades asignadas, cierres totales (ganados + perdidos), valor cerrado (solo ganados) y tareas pendientes.
+<strong>Cuándo usarlo:</strong> para revisiones de desempeño individual o repartición de carga de trabajo.
+<strong>Filtros:</strong> ninguno.
+<strong>Cómo interpretarlo:</strong> un agente con muchas tareas pendientes y pocos cierres puede necesitar apoyo o redistribución de cuentas.</p>
+<div class="pagebreak"></div>
+<h1 id="capítulo-35--exportaciones-">Capítulo 35 — Exportaciones 🟢</h1>
+<h2 id="351-formatos-disponibles">35.1 Formatos disponibles</h2>
+<p><strong>CSV</strong> y <strong>PDF</strong>, seleccionables con botones independientes en cada listado.</p>
+<h2 id="352-procedimiento-general">35.2 Procedimiento general</h2>
+<ol>
+<li>Aplique los filtros y/o la búsqueda que necesite.</li>
+<li>Verifique el resultado en pantalla.</li>
+<li>Presione el botón <strong>CSV</strong> o <strong>PDF</strong>.</li>
+<li>El archivo se descarga automáticamente con los resultados filtrados (no solo la página actual).</li>
+</ol>
+<h2 id="353-dónde-existe-exportación">35.3 Dónde existe exportación</h2>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th>Módulo</th>
+<th style="text-align:center">CSV</th>
+<th style="text-align:center">PDF</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Propiedades</td>
+<td style="text-align:center">✅</td>
+<td style="text-align:center">✅</td>
+</tr>
+<tr>
+<td>Propietarios</td>
+<td style="text-align:center">✅</td>
+<td style="text-align:center">✅</td>
+</tr>
+<tr>
+<td>Clientes</td>
+<td style="text-align:center">✅</td>
+<td style="text-align:center">✅</td>
+</tr>
+<tr>
+<td>Leads</td>
+<td style="text-align:center">✅</td>
+<td style="text-align:center">✅</td>
+</tr>
+<tr>
+<td>Oportunidades</td>
+<td style="text-align:center">✅</td>
+<td style="text-align:center">✅</td>
+</tr>
+<tr>
+<td>Cierres (oportunidades cerradas)</td>
+<td style="text-align:center">✅</td>
+<td style="text-align:center">✅</td>
+</tr>
+<tr>
+<td>Visitas</td>
+<td style="text-align:center">✅</td>
+<td style="text-align:center">✅</td>
+</tr>
+<tr>
+<td>Seguimientos</td>
+<td style="text-align:center">✅</td>
+<td style="text-align:center">✅</td>
+</tr>
+<tr>
+<td>Tareas</td>
+<td style="text-align:center">✅</td>
+<td style="text-align:center">✅</td>
+</tr>
+<tr>
+<td>Blog</td>
+<td style="text-align:center">✅</td>
+<td style="text-align:center">✅</td>
+</tr>
+<tr>
+<td>Reportes (los 3)</td>
+<td style="text-align:center">✅</td>
+<td style="text-align:center">✅</td>
+</tr>
+<tr>
+<td>Documentos</td>
+<td style="text-align:center">❌</td>
+<td style="text-align:center">❌</td>
+</tr>
+<tr>
+<td>Usuarios</td>
+<td style="text-align:center">❌</td>
+<td style="text-align:center">❌</td>
+</tr>
+<tr>
+<td>Agentes</td>
+<td style="text-align:center">❌</td>
+<td style="text-align:center">❌</td>
+</tr>
+</tbody>
+</table></div>
+<blockquote class="callout callout-warning">
+<p>⚠️ <strong>Esta función no está disponible en la versión actual:</strong> Documentos, Usuarios y Agentes no tienen botón de exportación.</p>
+</blockquote>
+<div class="pagebreak"></div>
+<h1 id="capítulo-36--configuración-y-perfil-">Capítulo 36 — Configuración y perfil 🟢</h1>
+<p>Ruta: <code>/settings</code>.</p>
+<figure class="screenshot"><img src="images/crm/crm-21-configuracion.png" alt="Configuración / perfil"><figcaption>Configuración / perfil</figcaption></figure>
+<h2 id="361-campos">36.1 Campos</h2>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th>Campo</th>
+<th style="text-align:center">Obligatorio</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Nombre</td>
+<td style="text-align:center">Sí</td>
+</tr>
+<tr>
+<td>Correo electrónico</td>
+<td style="text-align:center">Sí</td>
+</tr>
+<tr>
+<td>Nueva contraseña</td>
+<td style="text-align:center">No (déjela vacía para no cambiarla)</td>
+</tr>
+<tr>
+<td>Contraseña actual</td>
+<td style="text-align:center">Solo si va a cambiar la contraseña</td>
+</tr>
+</tbody>
+</table></div>
+<p>La tarjeta también muestra su <strong>rol actual</strong> como insignia (Administrador/Agente/Asistente), sin poder modificarlo usted mismo.</p>
+<h2 id="362-cambiar-la-contraseña">36.2 Cambiar la contraseña</h2>
+<ol>
+<li>Ingrese la <strong>nueva contraseña</strong> (mínimo 8 caracteres).</li>
+<li>Ingrese su <strong>contraseña actual</strong>.</li>
+<li>Presione <strong>“Guardar cambios”</strong>.</li>
+</ol>
+<p>Si deja el campo “Nueva contraseña” vacío, el sistema guarda solo los cambios de nombre/correo y <strong>no</strong> exige la contraseña actual. Si escribe una nueva contraseña pero no indica la actual, verá el error: <em>“Ingresa tu contraseña actual para poder cambiarla”</em>.</p>
+<p>Confirmación de éxito: <strong>“Perfil actualizado correctamente”</strong>.</p>
+<div class="pagebreak"></div>
+<h1 id="parte-c--flujos-y-referencia">Parte C — Flujos y referencia</h1>
+<h1 id="capítulo-37--flujos-completos">Capítulo 37 — Flujos completos</h1>
+<h2 id="flujo-1--publicar-una-propiedad">Flujo 1 — Publicar una propiedad</h2>
+<pre><code class="language-text">Propietario
+ ↓
+Crear propietario (Capítulo 20)
+ ↓
+Crear propiedad y asociarla al propietario (Capítulo 18)
+ ↓
+Completar ubicación, precio y características
+ ↓
+Subir fotografías (Capítulo 19)
+ ↓
+Activar "Publicar en el sitio web" y marcar Estado = Disponible
+ ↓
+Aparece en /propiedades, /comprar o /arrendar según su tipo
+</code></pre>
+<h2 id="flujo-2--atender-un-cliente-de-principio-a-fin">Flujo 2 — Atender un cliente de principio a fin</h2>
+<pre><code class="language-text">Lead (Capítulo 22) — nace en la web o se crea manualmente
+ ↓
+Contacto / seguimiento (Capítulo 26)
+ ↓
+Convertir a Cliente (Capítulo 23)
+ ↓
+Crear Oportunidad asociando Cliente + Propiedad (Capítulo 24)
+ ↓
+Agendar Visita (Capítulo 25)
+ ↓
+Registrar resultado de la visita
+ ↓
+Avanzar la etapa de la oportunidad (Negociación...)
+ ↓
+Cierre — Ganado o Perdido (Capítulo 28)
+</code></pre>
+<h2 id="flujo-3--captar-propietario-desde-la-web">Flujo 3 — Captar propietario desde la web</h2>
+<pre><code class="language-text">Visitante del sitio
+ ↓
+Página "Vender mi propiedad" (Capítulo 10)
+ ↓
+Completa el formulario (nombre + correo/teléfono + datos del inmueble)
+ ↓
+Se crea un Lead en el CRM (origen: Página web)
+ ↓
+El equipo comercial contacta al propietario (Seguimientos)
+ ↓
+Si prospera: se crea el Propietario y su Propiedad en el CRM
+</code></pre>
+<div class="pagebreak"></div>
+<h1 id="capítulo-38--búsqueda-filtros-y-paginación">Capítulo 38 — Búsqueda, filtros y paginación</h1>
+<h2 id="381-en-la-web-pública">38.1 En la web pública</h2>
+<ul>
+<li>El catálogo (<code>/propiedades</code>, <code>/comprar</code>, <code>/arrendar</code>) usa filtros por tipo, ciudad, precio, habitaciones y baños (ver <a href="#cap%C3%ADtulo-5--buscar-y-filtrar-propiedades">Capítulo 5</a>).</li>
+<li>La paginación no tiene selector de cantidad por página.</li>
+</ul>
+<h2 id="382-en-el-crm">38.2 En el CRM</h2>
+<ul>
+<li>Cada listado tiene un buscador de texto libre y, en la mayoría de los módulos, un filtro adicional por dropdown (estado, etapa, origen, tipo, rol, etc.).</li>
+<li>La paginación del CRM sí incluye selector de tamaño (10/25/50/100 registros).</li>
+</ul>
+<h3 id="ejemplo-práctico">Ejemplo práctico</h3>
+<p>Para encontrar todas las oportunidades en etapa de negociación de un cliente específico:</p>
+<ol>
+<li>Vaya a <strong>Oportunidades</strong>.</li>
+<li>En el buscador, escriba el nombre del cliente.</li>
+<li>En el filtro <strong>“Etapa”</strong>, seleccione <strong>“Negociación”</strong>.</li>
+<li>Ajuste el tamaño de página si hay muchos resultados.</li>
+</ol>
+<div class="pagebreak"></div>
+<h1 id="capítulo-39--estados-del-sistema">Capítulo 39 — Estados del sistema</h1>
+<h2 id="propiedades-status">Propiedades (<code>status</code>)</h2>
+<p>Borrador → Disponible → Reservado → Vendido / Arrendado → Inactivo.</p>
+<blockquote class="callout callout-pin">
+<p>📌 Solo <strong>Disponible</strong> y <strong>Reservado</strong> son visibles públicamente (y solo si además está publicada y la fecha de publicación ya pasó).</p>
+</blockquote>
+<h2 id="tipo-de-operación-listingtype">Tipo de operación (<code>listing_type</code>)</h2>
+<p>Venta, Arriendo.</p>
+<h2 id="tipo-de-inmueble-propertytype">Tipo de inmueble (<code>property_type</code>)</h2>
+<p>Apartamento, Casa, Oficina, Local, Lote, Bodega, Finca, Otro.</p>
+<h2 id="propietarios--clientes-status">Propietarios / Clientes (<code>status</code>)</h2>
+<p>Activo, Inactivo.</p>
+<h2 id="leads">Leads</h2>
+<p><strong>Origen:</strong> Página web, WhatsApp, Llamada, Referido, Redes sociales, Portal inmobiliario, Manual, Otro.
+<strong>Estado:</strong> Nuevo, Contactado, Calificado, Descartado, Convertido.</p>
+<h2 id="oportunidades">Oportunidades</h2>
+<p><strong>Etapa (<code>stage</code>):</strong> Nuevo, Contactado, Calificado, Propiedades enviadas, Visita agendada, Visita realizada, Negociación, Cierre ganado, Cierre perdido.
+<strong>Estado (<code>status</code>, automático):</strong> Abierta, Ganada, Perdida.</p>
+<h2 id="visitas">Visitas</h2>
+<p>Pendiente, Confirmada, Realizada, Cancelada, Reprogramada, No asistió.</p>
+<h2 id="seguimientos--actividades-type">Seguimientos / Actividades (<code>type</code>)</h2>
+<p>Llamada, WhatsApp, Correo, Reunión, Nota, Seguimiento.</p>
+<h2 id="tareas">Tareas</h2>
+<p>Pendiente, En progreso, Completada, Cancelada.</p>
+<h2 id="blog">Blog</h2>
+<p>Borrador, Publicado.</p>
+<div class="pagebreak"></div>
+<h1 id="capítulo-40--mensajes-del-sistema">Capítulo 40 — Mensajes del sistema</h1>
+<h2 id="401-éxito">40.1 Éxito</h2>
+<p>Patrón general: <strong>“{Registro} {creado/actualizado/eliminado} correctamente”</strong>. Ejemplos: <em>“Propiedad creada correctamente”</em>, <em>“Cliente actualizado correctamente”</em>, <em>“‘{nombre}’ eliminado correctamente”</em>, <em>“‘{nombre}’ convertido a cliente”</em>, <em>“Perfil actualizado correctamente”</em>, <em>“Contraseña actualizada correctamente”</em>.</p>
+<h2 id="402-error">40.2 Error</h2>
+<p>Patrón general: <strong>“No fue posible {crear/actualizar/eliminar/cargar} {el/la} {registro}”</strong>. Ejemplos: <em>“No fue posible eliminar la propiedad”</em>, <em>“No fue posible convertir el lead”</em>, <em>“No fue posible iniciar sesión”</em>, <em>“No fue posible generar el archivo de exportación”</em>.</p>
+<h2 id="403-validación">40.3 Validación</h2>
+<p>Aparecen debajo de cada campo del formulario. Ejemplos: <em>“El nombre es obligatorio”</em>, <em>“Correo inválido”</em>, <em>“La contraseña debe tener al menos 8 caracteres”</em>, <em>“Indica al menos un correo o un teléfono de contacto”</em>, <em>“El presupuesto máximo debe ser mayor o igual al mínimo”</em>, <em>“Ingresa tu contraseña actual para poder cambiarla”</em>.</p>
+<h2 id="404-permisos">40.4 Permisos</h2>
+<p>Cuando un rol sin permiso intenta una acción no disponible en su interfaz, el botón correspondiente <strong>directamente no aparece</strong> en pantalla (no se muestra un mensaje de “no autorizado” al usuario, porque la opción está oculta de antemano).</p>
+<h2 id="405-confirmación">40.5 Confirmación</h2>
+<p>Antes de eliminar cualquier registro, o de convertir un lead, aparece un cuadro de diálogo de confirmación con el detalle de la acción y un botón para confirmarla o cancelarla.</p>
+<div class="pagebreak"></div>
+<h1 id="capítulo-41--solución-de-problemas">Capítulo 41 — Solución de problemas</h1>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th>Problema</th>
+<th>Posible causa</th>
+<th>Qué hacer</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>No puedo crear un registro</td>
+<td>Su rol es <strong>Asistente</strong>, que no tiene permiso de creación</td>
+<td>Solicite a un Admin o Agente que lo cree, o pida que le asignen un rol con permiso de escritura</td>
+</tr>
+<tr>
+<td>No veo el botón “Eliminar”</td>
+<td>Es una restricción de permisos: solo el rol <strong>Administrador</strong> puede eliminar</td>
+<td>Solicite a un administrador que elimine el registro</td>
+</tr>
+<tr>
+<td>Una propiedad no aparece en la web</td>
+<td>El interruptor “Publicar en el sitio web” está apagado, o el Estado no es <em>Disponible</em>/<em>Reservado</em>, o la fecha de publicación es futura</td>
+<td>Edite la propiedad, active “Publicar en el sitio web” y verifique el Estado</td>
+</tr>
+<tr>
+<td>No puedo cambiar mi contraseña</td>
+<td>No escribió su <strong>contraseña actual</strong> al intentar establecer una nueva</td>
+<td>Complete también el campo “Contraseña actual” en Configuración</td>
+</tr>
+<tr>
+<td>Un archivo no se puede subir</td>
+<td>El tipo de archivo o el tamaño no están permitidos</td>
+<td>Para imágenes: use JPG/PNG/WEBP, máx. 5 MB. Para documentos: PDF/JPG/PNG/DOC/DOCX/XLS/XLSX, máx. 10 MB</td>
+</tr>
+<tr>
+<td>No puedo convertir un lead</td>
+<td>El lead ya fue convertido anteriormente, o su rol es Asistente</td>
+<td>Verifique el estado del lead; si ya está “Convertido”, no es necesario volver a hacerlo</td>
+</tr>
+<tr>
+<td>No veo el módulo “Equipo”</td>
+<td>Su rol no es Administrador</td>
+<td>Este módulo (Usuarios, Agentes, Roles) es exclusivo del rol Admin</td>
+</tr>
+<tr>
+<td>Olvidé mi contraseña</td>
+<td>—</td>
+<td>Use “¿Olvidaste tu contraseña?” en el login (Capítulo 16)</td>
+</tr>
+<tr>
+<td>El enlace de recuperación no funciona</td>
+<td>El enlace expiró (validez de 60 minutos) o ya fue usado</td>
+<td>Solicite un nuevo enlace desde “¿Olvidaste tu contraseña?”</td>
+</tr>
+<tr>
+<td>No encuentro una propiedad/cliente en el listado</td>
+<td>Hay un filtro activo que lo está ocultando</td>
+<td>Revise los filtros aplicados o límpielos antes de buscar</td>
+</tr>
+</tbody>
+</table></div>
+<div class="pagebreak"></div>
+<h1 id="capítulo-42--preguntas-frecuentes">Capítulo 42 — Preguntas frecuentes</h1>
+<p><strong>¿Cómo publico una propiedad?</strong>
+Cree o edite la propiedad, active el interruptor “Publicar en el sitio web” y asegúrese de que su Estado sea “Disponible” o “Reservado”. Ver <a href="#cap%C3%ADtulo-18--propiedades">Capítulo 18</a>.</p>
+<p><strong>¿Cómo marco una propiedad como destacada?</strong>
+Dentro del formulario de edición de la propiedad, active el interruptor “Propiedad destacada”.</p>
+<p><strong>¿Cómo convierto un lead?</strong>
+Desde <code>/leads</code>, use el botón “Convertir a cliente” en el lead correspondiente. Ver <a href="#cap%C3%ADtulo-23--convertir-un-lead-en-cliente">Capítulo 23</a>.</p>
+<p><strong>¿Cómo agendo una visita?</strong>
+Desde <code>/visits</code>, presione “Nueva visita” y complete propiedad, cliente y fecha/hora. Ver <a href="#cap%C3%ADtulo-25--visitas">Capítulo 25</a>.</p>
+<p><strong>¿Qué diferencia hay entre cliente y lead?</strong>
+Un lead es un interesado que aún no se ha calificado ni convertido; un cliente es un registro ya confirmado con el que se puede trabajar oportunidades comerciales formalmente.</p>
+<p><strong>¿Quién puede eliminar registros?</strong>
+Únicamente el rol <strong>Administrador</strong>.</p>
+<p><strong>¿Cómo exporto información?</strong>
+Aplique los filtros que necesite en el listado y presione el botón <strong>CSV</strong> o <strong>PDF</strong>. Ver <a href="#cap%C3%ADtulo-35--exportaciones">Capítulo 35</a>.</p>
+<p><strong>¿Cómo cambio mi contraseña?</strong>
+Vaya a Configuración, escriba la nueva contraseña y su contraseña actual, y presione “Guardar cambios”. Ver <a href="#cap%C3%ADtulo-36--configuraci%C3%B3n-y-perfil">Capítulo 36</a>.</p>
+<p><strong>¿Cómo publico un artículo del blog?</strong>
+Cree el artículo, guárdelo, y en su edición cambie el Estado a “Publicado” y suba la imagen de portada. Ver <a href="#cap%C3%ADtulo-30--blog-desde-el-crm">Capítulo 30</a>.</p>
+<p><strong>¿Por qué una propiedad no aparece públicamente?</strong>
+Revise que esté publicada, en estado Disponible o Reservado, y que la fecha de publicación no sea futura. Ver <a href="#cap%C3%ADtulo-41--soluci%C3%B3n-de-problemas">Capítulo 41</a>.</p>
+<div class="pagebreak"></div>
+<h1 id="capítulo-43--buenas-prácticas">Capítulo 43 — Buenas prácticas</h1>
+<ul>
+<li>Mantenga la información de propiedades, propietarios y clientes actualizada; los datos desactualizados generan errores de atención al cliente.</li>
+<li>Revise cuidadosamente los datos de una propiedad <strong>antes</strong> de activar “Publicar en el sitio web”: lo que ve el visitante es exactamente lo que se cargó.</li>
+<li>Use los estados correctamente (por ejemplo, marque una propiedad como “Vendida” o “Arrendada” tan pronto se cierre el negocio, para no seguir mostrándola disponible).</li>
+<li>Registre siempre un seguimiento después de cada contacto con un cliente o lead — es la única forma de que el resto del equipo tenga contexto.</li>
+<li>Cierre las tareas cuando estén completadas para mantener el tablero de trabajo limpio y confiable.</li>
+<li>Registre el resultado real de cada visita (realizada, no asistió, reprogramada) apenas ocurra.</li>
+<li>No comparta su usuario y contraseña con otro miembro del equipo: cada persona debe tener su propia cuenta, con el rol que corresponda a su función.</li>
+<li>Mantenga su contraseña segura y cámbiela periódicamente desde Configuración.</li>
+<li>Revise la información filtrada en pantalla antes de exportarla, ya que el archivo exportado refleja exactamente los filtros aplicados.</li>
+<li>Al eliminar un usuario administrador, verifique primero que quede al menos otro administrador activo en el sistema — el sistema no lo hace por usted.</li>
+</ul>
+<div class="pagebreak"></div>
+<h1 id="capítulo-44--glosario">Capítulo 44 — Glosario</h1>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th>Término</th>
+<th>Significado</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Lead</strong></td>
+<td>Persona que ha mostrado interés pero aún no se ha convertido en cliente.</td>
+</tr>
+<tr>
+<td><strong>Cliente</strong></td>
+<td>Persona con la que ya se trabaja comercialmente de forma confirmada.</td>
+</tr>
+<tr>
+<td><strong>Propietario</strong></td>
+<td>Persona dueña de un inmueble gestionado por la inmobiliaria.</td>
+</tr>
+<tr>
+<td><strong>Oportunidad</strong></td>
+<td>Un posible negocio comercial entre un cliente y (opcionalmente) una propiedad específica.</td>
+</tr>
+<tr>
+<td><strong>Pipeline</strong></td>
+<td>El conjunto de oportunidades abiertas, organizadas por etapa.</td>
+</tr>
+<tr>
+<td><strong>Cierre</strong></td>
+<td>Una oportunidad que llegó a su etapa final: ganada o perdida.</td>
+</tr>
+<tr>
+<td><strong>Propiedad destacada</strong></td>
+<td>Propiedad marcada para aparecer en la sección principal del sitio web.</td>
+</tr>
+<tr>
+<td><strong>Publicación</strong></td>
+<td>Acción de hacer visible una propiedad o artículo de blog en el sitio público.</td>
+</tr>
+<tr>
+<td><strong>Visita</strong></td>
+<td>Encuentro agendado entre un cliente y una propiedad, con un agente presente.</td>
+</tr>
+<tr>
+<td><strong>Seguimiento</strong></td>
+<td>Registro de un contacto realizado (llamada, WhatsApp, correo, reunión, nota).</td>
+</tr>
+<tr>
+<td><strong>Agente</strong></td>
+<td>Usuario del CRM con rol “Agente” o “Admin” que gestiona propiedades y clientes.</td>
+</tr>
+<tr>
+<td><strong>CRM</strong></td>
+<td>Sistema privado de administración y operación de la inmobiliaria.</td>
+</tr>
+</tbody>
+</table></div>
+<div class="pagebreak"></div>
+<h1 id="capítulo-45--soporte">Capítulo 45 — Soporte</h1>
+<blockquote class="callout callout-pin">
+<p>📌 <strong>Placeholder — completar con los datos reales de soporte de la inmobiliaria antes de entregar este manual al cliente final.</strong></p>
+</blockquote>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th>Canal</th>
+<th>Dato</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Correo de soporte</td>
+<td><code>[correo-de-soporte-pendiente]</code></td>
+</tr>
+<tr>
+<td>Teléfono de soporte</td>
+<td><code>[teléfono-de-soporte-pendiente]</code></td>
+</tr>
+<tr>
+<td>Horario de atención</td>
+<td><code>[horario-pendiente]</code></td>
+</tr>
+</tbody>
+</table></div>
+<div class="pagebreak"></div>
+<h1 id="anexo-a--arquitectura-general-del-sistema">Anexo A — Arquitectura general del sistema</h1>
+<p>Este anexo es de alto nivel, únicamente para dar contexto técnico general. No sustituye ni forma parte del manual de usuario.</p>
+<pre><code class="language-text">                 ┌───────────────────┐
+                 │   Sitio web        │
+                 │   (público)        │
+                 └─────────┬─────────┘
+                           │
+                 ┌─────────▼─────────┐
+                 │   Sistema          │
+                 │   (API central)    │
+                 └─────────┬─────────┘
+                           │
+                 ┌─────────▼─────────┐
+                 │   CRM              │
+                 │   (privado)        │
+                 └───────────────────┘
+</code></pre>
+<p>El sitio web público y el CRM privado comparten la misma base de datos a través de un sistema central: lo que se crea o modifica en el CRM se refleja en el sitio web público (y viceversa, en el caso de los formularios que generan leads).</p>
+</body></html>
+</body>
+</html>
