@@ -14,7 +14,12 @@ function selectValue(current: string | null): string {
   return current ?? ANY_VALUE;
 }
 
-export function PropertyFilters() {
+interface PropertyFiltersProps {
+  basePath?: string;
+  hideListingType?: boolean;
+}
+
+export function PropertyFilters({ basePath = "/propiedades", hideListingType = false }: PropertyFiltersProps) {
   const router = useRouter();
   const searchParams = useSearchParams();
 
@@ -30,7 +35,7 @@ export function PropertyFilters() {
       params.delete(key);
     }
     params.delete("page");
-    router.push(`/propiedades?${params.toString()}`);
+    router.push(`${basePath}?${params.toString()}`);
   }
 
   function handleSubmit(event: React.FormEvent) {
@@ -43,22 +48,24 @@ export function PropertyFilters() {
     if (priceMax) params.set("price_max", priceMax);
     else params.delete("price_max");
     params.delete("page");
-    router.push(`/propiedades?${params.toString()}`);
+    router.push(`${basePath}?${params.toString()}`);
   }
 
   return (
     <form onSubmit={handleSubmit} className="flex flex-col gap-4 rounded-2xl border border-border bg-card p-5">
       <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-4">
-        <Select value={selectValue(searchParams.get("listing_type"))} onValueChange={(v) => updateParam("listing_type", v)}>
-          <SelectTrigger className="w-full">
-            <SelectValue placeholder="Comprar o arrendar" />
-          </SelectTrigger>
-          <SelectContent>
-            <SelectItem value={ANY_VALUE}>Comprar o arrendar</SelectItem>
-            <SelectItem value="venta">Comprar</SelectItem>
-            <SelectItem value="arriendo">Arrendar</SelectItem>
-          </SelectContent>
-        </Select>
+        {!hideListingType && (
+          <Select value={selectValue(searchParams.get("listing_type"))} onValueChange={(v) => updateParam("listing_type", v)}>
+            <SelectTrigger className="w-full">
+              <SelectValue placeholder="Comprar o arrendar" />
+            </SelectTrigger>
+            <SelectContent>
+              <SelectItem value={ANY_VALUE}>Comprar o arrendar</SelectItem>
+              <SelectItem value="venta">Comprar</SelectItem>
+              <SelectItem value="arriendo">Arrendar</SelectItem>
+            </SelectContent>
+          </Select>
+        )}
 
         <Select value={selectValue(searchParams.get("property_type"))} onValueChange={(v) => updateParam("property_type", v)}>
           <SelectTrigger className="w-full">
