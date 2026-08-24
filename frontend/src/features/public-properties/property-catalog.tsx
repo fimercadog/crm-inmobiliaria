@@ -41,7 +41,7 @@ export async function PropertyCatalog({
 
   return (
     <PublicContainer className="flex flex-col gap-8 py-14">
-      <SectionHeading title={title} description={description} />
+      <SectionHeading level={1} title={title} description={description} />
 
       <Suspense>
         <PropertyFilters basePath={basePath} hideListingType={Boolean(lockedListingType)} />

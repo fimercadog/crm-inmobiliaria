@@ -41,6 +41,7 @@ export default function ContactoPage() {
   return (
     <PublicContainer className="flex flex-col gap-10 py-14">
       <SectionHeading
+        level={1}
         eyebrow="Contacto"
         title="Hablemos de tu próxima propiedad"
         description="Escríbenos y un asesor te responderá lo antes posible."

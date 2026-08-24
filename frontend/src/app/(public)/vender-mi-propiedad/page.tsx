@@ -32,6 +32,7 @@ export default function VenderMiPropiedadPage() {
   return (
     <PublicContainer className="flex flex-col gap-12 py-14">
       <SectionHeading
+        level={1}
         eyebrow="Propietarios"
         title="¿Quieres vender o arrendar tu propiedad?"
         description="Cuéntanos los detalles de tu inmueble y un asesor se pondrá en contacto contigo para evaluarlo y coordinar su publicación."

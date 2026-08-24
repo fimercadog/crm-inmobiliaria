@@ -20,7 +20,7 @@ export default async function BlogPage(props: PageProps<"/blog">) {
 
   return (
     <PublicContainer className="flex flex-col gap-10 py-14">
-      <SectionHeading title="Blog" description="Ideas y guías útiles para tu próxima decisión inmobiliaria." />
+      <SectionHeading level={1} title="Blog" description="Ideas y guías útiles para tu próxima decisión inmobiliaria." />
 
       {items.length === 0 ? (
         <p className="py-10 text-center text-muted-foreground">Todavía no hay artículos publicados.</p>

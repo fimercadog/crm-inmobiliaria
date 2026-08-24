@@ -48,6 +48,7 @@ export default function NosotrosPage() {
   return (
     <PublicContainer className="flex flex-col gap-16 py-14">
       <SectionHeading
+        level={1}
         eyebrow="Nosotros"
         title="Encontramos el lugar que tú imaginas"
         description="Somos un equipo inmobiliario enfocado en simplificar la compra, el arriendo y la venta de propiedades, con un proceso claro de principio a fin."

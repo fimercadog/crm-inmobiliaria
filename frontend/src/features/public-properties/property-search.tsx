@@ -16,6 +16,7 @@ export function PropertySearch() {
   const [listingType, setListingType] = useState<ListingTypeValue>("venta");
   const [propertyType, setPropertyType] = useState<string>(ANY_TYPE);
   const [city, setCity] = useState("");
+  const [zone, setZone] = useState("");
   const [priceMin, setPriceMin] = useState("");
   const [priceMax, setPriceMax] = useState("");
 
@@ -26,6 +27,7 @@ export function PropertySearch() {
     params.set("listing_type", listingType);
     if (propertyType !== ANY_TYPE) params.set("property_type", propertyType);
     if (city) params.set("city", city);
+    if (zone) params.set("zone", zone);
     if (priceMin) params.set("price_min", priceMin);
     if (priceMax) params.set("price_max", priceMax);
 
@@ -44,7 +46,7 @@ export function PropertySearch() {
         </TabsList>
       </Tabs>
 
-      <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-5">
+      <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-6">
         <Select value={propertyType} onValueChange={setPropertyType}>
           <SelectTrigger className="w-full">
             <SelectValue placeholder="Tipo de inmueble" />
@@ -60,6 +62,8 @@ export function PropertySearch() {
         </Select>
 
         <Input placeholder="Ciudad" value={city} onChange={(event) => setCity(event.target.value)} />
+
+        <Input placeholder="Barrio / zona" value={zone} onChange={(event) => setZone(event.target.value)} />
 
         <Input
           type="number"
