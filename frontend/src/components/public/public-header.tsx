@@ -20,8 +20,8 @@ export function PublicHeader() {
   const [mobileOpen, setMobileOpen] = useState(false);
 
   return (
-    <header className="sticky top-0 z-40 border-b border-black/5 bg-white/95 backdrop-blur supports-[backdrop-filter]:bg-white/85">
-      <div className="mx-auto flex h-20 max-w-[1320px] items-center justify-between gap-6 px-6 lg:px-10">
+    <header className="sticky top-0 z-40 border-b border-black/5 bg-white/95 backdrop-blur supports-backdrop-filter:bg-white/85">
+      <div className="mx-auto flex h-20 max-w-330 items-center justify-between gap-6 px-6 lg:px-10">
         <PublicLogo textClassName="hidden sm:flex" />
 
         <nav className="hidden items-center gap-8 lg:flex">
