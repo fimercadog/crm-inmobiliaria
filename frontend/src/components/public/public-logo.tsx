@@ -18,17 +18,11 @@ function LogoMark({ className, inverted = false }: Pick<PublicLogoProps, "classN
       fill="none"
       xmlns="http://www.w3.org/2000/svg"
     >
-      <rect width="96" height="96" rx="26" fill={inverted ? "white" : "#101820"} />
-      <path
-        d="M24 43L48 24L72 43"
-        stroke="#A7E8D1"
-        strokeWidth="6.75"
-        strokeLinecap="round"
-        strokeLinejoin="round"
-      />
-      <path d="M33 70V45H52.5C62.65 45 68.5 50.1 68.5 57.2C68.5 64.5 62.75 70 52.5 70H33Z" fill={inverted ? "#101820" : "white"} />
-      <path d="M45 61.7H52.9C56.85 61.7 59.2 59.95 59.2 57.2C59.2 54.5 56.85 52.8 52.9 52.8H45V61.7Z" fill={inverted ? "white" : "#101820"} />
-      <path d="M33 70H45V52.8H33V70Z" fill="#A7E8D1" />
+      <rect width="96" height="96" rx="26" fill={inverted ? "white" : "#25282D"} />
+      <rect x="28" y="22" width="14" height="54" fill={inverted ? "#25282D" : "white"} />
+      <rect x="28" y="22" width="40" height="12" fill={inverted ? "#25282D" : "white"} />
+      <rect x="56" y="22" width="12" height="30" fill={inverted ? "#25282D" : "white"} />
+      <rect x="42" y="34" width="14" height="18" fill="#19C78F" />
     </svg>
   );
 }
