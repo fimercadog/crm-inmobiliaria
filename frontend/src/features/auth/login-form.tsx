@@ -23,6 +23,12 @@ const loginSchema = z.object({
 
 type LoginValues = z.infer<typeof loginSchema>;
 
+const DEMO_USERS = [
+  { role: "Administrador", email: "admin@crm.test" },
+  { role: "Agente", email: "agente@crm.test" },
+  { role: "Asistente", email: "asistente@crm.test" },
+];
+
 export function LoginForm() {
   const router = useRouter();
   const dispatch = useAppDispatch();
@@ -30,8 +36,14 @@ export function LoginForm() {
   const {
     register,
     handleSubmit,
+    setValue,
     formState: { errors, isSubmitting },
   } = useForm<LoginValues>({ resolver: zodResolver(loginSchema) });
+
+  function fillDemoUser(email: string) {
+    setValue("email", email, { shouldValidate: true });
+    setValue("password", "password", { shouldValidate: true });
+  }
 
   async function onSubmit(values: LoginValues) {
     setFormError(null);
@@ -88,6 +100,24 @@ export function LoginForm() {
           Iniciar sesión
         </Button>
       </FieldGroup>
+
+      <div className="mt-6 rounded-lg border bg-muted/40 p-4">
+        <p className="text-sm font-medium">Usuarios demo</p>
+        <p className="text-xs text-muted-foreground">Contraseña para todos: password</p>
+        <div className="mt-3 flex flex-col gap-2">
+          {DEMO_USERS.map((demo) => (
+            <button
+              key={demo.email}
+              type="button"
+              onClick={() => fillDemoUser(demo.email)}
+              className="rounded-md border bg-background px-3 py-2 text-left transition-colors hover:bg-accent"
+            >
+              <p className="text-sm font-medium">{demo.role}</p>
+              <p className="text-xs text-muted-foreground">{demo.email}</p>
+            </button>
+          ))}
+        </div>
+      </div>
     </form>
   );
 }

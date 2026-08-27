@@ -8,7 +8,7 @@ export default function LoginPage() {
       <Card>
         <CardHeader>
           <CardTitle>Iniciar sesión</CardTitle>
-          <CardDescription>Ingresa tus credenciales para acceder al CRM</CardDescription>
+          <CardDescription>Usa un usuario demo para entrar al panel y probar roles.</CardDescription>
         </CardHeader>
         <CardContent>
           <LoginForm />
