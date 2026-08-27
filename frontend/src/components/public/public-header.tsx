@@ -40,7 +40,7 @@ export function PublicHeader() {
         </nav>
 
         <div className="hidden shrink-0 lg:block">
-          <Button asChild size="sm" className="h-9 rounded-full bg-[var(--realty-accent)] px-5 text-[0.68rem] font-extrabold uppercase text-white hover:bg-[var(--realty-accent)]/90">
+          <Button asChild size="sm" className="h-9 rounded-full bg-(--realty-accent) px-5 text-[0.68rem] font-extrabold uppercase text-white hover:bg-(--realty-accent)/90">
             <Link href="/vender-mi-propiedad">Vende tu propiedad</Link>
           </Button>
         </div>

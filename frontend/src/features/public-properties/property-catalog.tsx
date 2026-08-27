@@ -51,7 +51,7 @@ export async function PropertyCatalog({
         </div>
       </Suspense>
 
-      <p className="realty-animate-fade-up realty-animate-delay-2 text-center text-xs font-extrabold tracking-wide text-[var(--realty-blue)] uppercase">
+      <p className="realty-animate-fade-up realty-animate-delay-2 text-center text-xs font-extrabold tracking-wide text-(--realty-blue) uppercase">
         {meta.total} propiedades encontradas
       </p>
 

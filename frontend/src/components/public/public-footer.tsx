@@ -9,7 +9,7 @@ const currentYear = new Date().getFullYear();
 
 export function PublicFooter() {
   return (
-    <footer className="bg-[var(--realty-footer)] text-white">
+    <footer className="bg-(--realty-footer) text-white">
       <div className="mx-auto max-w-[1320px] px-6 py-18 lg:px-10">
         <div className="grid gap-12 lg:grid-cols-[1.5fr_1fr_1.4fr]">
           <div className="flex flex-col gap-4">
@@ -35,7 +35,7 @@ export function PublicFooter() {
 
           <div className="flex flex-col gap-3">
             <h3 className="text-xs font-extrabold tracking-wide text-white uppercase">Contacto</h3>
-            <a href={`tel:${SITE_CONFIG.phone.replace(/\s+/g, "")}`} className="text-3xl font-medium tracking-tight transition-colors hover:text-[var(--realty-accent)]">
+            <a href={`tel:${SITE_CONFIG.phone.replace(/\s+/g, "")}`} className="text-3xl font-medium tracking-tight transition-colors hover:text-(--realty-accent)">
               {SITE_CONFIG.phone}
             </a>
             <p className="max-w-xs text-sm leading-7 text-white/65">{SITE_CONFIG.address}</p>

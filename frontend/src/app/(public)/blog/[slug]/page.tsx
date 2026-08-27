@@ -6,6 +6,9 @@ import { SAMPLE_PROPERTY_IMAGE } from "@/constants/images";
 import { fetchPublicBlogPostBySlug } from "@/lib/api/public";
 import { SITE_CONFIG } from "@/constants/site";
 
+// Needs a live backend at request time — don't prerender at build time.
+export const dynamic = "force-dynamic";
+
 export async function generateMetadata(props: PageProps<"/blog/[slug]">): Promise<Metadata> {
   const { slug } = await props.params;
   const post = await fetchPublicBlogPostBySlug(slug);
@@ -56,7 +59,7 @@ export default async function BlogPostPage(props: PageProps<"/blog/[slug]">) {
         </h1>
       </div>
 
-      <div className="realty-animate-scale-in realty-animate-delay-1 relative mx-auto aspect-16/9 w-full max-w-4xl overflow-hidden rounded-2xl bg-muted">
+      <div className="realty-animate-scale-in realty-animate-delay-1 relative mx-auto aspect-video w-full max-w-4xl overflow-hidden rounded-2xl bg-muted">
         <Image
           src={post.cover_image ?? SAMPLE_PROPERTY_IMAGE}
           alt={post.cover_image ? post.title : "Interior moderno de propiedad"}

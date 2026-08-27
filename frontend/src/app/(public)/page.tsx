@@ -10,6 +10,10 @@ import { PropertyGrid } from "@/features/public-properties/property-grid";
 import { fetchFeaturedProperties } from "@/lib/api/public";
 import { SITE_CONFIG } from "@/constants/site";
 
+// Needs a live backend at request time (featured properties) — don't
+// prerender at build time, when the API may not be reachable yet.
+export const dynamic = "force-dynamic";
+
 export const metadata: Metadata = {
   title: `${SITE_CONFIG.name} — Encuentra el espacio que estás buscando`,
   description: "Compra, arrienda o vende tu propiedad con el acompañamiento de un equipo inmobiliario profesional.",
@@ -53,7 +57,7 @@ export default async function HomePage() {
             <Link
               key={item.href}
               href={item.href}
-              className={`flex min-h-36 flex-col items-center justify-center gap-4 text-center text-[0.68rem] font-extrabold uppercase tracking-wide transition-colors hover:bg-[var(--realty-accent)] ${index === 3 ? "bg-[var(--realty-accent)]" : ""}`}
+              className={`flex min-h-36 flex-col items-center justify-center gap-4 text-center text-[0.68rem] font-extrabold uppercase tracking-wide transition-colors hover:bg-(--realty-accent) ${index === 3 ? "bg-(--realty-accent)" : ""}`}
             >
               <item.icon className="size-7" />
               {item.title}
@@ -71,14 +75,14 @@ export default async function HomePage() {
           />
           <PropertyGrid properties={featured} />
           <div className="flex justify-center">
-            <Button asChild variant="outline" size="lg" className="rounded-full border-2 border-[var(--realty-accent)] px-6 text-[0.68rem] font-extrabold uppercase text-[var(--realty-accent)] hover:bg-[var(--realty-accent)] hover:text-white">
+            <Button asChild variant="outline" size="lg" className="rounded-full border-2 border-(--realty-accent) px-6 text-[0.68rem] font-extrabold uppercase text-(--realty-accent) hover:bg-(--realty-accent) hover:text-white">
               <Link href="/propiedades">Ver todas las propiedades</Link>
             </Button>
           </div>
         </PublicContainer>
       </section>
 
-      <section className="realty-animate-fade-up bg-[var(--realty-surface)] py-24">
+      <section className="realty-animate-fade-up bg-(--realty-surface) py-24">
         <PublicContainer className="grid gap-12 lg:grid-cols-2">
           <SectionHeading eyebrow="Por qué elegirnos" title="Expertos en los que puedes confiar" />
           <div className="grid gap-8">
@@ -105,7 +109,7 @@ export default async function HomePage() {
         <h2 className="mx-auto mt-6 max-w-4xl text-4xl font-medium text-balance sm:text-5xl lg:text-6xl">
           Deja los detalles en nuestras manos y vive mejor tu próximo paso.
         </h2>
-        <Link href="/contacto" className="mt-10 inline-flex min-h-10 items-center justify-center rounded-full bg-[var(--realty-accent)] px-7 text-[0.68rem] font-extrabold uppercase text-white transition-colors hover:bg-[var(--realty-accent)]/90">
+        <Link href="/contacto" className="mt-10 inline-flex min-h-10 items-center justify-center rounded-full bg-(--realty-accent) px-7 text-[0.68rem] font-extrabold uppercase text-white transition-colors hover:bg-(--realty-accent)/90">
           Contactar asesor
         </Link>
       </section>

@@ -3,6 +3,9 @@ import { fetchPublicBlogPosts, fetchPublicProperties } from "@/lib/api/public";
 
 const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL ?? "http://localhost:3000";
 
+// Needs a live backend at request time — don't prerender at build time.
+export const dynamic = "force-dynamic";
+
 async function collectAllPropertySlugs(): Promise<string[]> {
   const slugs: string[] = [];
   let page = 1;

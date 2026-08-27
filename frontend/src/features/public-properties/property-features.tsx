@@ -24,7 +24,7 @@ export function PropertyFeatures({ property }: { property: PublicPropertyDetail 
     <div className="grid gap-x-16 sm:grid-cols-2">
       {items.map((item) => (
         <div key={item.label} className="grid grid-cols-2 border-b border-black/10 py-5 text-sm">
-          <p className="font-extrabold text-[0.7rem] tracking-wide text-[var(--realty-primary)] uppercase">{item.label}</p>
+          <p className="font-extrabold text-[0.7rem] tracking-wide text-(--realty-primary) uppercase">{item.label}</p>
           <p className="text-muted-foreground">{item.value}</p>
         </div>
       ))}

@@ -7,11 +7,11 @@ export function PropertyCTA({ propertyId, title, code }: { propertyId: number; t
   const whatsappUrl = buildWhatsAppUrl(`Hola, estoy interesado en la propiedad ${code} - ${title}.`);
 
   return (
-    <div className="bg-[var(--realty-surface)] p-8">
+    <div className="bg-(--realty-surface) p-8">
       <div className="flex flex-col gap-5">
         <h2 className="text-3xl font-medium">Solicitar información</h2>
         <p className="text-sm leading-7 text-muted-foreground">Escríbenos por WhatsApp o deja tus datos y un asesor te contactará.</p>
-        <Button asChild size="lg" className="w-full rounded-full bg-[var(--realty-accent)] text-[0.68rem] font-extrabold uppercase text-white hover:bg-[var(--realty-accent)]/90">
+        <Button asChild size="lg" className="w-full rounded-full bg-(--realty-accent) text-[0.68rem] font-extrabold uppercase text-white hover:bg-(--realty-accent)/90">
           <Link href={whatsappUrl} target="_blank" rel="noopener noreferrer">
             Escribir por WhatsApp
           </Link>

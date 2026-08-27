@@ -81,7 +81,7 @@ export function PropertySearch() {
           onChange={(event) => setPriceMax(event.target.value)}
         />
 
-        <Button type="submit" className="w-full rounded-none bg-white px-3 text-[0.62rem] font-extrabold uppercase text-[var(--realty-primary)] hover:bg-white/90">
+        <Button type="submit" className="w-full rounded-none bg-white px-3 text-[0.62rem] font-extrabold uppercase text-(--realty-primary) hover:bg-white/90">
           <Search />
           Buscar
         </Button>

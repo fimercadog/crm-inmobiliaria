@@ -24,8 +24,8 @@ export function PropertyCard({ property }: { property: PublicPropertySummary }) 
       </div>
 
       <div className="flex flex-1 flex-col items-start gap-2">
-        <p className="text-xl font-extrabold text-[var(--realty-primary)]">{currencyFormatter.format(property.price)}</p>
-        <p className="text-sm font-extrabold text-[var(--realty-primary)]">
+        <p className="text-xl font-extrabold text-(--realty-primary)">{currencyFormatter.format(property.price)}</p>
+        <p className="text-sm font-extrabold text-(--realty-primary)">
           {[
             property.bedrooms !== null ? `${property.bedrooms} Hab.` : null,
             property.bathrooms !== null ? `${property.bathrooms} Baños` : null,
@@ -34,7 +34,7 @@ export function PropertyCard({ property }: { property: PublicPropertySummary }) 
         </p>
         <h3 className="line-clamp-1 text-sm font-medium text-muted-foreground">{property.title}</h3>
         <p className="line-clamp-1 text-sm text-muted-foreground">{location}</p>
-        <p className="text-[0.68rem] font-extrabold tracking-wide text-[var(--realty-blue)] uppercase">
+        <p className="text-[0.68rem] font-extrabold tracking-wide text-(--realty-blue) uppercase">
           {PROPERTY_TYPE_LABELS[property.property_type]} · {LISTING_TYPE_LABELS[property.listing_type]}
           {property.is_featured ? " · Destacada" : ""}
         </p>

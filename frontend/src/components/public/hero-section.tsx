@@ -35,7 +35,7 @@ export function HeroSection({ backgroundImage, children }: HeroSectionProps) {
             barrio.
           </p>
           <div className="flex flex-wrap items-center justify-center gap-3">
-            <Button asChild size="lg" className="rounded-full bg-[var(--realty-accent)] px-6 text-[0.68rem] font-extrabold uppercase text-white hover:bg-[var(--realty-accent)]/90">
+            <Button asChild size="lg" className="rounded-full bg-(--realty-accent) px-6 text-[0.68rem] font-extrabold uppercase text-white hover:bg-(--realty-accent)/90">
               <Link href="/propiedades">Ver propiedades</Link>
             </Button>
             <Button asChild size="lg" variant="outline" className="rounded-full border-white/60 bg-transparent px-6 text-[0.68rem] font-extrabold uppercase text-white hover:bg-white/10 hover:text-white">

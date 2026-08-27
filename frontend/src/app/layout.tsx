@@ -5,7 +5,10 @@ import { ThemeProvider } from "@/components/theme-provider";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import { Toaster } from "@/components/ui/sonner";
 import { AuthProvider } from "@/features/auth/auth-provider";
+import { SITE_CONFIG } from "@/constants/site";
 import "./globals.css";
+
+const siteUrl = process.env.NEXT_PUBLIC_SITE_URL ?? "http://localhost:3000";
 
 const geistSans = Geist({
   variable: "--font-sans",
@@ -18,12 +21,26 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "CRM Inmobiliaria",
+  metadataBase: new URL(siteUrl),
+  title: SITE_CONFIG.name,
   description: "CRM inmobiliario para gestión de propiedades, clientes y oportunidades",
   icons: {
     icon: [{ url: "/brand/favicon.svg", type: "image/svg+xml" }],
     shortcut: [{ url: "/brand/favicon.svg", type: "image/svg+xml" }],
     apple: [{ url: "/brand/logo-mark.svg", type: "image/svg+xml" }],
+  },
+  // Fallback preview (image + title + description) for any page that
+  // doesn't set its own — property/blog detail pages override this with
+  // their own photo. `opengraph-image.tsx` supplies the picture.
+  openGraph: {
+    type: "website",
+    siteName: SITE_CONFIG.name,
+    title: SITE_CONFIG.name,
+    description: "Compra, arrienda o vende tu propiedad con el acompañamiento de un equipo inmobiliario profesional.",
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: SITE_CONFIG.name,
   },
 };
 

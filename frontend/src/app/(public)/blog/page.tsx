@@ -7,6 +7,9 @@ import { BlogCard } from "@/features/public-blog/blog-card";
 import { fetchPublicBlogPosts } from "@/lib/api/public";
 import { SITE_CONFIG } from "@/constants/site";
 
+// Needs a live backend at request time — don't prerender at build time.
+export const dynamic = "force-dynamic";
+
 export const metadata: Metadata = {
   title: `Blog | ${SITE_CONFIG.name}`,
   description: "Consejos, tendencias del mercado y guías para comprar, arrendar o vender tu propiedad.",

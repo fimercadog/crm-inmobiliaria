@@ -11,6 +11,9 @@ import { fetchPublicPropertyBySlug } from "@/lib/api/public";
 import { LISTING_TYPE_LABELS, PROPERTY_TYPE_LABELS } from "@/types/property";
 import { SITE_CONFIG } from "@/constants/site";
 
+// Needs a live backend at request time — don't prerender at build time.
+export const dynamic = "force-dynamic";
+
 export async function generateMetadata(props: PageProps<"/propiedades/[slug]">): Promise<Metadata> {
   const { slug } = await props.params;
   const property = await fetchPublicPropertyBySlug(slug);
@@ -74,7 +77,7 @@ export default async function PropertyDetailPage(props: PageProps<"/propiedades/
 
       <div className="realty-animate-fade-up flex max-w-5xl flex-col gap-4">
         <div className="flex flex-wrap items-center gap-2">
-          <Badge className="rounded-full bg-[var(--realty-accent)] text-white">{LISTING_TYPE_LABELS[property.listing_type]}</Badge>
+          <Badge className="rounded-full bg-(--realty-accent) text-white">{LISTING_TYPE_LABELS[property.listing_type]}</Badge>
           <span className="text-xs font-extrabold tracking-wide text-muted-foreground uppercase">{property.code}</span>
         </div>
         <h1 className="font-sans text-4xl font-medium tracking-normal text-balance sm:text-5xl lg:text-6xl">
@@ -110,7 +113,7 @@ export default async function PropertyDetailPage(props: PageProps<"/propiedades/
               <ul className="grid grid-cols-2 gap-x-12 gap-y-4 sm:grid-cols-3">
                 {property.features.map((feature) => (
                   <li key={feature} className="flex items-center gap-2 text-sm text-muted-foreground">
-                    <span className="size-1.5 shrink-0 rounded-full bg-[var(--realty-accent)]" />
+                    <span className="size-1.5 shrink-0 rounded-full bg-(--realty-accent)" />
                     {feature}
                   </li>
                 ))}
@@ -120,12 +123,12 @@ export default async function PropertyDetailPage(props: PageProps<"/propiedades/
         </div>
 
         <aside className="realty-animate-fade-up realty-animate-delay-1 flex flex-col gap-8 lg:sticky lg:top-28 lg:h-fit">
-          <div className="bg-[var(--realty-surface)] p-8">
-            <p className="text-3xl font-extrabold text-[var(--realty-primary)]">{currencyFormatter.format(property.price)}</p>
+          <div className="bg-(--realty-surface) p-8">
+            <p className="text-3xl font-extrabold text-(--realty-primary)">{currencyFormatter.format(property.price)}</p>
             {property.admin_fee !== null && (
               <p className="mt-3 text-sm text-muted-foreground">+ {currencyFormatter.format(property.admin_fee)} de administración</p>
             )}
-            <div className="mt-8 border-t border-black/10 pt-6 text-sm font-extrabold text-[var(--realty-primary)]">
+            <div className="mt-8 border-t border-black/10 pt-6 text-sm font-extrabold text-(--realty-primary)">
               {[
                 property.bedrooms !== null ? `${property.bedrooms} habitaciones` : null,
                 property.bathrooms !== null ? `${property.bathrooms} baños` : null,

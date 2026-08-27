@@ -39,7 +39,7 @@ export function PublicLogo({ className, markClassName, textClassName, inverted =
       <LogoMark className={markClassName} inverted={inverted} />
       <span className={cn("flex flex-col leading-none", textClassName)}>
         <span className="font-(family-name:--font-display) text-xl font-semibold tracking-tight">{SITE_CONFIG.name}</span>
-        <span className={cn("mt-1 text-[0.58rem] font-extrabold tracking-[0.32em] uppercase", inverted ? "text-white/45" : "text-[var(--realty-blue)]")}>
+        <span className={cn("mt-1 text-[0.58rem] font-extrabold tracking-[0.32em] uppercase", inverted ? "text-white/45" : "text-(--realty-blue)")}>
           Real Estate
         </span>
       </span>
