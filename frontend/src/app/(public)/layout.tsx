@@ -2,6 +2,7 @@ import { Fraunces } from "next/font/google";
 import { PublicHeader } from "@/components/public/public-header";
 import { PublicFooter } from "@/components/public/public-footer";
 import { FloatingWhatsApp } from "@/components/public/floating-whatsapp";
+import { ScrollReveal } from "@/components/public/scroll-reveal";
 
 const fraunces = Fraunces({
   variable: "--font-display",
@@ -16,6 +17,7 @@ export default function PublicLayout({ children }: LayoutProps<"/">) {
       <main className="flex-1">{children}</main>
       <PublicFooter />
       <FloatingWhatsApp />
+      <ScrollReveal />
     </div>
   );
 }

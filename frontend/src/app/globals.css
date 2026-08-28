@@ -199,7 +199,7 @@
   font-weight: 800;
   line-height: 1;
   text-transform: uppercase;
-  transition: background-color 150ms ease, color 150ms ease;
+  transition: background-color 160ms var(--realty-ease-out), color 160ms var(--realty-ease-out), transform 160ms var(--realty-ease-out);
 }
 
 .public-theme .realty-button:hover {
@@ -207,36 +207,64 @@
   color: white;
 }
 
-.public-theme .realty-animate-fade-up {
-  animation: realty-fade-up 700ms ease both;
+.public-theme .realty-button:active {
+  transform: scale(0.96);
 }
 
-.public-theme .realty-animate-fade-in {
-  animation: realty-fade-in 700ms ease both;
+/*
+ * Scroll reveal — these elements start hidden and only animate once they
+ * scroll into view (toggled by ScrollReveal's IntersectionObserver, which
+ * adds .is-visible). Previously these ran as plain CSS `animation`s that
+ * fired immediately on mount, so anything below the fold had already
+ * finished animating — invisibly — before a visitor ever scrolled to it.
+ */
+:root {
+  --realty-ease-out: cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.public-theme .realty-animate-fade-up,
+.public-theme .realty-animate-fade-in,
+.public-theme .realty-animate-scale-in {
+  opacity: 0;
+  transition: opacity 700ms var(--realty-ease-out), transform 700ms var(--realty-ease-out), filter 700ms var(--realty-ease-out);
+}
+
+.public-theme .realty-animate-fade-up {
+  transform: translateY(28px);
 }
 
 .public-theme .realty-animate-scale-in {
-  animation: realty-scale-in 650ms ease both;
+  transform: scale(0.94);
+  filter: blur(4px);
+}
+
+.public-theme .realty-animate-fade-up.is-visible,
+.public-theme .realty-animate-fade-in.is-visible,
+.public-theme .realty-animate-scale-in.is-visible {
+  opacity: 1;
+  transform: none;
+  filter: none;
 }
 
 .public-theme .realty-animate-delay-1 {
-  animation-delay: 120ms;
+  transition-delay: 90ms;
 }
 
 .public-theme .realty-animate-delay-2 {
-  animation-delay: 240ms;
+  transition-delay: 180ms;
 }
 
 .public-theme .realty-animate-delay-3 {
-  animation-delay: 360ms;
+  transition-delay: 270ms;
 }
 
 .public-theme .realty-hover-lift {
-  transition: transform 220ms ease, filter 220ms ease, opacity 220ms ease;
+  transition: transform 260ms var(--realty-ease-out), filter 260ms var(--realty-ease-out), opacity 260ms var(--realty-ease-out), box-shadow 260ms var(--realty-ease-out);
 }
 
 .public-theme .realty-hover-lift:hover {
   transform: translateY(-6px);
+  box-shadow: 0 24px 40px -20px rgb(0 0 0 / 0.35);
 }
 
 .public-theme .realty-whatsapp-float {
@@ -288,7 +316,10 @@
   .public-theme .realty-animate-fade-up,
   .public-theme .realty-animate-fade-in,
   .public-theme .realty-animate-scale-in {
-    animation: none;
+    opacity: 1;
+    transform: none;
+    filter: none;
+    transition: none;
   }
 
   .public-theme .realty-hover-lift,
