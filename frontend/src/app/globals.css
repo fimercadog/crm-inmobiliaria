@@ -214,7 +214,7 @@
 /*
  * Scroll reveal — these elements start hidden and only animate once they
  * scroll into view (toggled by ScrollReveal's IntersectionObserver, which
- * adds .is-visible). Previously these ran as plain CSS `animation`s that
+ * sets [data-revealed]). Previously these ran as plain CSS `animation`s that
  * fired immediately on mount, so anything below the fold had already
  * finished animating — invisibly — before a visitor ever scrolled to it.
  */
@@ -238,9 +238,9 @@
   filter: blur(4px);
 }
 
-.public-theme .realty-animate-fade-up.is-visible,
-.public-theme .realty-animate-fade-in.is-visible,
-.public-theme .realty-animate-scale-in.is-visible {
+.public-theme .realty-animate-fade-up[data-revealed],
+.public-theme .realty-animate-fade-in[data-revealed],
+.public-theme .realty-animate-scale-in[data-revealed] {
   opacity: 1;
   transform: none;
   filter: none;
@@ -256,6 +256,30 @@
 
 .public-theme .realty-animate-delay-3 {
   transition-delay: 270ms;
+}
+
+.public-theme .realty-animate-delay-4 {
+  transition-delay: 360ms;
+}
+
+.public-theme .realty-animate-delay-5 {
+  transition-delay: 460ms;
+}
+
+/*
+ * Hero background — a slow, one-shot cinematic zoom (not a loop, not
+ * scroll-linked parallax). Starts slightly zoomed in and settles, so the
+ * photo feels alive the moment the page loads.
+ */
+.public-theme .realty-hero-image {
+  transform: scale(1.12);
+  animation: realty-hero-zoom 6s var(--realty-ease-out) forwards;
+}
+
+@keyframes realty-hero-zoom {
+  to {
+    transform: scale(1);
+  }
 }
 
 .public-theme .realty-hover-lift {
@@ -309,23 +333,6 @@
   }
   50% {
     transform: translateY(-6px);
-  }
-}
-
-@media (prefers-reduced-motion: reduce) {
-  .public-theme .realty-animate-fade-up,
-  .public-theme .realty-animate-fade-in,
-  .public-theme .realty-animate-scale-in {
-    opacity: 1;
-    transform: none;
-    filter: none;
-    transition: none;
-  }
-
-  .public-theme .realty-hover-lift,
-  .public-theme .realty-hover-lift:hover {
-    transform: none;
-    transition: none;
   }
 }
 
