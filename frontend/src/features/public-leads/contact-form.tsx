@@ -87,7 +87,7 @@ export function ContactForm() {
           <FieldError errors={errors.message ? [errors.message] : undefined} />
         </Field>
 
-        <Field data-invalid={errors.acceptsDataPolicy ? "true" : undefined} orientation="horizontal">
+        <Field data-invalid={errors.acceptsDataPolicy ? "true" : undefined} orientation="horizontal" className="items-start">
           <Controller
             name="acceptsDataPolicy"
             control={control}
@@ -97,10 +97,11 @@ export function ContactForm() {
                 checked={field.value ?? false}
                 onCheckedChange={field.onChange}
                 aria-invalid={!!errors.acceptsDataPolicy}
+                className="mt-0.5"
               />
             )}
           />
-          <FieldLabel htmlFor="contact-accepts-data-policy" className="font-normal">
+          <FieldLabel htmlFor="contact-accepts-data-policy" className="block w-auto font-normal leading-relaxed">
             Autorizo el tratamiento de mis datos personales conforme a la{" "}
             <Link href="/privacidad" target="_blank" className="underline underline-offset-2 hover:text-foreground">
               Política de tratamiento de datos
