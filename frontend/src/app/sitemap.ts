@@ -46,6 +46,8 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     { url: `${SITE_URL}/nosotros`, changeFrequency: "monthly", priority: 0.5 },
     { url: `${SITE_URL}/contacto`, changeFrequency: "monthly", priority: 0.5 },
     { url: `${SITE_URL}/blog`, changeFrequency: "weekly", priority: 0.6 },
+    { url: `${SITE_URL}/privacidad`, changeFrequency: "yearly", priority: 0.3 },
+    { url: `${SITE_URL}/terminos`, changeFrequency: "yearly", priority: 0.3 },
   ];
 
   const propertyRoutes: MetadataRoute.Sitemap = propertySlugs.map((slug) => ({

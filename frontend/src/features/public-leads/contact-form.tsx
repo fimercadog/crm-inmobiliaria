@@ -1,12 +1,14 @@
 "use client";
 
 import { useState } from "react";
-import { useForm } from "react-hook-form";
+import Link from "next/link";
+import { Controller, useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { CheckCircle2, Loader2, Send } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
+import { Checkbox } from "@/components/ui/checkbox";
 import { Field, FieldError, FieldGroup, FieldLabel } from "@/components/ui/field";
 import { contactFormSchema, type ContactFormInput, type ContactFormOutput } from "@/features/public-leads/contact-form-schema";
 import { submitPublicLead } from "@/lib/api/public";
@@ -17,8 +19,12 @@ export function ContactForm() {
   const {
     register,
     handleSubmit,
+    control,
     formState: { errors, isSubmitting },
-  } = useForm<ContactFormInput, unknown, ContactFormOutput>({ resolver: zodResolver(contactFormSchema) });
+  } = useForm<ContactFormInput, unknown, ContactFormOutput>({
+    resolver: zodResolver(contactFormSchema),
+    defaultValues: { acceptsDataPolicy: false },
+  });
 
   async function onSubmit(values: ContactFormOutput) {
     setFormError(null);
@@ -79,6 +85,29 @@ export function ContactForm() {
           <FieldLabel htmlFor="contact-message">Mensaje</FieldLabel>
           <Textarea id="contact-message" rows={5} {...register("message")} />
           <FieldError errors={errors.message ? [errors.message] : undefined} />
+        </Field>
+
+        <Field data-invalid={errors.acceptsDataPolicy ? "true" : undefined} orientation="horizontal">
+          <Controller
+            name="acceptsDataPolicy"
+            control={control}
+            render={({ field }) => (
+              <Checkbox
+                id="contact-accepts-data-policy"
+                checked={field.value ?? false}
+                onCheckedChange={field.onChange}
+                aria-invalid={!!errors.acceptsDataPolicy}
+              />
+            )}
+          />
+          <FieldLabel htmlFor="contact-accepts-data-policy" className="font-normal">
+            Autorizo el tratamiento de mis datos personales conforme a la{" "}
+            <Link href="/privacidad" target="_blank" className="underline underline-offset-2 hover:text-foreground">
+              Política de tratamiento de datos
+            </Link>{" "}
+            (Ley 1581 de 2012).
+          </FieldLabel>
+          <FieldError errors={errors.acceptsDataPolicy ? [errors.acceptsDataPolicy] : undefined} />
         </Field>
 
         {formError && (
