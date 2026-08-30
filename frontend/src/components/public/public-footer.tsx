@@ -10,7 +10,7 @@ const currentYear = new Date().getFullYear();
 export function PublicFooter() {
   return (
     <footer className="bg-(--realty-footer) text-white">
-      <div className="mx-auto max-w-[1320px] px-6 py-18 lg:px-10">
+      <div className="mx-auto max-w-330 px-6 py-18 lg:px-10">
         <div className="grid gap-12 lg:grid-cols-[1.3fr_0.8fr_0.8fr_1.4fr]">
           <div className="flex flex-col gap-4">
             <PublicLogo inverted markClassName="size-12" textClassName="text-white" />
