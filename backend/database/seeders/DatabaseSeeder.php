@@ -6,6 +6,7 @@ use App\Enums\UserRole;
 use App\Models\Activity;
 use App\Models\BlogPost;
 use App\Models\Client;
+use App\Models\Document;
 use App\Models\Lead;
 use App\Models\Opportunity;
 use App\Models\Owner;
@@ -13,7 +14,10 @@ use App\Models\Property;
 use App\Models\Task;
 use App\Models\User;
 use App\Models\Visit;
+use Illuminate\Database\Eloquent\Relations\Relation;
 use Illuminate\Database\Seeder;
+use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Str;
 
 class DatabaseSeeder extends Seeder
 {
@@ -88,5 +92,27 @@ class DatabaseSeeder extends Seeder
         BlogPost::factory(8)
             ->recycle($agents)
             ->create();
+
+        // Documents module was never seeded (factory existed, nobody called
+        // it), so every property/client/owner showed an empty "Documentos"
+        // tab. Attach a handful of real, downloadable placeholder files —
+        // not just fake path strings — so the download endpoint works too.
+        $uploaders = $agents->push($admin);
+
+        collect()
+            ->concat($properties->random(10))
+            ->concat($clients->random(6))
+            ->concat($owners->random(4))
+            ->each(function (Property|Client|Owner $subject) use ($uploaders): void {
+                $path = 'documents/'.Str::uuid().'.pdf';
+                Storage::disk('local')->put($path, "%PDF-1.4\n% Documento de muestra generado por el seeder de demo.\n");
+
+                Document::factory()->create([
+                    'path' => $path,
+                    'subject_type' => Relation::getMorphAlias($subject::class),
+                    'subject_id' => $subject->id,
+                    'uploaded_by' => $uploaders->random()->id,
+                ]);
+            });
     }
 }
