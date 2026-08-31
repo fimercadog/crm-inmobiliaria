@@ -2,9 +2,10 @@
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { Building2, ChevronRight } from "lucide-react";
+import { Building2, ChevronRight, Lock, Sparkles } from "lucide-react";
 import { BOTTOM_LINKS, DASHBOARD_LINK, NAV_GROUPS } from "@/constants/navigation";
 import { usePermissions } from "@/hooks/use-permissions";
+import { Badge } from "@/components/ui/badge";
 import { Collapsible, CollapsibleContent, CollapsibleTrigger } from "@/components/ui/collapsible";
 import {
   Sidebar,
@@ -69,6 +70,17 @@ export function AppSidebar() {
                   <DASHBOARD_LINK.icon />
                   <span>{DASHBOARD_LINK.title}</span>
                 </Link>
+              </SidebarMenuButton>
+            </SidebarMenuItem>
+
+            <SidebarMenuItem>
+              <SidebarMenuButton disabled aria-disabled className="cursor-not-allowed opacity-60 hover:bg-transparent">
+                <Sparkles />
+                <span>IA</span>
+                <Badge variant="secondary" className="ml-auto gap-1">
+                  <Lock />
+                  Premium
+                </Badge>
               </SidebarMenuButton>
             </SidebarMenuItem>
 
