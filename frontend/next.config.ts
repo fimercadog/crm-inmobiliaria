@@ -18,6 +18,17 @@ const nextConfig: NextConfig = {
     // Only relaxed outside production, where the API host is never loopback.
     dangerouslyAllowLocalIP: process.env.NODE_ENV !== "production",
   },
+  async headers() {
+    // Defense-in-depth against the Hostinger CDN caching auth HTML: `dynamic`
+    // already opts these routes out of static generation; this makes the
+    // no-store intent explicit for any proxy in front that reads the header.
+    const noStore = [{ key: "Cache-Control", value: "no-store, must-revalidate" }];
+    return [
+      { source: "/login", headers: noStore },
+      { source: "/forgot-password", headers: noStore },
+      { source: "/reset-password", headers: noStore },
+    ];
+  },
 };
 
 export default nextConfig;

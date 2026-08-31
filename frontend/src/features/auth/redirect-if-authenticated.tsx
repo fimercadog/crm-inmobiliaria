@@ -14,7 +14,12 @@ export function RedirectIfAuthenticated({ children }: { children: React.ReactNod
     }
   }, [status, router]);
 
-  if (status !== "unauthenticated") {
+  // Render the form for every state except "authenticated". Previously this
+  // also hid it during "idle", so the form only existed once client JS had
+  // hydrated — a chunk failure on /login then left a blank screen. An already
+  // authenticated visitor sees the form for one frame before the effect above
+  // redirects, which is a far better failure mode than nothing.
+  if (status === "authenticated") {
     return null;
   }
 
