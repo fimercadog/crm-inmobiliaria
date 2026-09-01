@@ -27,7 +27,13 @@ interface StatCardProps {
 // the chart cards borrow the same piece instead of looking flatter.
 export function IconBadge({ icon: Icon, tone = "chart-1", className }: { icon: LucideIcon; tone?: StatCardTone; className?: string }) {
   return (
-    <div className={cn("flex size-10 shrink-0 items-center justify-center rounded-lg", TONE_CLASSNAMES[tone], className)}>
+    <div
+      className={cn(
+        "ring-current/20 flex size-10 shrink-0 items-center justify-center rounded-lg shadow-sm ring-1 ring-inset",
+        TONE_CLASSNAMES[tone],
+        className,
+      )}
+    >
       <Icon className="size-5" />
     </div>
   );

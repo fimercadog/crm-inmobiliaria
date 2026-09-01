@@ -71,6 +71,17 @@ export function PropertiesStatusChart() {
           <>
             <ChartContainer config={chartConfig} className="mx-auto aspect-auto h-60 w-full">
               <PieChart>
+                <defs>
+                  {/* Top-to-bottom gradient per slice for some depth — literal
+                   * hex from the palette, not a CSS var (a var() doesn't
+                   * resolve through the raw `stop-color` attribute). */}
+                  {rows.map((row, index) => (
+                    <linearGradient key={row.status} id={`pie-gradient-${row.status}`} x1="0" y1="0" x2="0" y2="1">
+                      <stop offset="0%" stopColor={palette[index % palette.length]} stopOpacity={1} />
+                      <stop offset="100%" stopColor={palette[index % palette.length]} stopOpacity={0.75} />
+                    </linearGradient>
+                  ))}
+                </defs>
                 <Pie
                   data={rows}
                   dataKey="count"
@@ -82,8 +93,8 @@ export function PropertiesStatusChart() {
                   label={renderInsideLabel}
                   labelLine={false}
                 >
-                  {rows.map((row, index) => (
-                    <Cell key={row.status} fill={palette[index % palette.length]} />
+                  {rows.map((row) => (
+                    <Cell key={row.status} fill={`url(#pie-gradient-${row.status})`} />
                   ))}
                 </Pie>
                 <ChartTooltip content={<ChartTooltipContent nameKey="status" />} />

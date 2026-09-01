@@ -40,6 +40,15 @@ export function PropertiesByAgentChart() {
           <>
             <ChartContainer config={chartConfig} className="aspect-auto h-70 w-full">
               <BarChart data={rows} margin={{ left: -20 }} barCategoryGap="30%">
+                <defs>
+                  {/* Bottom-to-top gradient per status for some depth. */}
+                  {PROPERTY_STATUSES.map((status, index) => (
+                    <linearGradient key={status} id={`agent-gradient-${status}`} x1="0" y1="0" x2="0" y2="1">
+                      <stop offset="0%" stopColor={palette[index % palette.length]} stopOpacity={1} />
+                      <stop offset="100%" stopColor={palette[index % palette.length]} stopOpacity={0.75} />
+                    </linearGradient>
+                  ))}
+                </defs>
                 <XAxis dataKey="agent" tick={{ fontSize: 12, fill: "var(--muted-foreground)" }} axisLine={false} tickLine={false} tickMargin={8} />
                 <ChartTooltip cursor={{ fill: "var(--muted)", opacity: 0.5 }} content={<ChartTooltipContent />} />
                 {PROPERTY_STATUSES.map((status, index) => (
@@ -48,9 +57,7 @@ export function PropertiesByAgentChart() {
                     dataKey={status}
                     name={PROPERTY_STATUS_LABELS[status]}
                     stackId="properties"
-                    // Literal hex from the shuffled palette — no CSS-var
-                    // workaround needed, it's a plain color string.
-                    fill={palette[index % palette.length]}
+                    fill={`url(#agent-gradient-${status})`}
                     // Only the topmost segment of the stack gets rounded top
                     // corners — rounding every segment would look like a
                     // stack of separate pills instead of one bar.
