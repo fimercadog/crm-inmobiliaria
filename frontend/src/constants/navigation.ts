@@ -1,5 +1,5 @@
 import type { LucideIcon } from "lucide-react";
-import { Building2, Globe, Handshake, LayoutDashboard, Settings, ShieldAlert, Target, Users, UsersRound } from "lucide-react";
+import { Building2, Globe, Handshake, LayoutDashboard, Settings, Target, Users, UsersRound, WifiOff } from "lucide-react";
 
 export interface NavLink {
   title: string;
@@ -27,7 +27,9 @@ export const REPORTS_LINK: NavLink = { title: "Reportes", href: "/reports", icon
 export const CONTINGENCY_LINK: NavLink = {
   title: "Modo contingencia",
   href: "/settings/contingency",
-  icon: ShieldAlert,
+  // WifiOff over a generic shield icon — contingency mode IS "working
+  // without a connection," so the icon should say that directly.
+  icon: WifiOff,
   adminOnly: true,
 };
 

@@ -62,7 +62,7 @@ export function AppSidebar() {
                 <div className="flex flex-col gap-0.5 leading-none">
                   <span className="flex items-center gap-1.5 font-semibold">
                     CRM Inmobiliaria
-                    <Badge variant="secondary" className="px-1.5 py-0 text-[10px]">
+                    <Badge className="bg-warning px-1.5 py-0 text-[10px] font-semibold text-warning-foreground">
                       Beta
                     </Badge>
                   </span>
