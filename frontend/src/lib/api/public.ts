@@ -13,12 +13,17 @@ const API_URL = process.env.NEXT_PUBLIC_API_URL ?? "http://localhost:8000/api/v1
 /**
  * Plain fetch (not the browser-only axios instance) so this module works
  * from Server Components and generateMetadata, not just the client.
+ *
+ * no-store, not a revalidate window: these pages are already force-dynamic
+ * (never statically cached), and a property/listing can change status
+ * (publicado, vendido, precio) from the CRM at any moment — a stale window
+ * here means the public site disagrees with the CRM until it expires.
  */
 async function publicFetch<T>(path: string, init?: RequestInit): Promise<T> {
   const response = await fetch(`${API_URL}${path}`, {
     ...init,
     headers: { Accept: "application/json", ...init?.headers },
-    next: init?.method ? undefined : { revalidate: 60 },
+    cache: "no-store",
   });
 
   if (!response.ok) {
