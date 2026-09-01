@@ -1,7 +1,7 @@
 "use client";
 
 import { Users } from "lucide-react";
-import { Bar, BarChart, LabelList, XAxis } from "recharts";
+import { Bar, BarChart, CartesianGrid, LabelList, XAxis } from "recharts";
 import { Card, CardAction, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { ChartContainer, ChartTooltip, ChartTooltipContent, type ChartConfig } from "@/components/ui/chart";
 import { LoadingState } from "@/components/shared/loading-state";
@@ -49,6 +49,7 @@ export function PropertiesByAgentChart() {
                     </linearGradient>
                   ))}
                 </defs>
+                <CartesianGrid strokeDasharray="3 3" vertical={false} className="stroke-border/40" />
                 <XAxis dataKey="agent" tick={{ fontSize: 12, fill: "var(--muted-foreground)" }} axisLine={false} tickLine={false} tickMargin={8} />
                 <ChartTooltip cursor={{ fill: "var(--muted)", opacity: 0.5 }} content={<ChartTooltipContent />} />
                 {PROPERTY_STATUSES.map((status, index) => (

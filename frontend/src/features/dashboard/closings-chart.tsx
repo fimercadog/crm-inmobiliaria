@@ -1,7 +1,7 @@
 "use client";
 
 import { Trophy } from "lucide-react";
-import { Bar, BarChart, LabelList, XAxis } from "recharts";
+import { Bar, BarChart, CartesianGrid, LabelList, XAxis } from "recharts";
 import { Card, CardAction, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { ChartContainer, ChartTooltip, ChartTooltipContent, type ChartConfig } from "@/components/ui/chart";
 import { LoadingState } from "@/components/shared/loading-state";
@@ -61,6 +61,7 @@ export function ClosingsChart() {
                     <stop offset="100%" stopColor={palette[1]} stopOpacity={0.75} />
                   </linearGradient>
                 </defs>
+                <CartesianGrid strokeDasharray="3 3" vertical={false} className="stroke-border/40" />
                 <XAxis
                   dataKey="period"
                   tick={{ fontSize: 12, fill: "var(--muted-foreground)" }}
