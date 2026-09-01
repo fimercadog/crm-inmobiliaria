@@ -28,7 +28,7 @@ export function BetaNoticeDialog({ open, onOpenChange }: BetaNoticeDialogProps) 
         <DialogHeader>
           <div className="flex items-center gap-2">
             <DialogTitle>Estás en la versión Beta</DialogTitle>
-            <Badge variant="secondary">Beta</Badge>
+            <Badge className="bg-warning font-semibold text-warning-foreground">Beta</Badge>
           </div>
           <DialogDescription>
             Antes de que sigas explorando, un par de cosas que vale la pena saber.
