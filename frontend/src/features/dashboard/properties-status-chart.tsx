@@ -88,7 +88,12 @@ export function PropertiesStatusChart() {
                   nameKey="status"
                   outerRadius={95}
                   paddingAngle={3}
-                  strokeWidth={0}
+                  strokeWidth={2}
+                  // A CSS var doesn't resolve through the plain `stroke`
+                  // attribute, only via `style` — matches the card's own
+                  // background so the border reads as a crisp separator in
+                  // both themes instead of a hardcoded color.
+                  style={{ stroke: "var(--card)" }}
                   isAnimationActive={false}
                   label={renderInsideLabel}
                   labelLine={false}
