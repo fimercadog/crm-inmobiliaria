@@ -47,5 +47,11 @@ class AppServiceProvider extends ServiceProvider
         }
 
         Gate::policy(User::class, UserPolicy::class);
+
+        // Activating/deactivating contingency mode is an operational decision
+        // (it puts most of the CRM in read-only for everyone), not a regular
+        // CRM write — reuses the existing Admin role rather than adding a new
+        // granular permission for a single gate.
+        Gate::define('manage-contingency', fn (User $user): bool => $user->isAdmin());
     }
 }

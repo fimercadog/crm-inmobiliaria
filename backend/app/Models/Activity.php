@@ -21,6 +21,8 @@ class Activity extends Model
         'agent_id',
         'subject_type',
         'subject_id',
+        'client_uuid',
+        'synced_via_contingency',
     ];
 
     protected function casts(): array

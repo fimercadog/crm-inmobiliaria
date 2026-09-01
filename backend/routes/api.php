@@ -4,6 +4,7 @@ use App\Http\Controllers\Api\V1\ActivityController;
 use App\Http\Controllers\Api\V1\AgentController;
 use App\Http\Controllers\Api\V1\AuthController;
 use App\Http\Controllers\Api\V1\BlogPostController;
+use App\Http\Controllers\Api\V1\ContingencyController;
 use App\Http\Controllers\Api\V1\ClientController;
 use App\Http\Controllers\Api\V1\DashboardController;
 use App\Http\Controllers\Api\V1\DocumentController;
@@ -98,6 +99,13 @@ Route::prefix('v1')->group(function (): void {
             Route::get('/properties-by-status', [ReportController::class, 'propertiesByStatus']);
             Route::get('/closings-by-period', [ReportController::class, 'closingsByPeriod']);
             Route::get('/agent-performance', [ReportController::class, 'agentPerformance']);
+        });
+
+        Route::prefix('contingency')->group(function (): void {
+            Route::get('/status', [ContingencyController::class, 'status']);
+            Route::get('/modules', [ContingencyController::class, 'modules']);
+            Route::post('/activate', [ContingencyController::class, 'activate']);
+            Route::post('/deactivate', [ContingencyController::class, 'deactivate']);
         });
 
         Route::get('/documents', [DocumentController::class, 'index']);

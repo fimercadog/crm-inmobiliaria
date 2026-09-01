@@ -52,8 +52,19 @@ class ActivityService
         return $query;
     }
 
+    /**
+     * Idempotent when a client_uuid is present (contingency sync): retrying
+     * the same local transaction must never create a second record.
+     */
     public function create(array $data): Activity
     {
+        if (! empty($data['client_uuid'])) {
+            return Activity::query()->firstOrCreate(
+                ['client_uuid' => $data['client_uuid']],
+                $data,
+            );
+        }
+
         return Activity::create($data);
     }
 
