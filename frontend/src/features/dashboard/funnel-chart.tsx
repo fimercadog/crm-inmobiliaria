@@ -9,15 +9,12 @@ interface FunnelChartProps {
 export function FunnelChart({ data }: FunnelChartProps) {
   const palette = usePowerBiPalette();
   const max = Math.max(1, ...data.map((item) => item.count));
-  // One flat accent color for every bar (matches the flat/minimal reference
-  // look) — it still rotates each page load since palette[0] comes from the
-  // shuffled palette, so "colors change on reload" still holds.
-  const color = palette[0];
 
   return (
     <div className="flex flex-col gap-3">
-      {data.map((item) => {
+      {data.map((item, index) => {
         const widthPercent = (item.count / max) * 100;
+        const color = palette[index % palette.length];
 
         return (
           <div key={item.stage} className="flex items-center gap-3">
