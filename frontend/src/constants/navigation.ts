@@ -17,6 +17,11 @@ export interface NavGroup {
 
 export const DASHBOARD_LINK: NavLink = { title: "Dashboard", href: "/dashboard", icon: LayoutDashboard };
 
+// Promoted out of BOTTOM_LINKS: reports are a destination people visit
+// often, not a utility like Settings — burying it at the very bottom of the
+// sidebar next to Configuración made it hard to find.
+export const REPORTS_LINK: NavLink = { title: "Reportes", href: "/reports", icon: Target };
+
 // Emergency-equipment placement, not filed inside a submenu: an admin should
 // see this — and its live status — without opening anything first.
 export const CONTINGENCY_LINK: NavLink = {
@@ -79,7 +84,4 @@ export const NAV_GROUPS: NavGroup[] = [
   },
 ];
 
-export const BOTTOM_LINKS: NavLink[] = [
-  { title: "Reportes", href: "/reports", icon: Target },
-  { title: "Configuración", href: "/settings", icon: Settings },
-];
+export const BOTTOM_LINKS: NavLink[] = [{ title: "Configuración", href: "/settings", icon: Settings }];

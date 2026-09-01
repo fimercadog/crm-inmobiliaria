@@ -3,7 +3,7 @@
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { Building2, ChevronRight, Lock, Sparkles } from "lucide-react";
-import { BOTTOM_LINKS, CONTINGENCY_LINK, DASHBOARD_LINK, NAV_GROUPS } from "@/constants/navigation";
+import { BOTTOM_LINKS, CONTINGENCY_LINK, DASHBOARD_LINK, NAV_GROUPS, REPORTS_LINK } from "@/constants/navigation";
 import { useContingency } from "@/features/contingency/contingency-context";
 import { usePermissions } from "@/hooks/use-permissions";
 import { Badge } from "@/components/ui/badge";
@@ -87,6 +87,15 @@ export function AppSidebar() {
             </SidebarMenuItem>
 
             <SidebarMenuItem>
+              <SidebarMenuButton asChild isActive={isPathActive(pathname, REPORTS_LINK.href)}>
+                <Link href={REPORTS_LINK.href} onClick={closeOnMobile}>
+                  <REPORTS_LINK.icon />
+                  <span>{REPORTS_LINK.title}</span>
+                </Link>
+              </SidebarMenuButton>
+            </SidebarMenuItem>
+
+            <SidebarMenuItem>
               <SidebarMenuButton disabled aria-disabled className="cursor-not-allowed opacity-60 hover:bg-transparent">
                 <Sparkles />
                 <span>IA</span>
@@ -101,7 +110,10 @@ export function AppSidebar() {
               <SidebarMenuItem>
                 <SidebarMenuButton asChild isActive={isPathActive(pathname, CONTINGENCY_LINK.href)}>
                   <Link href={CONTINGENCY_LINK.href} onClick={closeOnMobile}>
-                    <CONTINGENCY_LINK.icon className={contingencyActive ? "text-warning" : undefined} />
+                    {/* Fixed strong color regardless of state — this is a
+                     * "fire extinguisher", it should read as important even
+                     * at rest, not only once it's already active. */}
+                    <CONTINGENCY_LINK.icon className="text-destructive" />
                     <span>{CONTINGENCY_LINK.title}</span>
                     {contingencyActive && (
                       <Badge
