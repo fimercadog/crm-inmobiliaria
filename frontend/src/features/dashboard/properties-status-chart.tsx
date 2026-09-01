@@ -32,28 +32,34 @@ export function PropertiesStatusChart() {
         )}
         {rows !== null && !error && rows.length > 0 && (
           <>
-            <ResponsiveContainer width="100%" height={240}>
-              <PieChart>
-                <Pie
-                  data={rows}
-                  dataKey="count"
-                  nameKey="status"
-                  innerRadius={55}
-                  outerRadius={95}
-                  paddingAngle={2}
-                  strokeWidth={0}
-                  isAnimationActive={false}
-                >
-                  {rows.map((row, index) => (
-                    <Cell key={row.status} style={{ fill: COLORS[index % COLORS.length] }} />
-                  ))}
-                </Pie>
-                <Tooltip
-                  formatter={(value, _name, entry) => [value, statusLabel(String((entry.payload as PropertiesByStatusRow).status))]}
-                  contentStyle={{ borderRadius: 8, fontSize: 12 }}
-                />
-              </PieChart>
-            </ResponsiveContainer>
+            <div className="relative">
+              <ResponsiveContainer width="100%" height={240}>
+                <PieChart>
+                  <Pie
+                    data={rows}
+                    dataKey="count"
+                    nameKey="status"
+                    innerRadius={55}
+                    outerRadius={95}
+                    paddingAngle={2}
+                    strokeWidth={0}
+                    isAnimationActive={false}
+                  >
+                    {rows.map((row, index) => (
+                      <Cell key={row.status} style={{ fill: COLORS[index % COLORS.length] }} />
+                    ))}
+                  </Pie>
+                  <Tooltip
+                    formatter={(value, _name, entry) => [value, statusLabel(String((entry.payload as PropertiesByStatusRow).status))]}
+                    contentStyle={{ borderRadius: 8, fontSize: 12 }}
+                  />
+                </PieChart>
+              </ResponsiveContainer>
+              <div className="pointer-events-none absolute inset-0 flex flex-col items-center justify-center">
+                <p className="text-xs text-muted-foreground">Total</p>
+                <p className="text-2xl font-semibold tabular-nums">{rows.reduce((sum, row) => sum + row.count, 0)}</p>
+              </div>
+            </div>
             <div className="mt-2 flex flex-wrap justify-center gap-x-4 gap-y-1.5 text-xs text-muted-foreground">
               {rows.map((row, index) => (
                 <div key={row.status} className="flex items-center gap-1.5">
