@@ -83,6 +83,7 @@ export function PropertiesStatusChart() {
                   dataKey="count"
                   nameKey="status"
                   outerRadius={95}
+                  paddingAngle={3}
                   strokeWidth={0}
                   isAnimationActive={false}
                   label={renderInsideLabel}
