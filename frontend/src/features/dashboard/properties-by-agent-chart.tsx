@@ -1,6 +1,6 @@
 "use client";
 
-import { Bar, BarChart, CartesianGrid, LabelList, XAxis, YAxis } from "recharts";
+import { Bar, BarChart, LabelList, XAxis } from "recharts";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { ChartContainer, ChartTooltip, ChartTooltipContent, type ChartConfig } from "@/components/ui/chart";
 import { LoadingState } from "@/components/shared/loading-state";
@@ -34,10 +34,8 @@ export function PropertiesByAgentChart() {
         {rows !== null && !error && rows.length > 0 && (
           <>
             <ChartContainer config={chartConfig} className="aspect-auto h-70 w-full">
-              <BarChart data={rows} margin={{ left: -20 }}>
-                <CartesianGrid strokeDasharray="3 3" vertical={false} className="stroke-border/50" />
+              <BarChart data={rows} margin={{ left: -20 }} barCategoryGap="30%">
                 <XAxis dataKey="agent" tick={{ fontSize: 12, fill: "var(--muted-foreground)" }} axisLine={false} tickLine={false} tickMargin={8} />
-                <YAxis tick={{ fontSize: 12, fill: "var(--muted-foreground)" }} allowDecimals={false} axisLine={false} tickLine={false} />
                 <ChartTooltip cursor={{ fill: "var(--muted)", opacity: 0.5 }} content={<ChartTooltipContent />} />
                 {PROPERTY_STATUSES.map((status, index) => (
                   <Bar
@@ -48,6 +46,10 @@ export function PropertiesByAgentChart() {
                     // Literal hex from the shuffled palette — no CSS-var
                     // workaround needed, it's a plain color string.
                     fill={palette[index % palette.length]}
+                    // Only the topmost segment of the stack gets rounded top
+                    // corners — rounding every segment would look like a
+                    // stack of separate pills instead of one bar.
+                    radius={index === PROPERTY_STATUSES.length - 1 ? [8, 8, 0, 0] : 0}
                     isAnimationActive={false}
                     className="transition-opacity hover:opacity-80"
                   >

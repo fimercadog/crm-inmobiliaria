@@ -1,6 +1,6 @@
 "use client";
 
-import { Bar, BarChart, CartesianGrid, LabelList, XAxis, YAxis } from "recharts";
+import { Bar, BarChart, LabelList, XAxis } from "recharts";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { ChartContainer, ChartTooltip, ChartTooltipContent, type ChartConfig } from "@/components/ui/chart";
 import { LoadingState } from "@/components/shared/loading-state";
@@ -45,7 +45,6 @@ export function ClosingsChart() {
           <>
             <ChartContainer config={chartConfig} className="aspect-auto h-60 w-full">
               <BarChart data={rows} margin={{ left: -20 }}>
-                <CartesianGrid strokeDasharray="3 3" vertical={false} className="stroke-border/50" />
                 <XAxis
                   dataKey="period"
                   tick={{ fontSize: 12, fill: "var(--muted-foreground)" }}
@@ -54,14 +53,13 @@ export function ClosingsChart() {
                   tickLine={false}
                   tickMargin={8}
                 />
-                <YAxis tick={{ fontSize: 12, fill: "var(--muted-foreground)" }} allowDecimals={false} axisLine={false} tickLine={false} />
                 <ChartTooltip content={<ChartTooltipContent />} />
                 {/* Literal hex from the shuffled palette — works directly as
                  * `fill`, no CSS-var-in-SVG-attribute workaround needed. */}
-                <Bar dataKey="won_count" name="Ganados" fill={palette[0]} radius={[4, 4, 0, 0]} isAnimationActive={false}>
+                <Bar dataKey="won_count" name="Ganados" fill={palette[0]} radius={[8, 8, 0, 0]} isAnimationActive={false}>
                   <LabelList dataKey="won_count" position="top" fontSize={11} fill="var(--muted-foreground)" formatter={(value) => (Number(value) > 0 ? value : "")} />
                 </Bar>
-                <Bar dataKey="lost_count" name="Perdidos" fill={palette[1]} radius={[4, 4, 0, 0]} isAnimationActive={false}>
+                <Bar dataKey="lost_count" name="Perdidos" fill={palette[1]} radius={[8, 8, 0, 0]} isAnimationActive={false}>
                   <LabelList dataKey="lost_count" position="top" fontSize={11} fill="var(--muted-foreground)" formatter={(value) => (Number(value) > 0 ? value : "")} />
                 </Bar>
               </BarChart>
