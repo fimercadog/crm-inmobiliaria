@@ -32,8 +32,11 @@ export function ClosingsChart() {
               <YAxis tick={{ fontSize: 12 }} allowDecimals={false} />
               <Tooltip contentStyle={{ borderRadius: 8, fontSize: 12 }} />
               <Legend wrapperStyle={{ fontSize: 12 }} />
-              <Bar dataKey="won_count" name="Ganados" style={{ fill: "var(--chart-2)" }} radius={[4, 4, 0, 0]} isAnimationActive={false} />
-              <Bar dataKey="lost_count" name="Perdidos" style={{ fill: "var(--chart-4)" }} radius={[4, 4, 0, 0]} isAnimationActive={false} />
+              {/* `fill` (for the Legend swatch color, recharts reads the
+               * prop directly) + `style.fill` (for the bar itself, since a
+               * CSS var doesn't resolve as a plain SVG attribute). */}
+              <Bar dataKey="won_count" name="Ganados" fill="var(--chart-2)" style={{ fill: "var(--chart-2)" }} radius={[4, 4, 0, 0]} isAnimationActive={false} />
+              <Bar dataKey="lost_count" name="Perdidos" fill="var(--chart-4)" style={{ fill: "var(--chart-4)" }} radius={[4, 4, 0, 0]} isAnimationActive={false} />
             </BarChart>
           </ResponsiveContainer>
         )}

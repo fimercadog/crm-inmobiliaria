@@ -3,6 +3,7 @@
 namespace App\Services\Report;
 
 use App\Enums\OpportunityStatus;
+use App\Enums\PropertyStatus;
 use App\Enums\TaskStatus;
 use App\Enums\UserRole;
 use App\Models\Opportunity;
@@ -57,6 +58,41 @@ class ReportService
                     'won_value' => (float) $inMonth->where('status', OpportunityStatus::Ganada)->sum('value'),
                 ];
             });
+    }
+
+    /**
+     * One row per agent with a count per property status — feeds the
+     * stacked bar chart on the dashboard. Agents with zero properties are
+     * skipped rather than shown as an all-zero bar.
+     *
+     * @return Collection<int, array<string, string|int>>
+     */
+    public function propertiesByAgentStatus(): Collection
+    {
+        $rows = Property::query()
+            ->whereNotNull('agent_id')
+            ->selectRaw('agent_id, status, count(*) as count')
+            ->groupBy('agent_id', 'status')
+            ->get();
+
+        $agentNames = User::query()->whereIn('id', $rows->pluck('agent_id')->unique())->pluck('name', 'id');
+
+        return $rows
+            ->groupBy('agent_id')
+            ->map(function (Collection $group, $agentId) use ($agentNames) {
+                $row = ['agent' => $agentNames[$agentId] ?? 'Sin asignar'];
+
+                foreach (PropertyStatus::cases() as $status) {
+                    $row[$status->value] = 0;
+                }
+
+                foreach ($group as $item) {
+                    $row[$item->status->value] = (int) $item->count;
+                }
+
+                return $row;
+            })
+            ->values();
     }
 
     /**

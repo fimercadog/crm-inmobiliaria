@@ -105,6 +105,27 @@ class ReportTest extends TestCase
         $this->assertSame(75_000_000.0, (float) $row['closed_value']);
     }
 
+    public function test_properties_by_agent_status_groups_per_agent_and_status(): void
+    {
+        $this->actingUser();
+        $agent = User::factory()->create(['role' => UserRole::Agente, 'name' => 'Agente Uno']);
+        Property::factory(2)->create(['agent_id' => $agent->id, 'status' => PropertyStatus::Disponible]);
+        Property::factory(1)->create(['agent_id' => $agent->id, 'status' => PropertyStatus::Vendido]);
+        Property::factory(1)->create(['agent_id' => null]); // sin agente, no debe romper ni contar aparte incorrectamente
+
+        $response = $this->getJson('/api/v1/reports/properties-by-agent-status');
+
+        $response->assertOk();
+        $rows = collect($response->json('data'));
+        $this->assertCount(1, $rows);
+
+        $row = $rows->first();
+        $this->assertSame('Agente Uno', $row['agent']);
+        $this->assertSame(2, $row['disponible']);
+        $this->assertSame(1, $row['vendido']);
+        $this->assertSame(0, $row['reservado']);
+    }
+
     public function test_can_export_a_report_as_csv(): void
     {
         $this->actingUser();

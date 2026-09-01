@@ -24,6 +24,7 @@ import { StatCard } from "@/components/shared/stat-card";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { FunnelChart } from "@/features/dashboard/funnel-chart";
 import { PropertiesStatusChart } from "@/features/dashboard/properties-status-chart";
+import { PropertiesByAgentChart } from "@/features/dashboard/properties-by-agent-chart";
 import { ClosingsChart } from "@/features/dashboard/closings-chart";
 import { useDashboardSummary } from "@/features/dashboard/use-dashboard-summary";
 
@@ -92,6 +93,7 @@ export default function DashboardPage() {
             </Card>
 
             <PropertiesStatusChart />
+            <PropertiesByAgentChart />
             <ClosingsChart />
           </div>
         </>

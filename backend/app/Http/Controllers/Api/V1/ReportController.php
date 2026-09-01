@@ -61,6 +61,14 @@ class ReportController extends Controller
         return $this->respond($request, $rows, self::AGENTS_COLUMNS, 'desempeno-por-agente', 'Desempeño por agente');
     }
 
+    /** Feeds the dashboard's stacked bar chart only — no CSV/PDF export,
+     * unlike the other reports (not asked for, and the column set is
+     * dynamic per status rather than fixed). */
+    public function propertiesByAgentStatus(): JsonResponse
+    {
+        return ApiResponse::success($this->reportService->propertiesByAgentStatus());
+    }
+
     /**
      * @param  Collection<int, array<string, mixed>>  $rows
      * @param  array<string, string>  $columns

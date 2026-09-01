@@ -18,3 +18,13 @@ export interface AgentPerformanceRow {
   closed_value: number;
   pending_tasks_count: number;
 }
+
+export interface PropertiesByAgentStatusRow {
+  agent: string;
+  borrador: number;
+  disponible: number;
+  reservado: number;
+  vendido: number;
+  arrendado: number;
+  inactivo: number;
+}

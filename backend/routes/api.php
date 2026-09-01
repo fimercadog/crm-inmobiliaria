@@ -99,6 +99,7 @@ Route::prefix('v1')->group(function (): void {
             Route::get('/properties-by-status', [ReportController::class, 'propertiesByStatus']);
             Route::get('/closings-by-period', [ReportController::class, 'closingsByPeriod']);
             Route::get('/agent-performance', [ReportController::class, 'agentPerformance']);
+            Route::get('/properties-by-agent-status', [ReportController::class, 'propertiesByAgentStatus']);
         });
 
         Route::prefix('contingency')->group(function (): void {
