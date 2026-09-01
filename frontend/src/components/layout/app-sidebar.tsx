@@ -3,7 +3,7 @@
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { Building2, ChevronRight, Lock, Sparkles } from "lucide-react";
-import { BOTTOM_LINKS, DASHBOARD_LINK, NAV_GROUPS } from "@/constants/navigation";
+import { BOTTOM_LINKS, CONTINGENCY_LINK, DASHBOARD_LINK, NAV_GROUPS } from "@/constants/navigation";
 import { useContingency } from "@/features/contingency/contingency-context";
 import { usePermissions } from "@/hooks/use-permissions";
 import { Badge } from "@/components/ui/badge";
@@ -32,7 +32,8 @@ function isPathActive(pathname: string, href: string): boolean {
 export function AppSidebar() {
   const pathname = usePathname();
   const { isAdmin, canWrite: roleCanWrite } = usePermissions();
-  const { active: contingencyActive } = useContingency();
+  const { active: contingencyActive, transactions } = useContingency();
+  const hasContingencyIssues = transactions.some((tx) => tx.status === "CONFLICT" || tx.status === "FAILED");
   const { isMobile, setOpenMobile } = useSidebar();
   // writeOnly sidebar shortcuts don't carry a module key, so contingency
   // hides all of them while active rather than guessing which module each
@@ -95,6 +96,25 @@ export function AppSidebar() {
                 </Badge>
               </SidebarMenuButton>
             </SidebarMenuItem>
+
+            {isAdmin && (
+              <SidebarMenuItem>
+                <SidebarMenuButton asChild isActive={isPathActive(pathname, CONTINGENCY_LINK.href)}>
+                  <Link href={CONTINGENCY_LINK.href} onClick={closeOnMobile}>
+                    <CONTINGENCY_LINK.icon className={contingencyActive ? "text-warning" : undefined} />
+                    <span>{CONTINGENCY_LINK.title}</span>
+                    {contingencyActive && (
+                      <Badge
+                        variant={hasContingencyIssues ? "destructive" : "secondary"}
+                        className={hasContingencyIssues ? "ml-auto" : "ml-auto bg-warning text-warning-foreground"}
+                      >
+                        Activa
+                      </Badge>
+                    )}
+                  </Link>
+                </SidebarMenuButton>
+              </SidebarMenuItem>
+            )}
 
             {visibleGroups.map((group) => {
               const groupActive = group.items.some((item) => isPathActive(pathname, item.href));

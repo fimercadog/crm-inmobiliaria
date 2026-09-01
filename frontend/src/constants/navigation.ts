@@ -1,10 +1,11 @@
 import type { LucideIcon } from "lucide-react";
-import { Building2, Globe, Handshake, LayoutDashboard, Settings, Target, Users, UsersRound } from "lucide-react";
+import { Building2, Globe, Handshake, LayoutDashboard, Settings, ShieldAlert, Target, Users, UsersRound } from "lucide-react";
 
 export interface NavLink {
   title: string;
   href: string;
   icon: LucideIcon;
+  adminOnly?: boolean;
 }
 
 export interface NavGroup {
@@ -15,6 +16,15 @@ export interface NavGroup {
 }
 
 export const DASHBOARD_LINK: NavLink = { title: "Dashboard", href: "/dashboard", icon: LayoutDashboard };
+
+// Emergency-equipment placement, not filed inside a submenu: an admin should
+// see this — and its live status — without opening anything first.
+export const CONTINGENCY_LINK: NavLink = {
+  title: "Modo contingencia",
+  href: "/settings/contingency",
+  icon: ShieldAlert,
+  adminOnly: true,
+};
 
 export const NAV_GROUPS: NavGroup[] = [
   {
@@ -65,7 +75,6 @@ export const NAV_GROUPS: NavGroup[] = [
       { title: "Agentes", href: "/team/agents" },
       { title: "Usuarios", href: "/team/users" },
       { title: "Roles", href: "/team/roles" },
-      { title: "Modo contingencia", href: "/settings/contingency" },
     ],
   },
 ];
