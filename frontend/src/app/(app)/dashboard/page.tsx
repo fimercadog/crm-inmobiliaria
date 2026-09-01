@@ -23,6 +23,8 @@ import { ErrorState } from "@/components/shared/error-state";
 import { StatCard } from "@/components/shared/stat-card";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { FunnelChart } from "@/features/dashboard/funnel-chart";
+import { PropertiesStatusChart } from "@/features/dashboard/properties-status-chart";
+import { ClosingsChart } from "@/features/dashboard/closings-chart";
 import { useDashboardSummary } from "@/features/dashboard/use-dashboard-summary";
 
 // "notation: compact" reads as "$11 mil M" in es-CO for billions (numerically
@@ -78,15 +80,20 @@ export default function DashboardPage() {
             icon={Wallet}
           />
 
-          <Card>
-            <CardHeader>
-              <CardTitle>Embudo inmobiliario</CardTitle>
-              <CardDescription>Lead → Contactado → Propiedad recomendada → Visita → Negociación → Cierre</CardDescription>
-            </CardHeader>
-            <CardContent>
-              <FunnelChart data={summary.funnel} />
-            </CardContent>
-          </Card>
+          <div className="grid gap-4 lg:grid-cols-2">
+            <Card>
+              <CardHeader>
+                <CardTitle>Embudo inmobiliario</CardTitle>
+                <CardDescription>Lead → Contactado → Propiedad recomendada → Visita → Negociación → Cierre</CardDescription>
+              </CardHeader>
+              <CardContent>
+                <FunnelChart data={summary.funnel} />
+              </CardContent>
+            </Card>
+
+            <PropertiesStatusChart />
+            <ClosingsChart />
+          </div>
         </>
       )}
     </PageContainer>
