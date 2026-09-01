@@ -60,6 +60,11 @@ export function ClosingsChart() {
                     <stop offset="0%" stopColor={palette[1]} stopOpacity={1} />
                     <stop offset="100%" stopColor={palette[1]} stopOpacity={0.75} />
                   </linearGradient>
+                  {/* Soft drop shadow so the fully-rounded bars read as
+                   * floating pills instead of flat rectangles. */}
+                  <filter id="closings-bar-shadow" x="-50%" y="-20%" width="200%" height="150%">
+                    <feDropShadow dx="0" dy="3" stdDeviation="4" floodOpacity={0.35} />
+                  </filter>
                 </defs>
                 <CartesianGrid strokeDasharray="3 3" vertical={false} className="stroke-border/40" />
                 <XAxis
@@ -71,10 +76,24 @@ export function ClosingsChart() {
                   tickMargin={8}
                 />
                 <ChartTooltip content={<ChartTooltipContent />} />
-                <Bar dataKey="won_count" name="Ganados" fill="url(#closings-won)" radius={[8, 8, 0, 0]} isAnimationActive={false}>
+                <Bar
+                  dataKey="won_count"
+                  name="Ganados"
+                  fill="url(#closings-won)"
+                  radius={12}
+                  style={{ filter: "url(#closings-bar-shadow)" }}
+                  isAnimationActive={false}
+                >
                   <LabelList dataKey="won_count" position="top" fontSize={11} fill="var(--muted-foreground)" formatter={(value) => (Number(value) > 0 ? value : "")} />
                 </Bar>
-                <Bar dataKey="lost_count" name="Perdidos" fill="url(#closings-lost)" radius={[8, 8, 0, 0]} isAnimationActive={false}>
+                <Bar
+                  dataKey="lost_count"
+                  name="Perdidos"
+                  fill="url(#closings-lost)"
+                  radius={12}
+                  style={{ filter: "url(#closings-bar-shadow)" }}
+                  isAnimationActive={false}
+                >
                   <LabelList dataKey="lost_count" position="top" fontSize={11} fill="var(--muted-foreground)" formatter={(value) => (Number(value) > 0 ? value : "")} />
                 </Bar>
               </BarChart>
