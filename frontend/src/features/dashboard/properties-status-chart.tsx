@@ -1,11 +1,13 @@
 "use client";
 
+import { ChartPie } from "lucide-react";
 import { Cell, Pie, PieChart } from "recharts";
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
+import { Card, CardAction, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { ChartContainer, ChartTooltip, ChartTooltipContent, type ChartConfig } from "@/components/ui/chart";
 import { LoadingState } from "@/components/shared/loading-state";
 import { ErrorState } from "@/components/shared/error-state";
 import { EmptyState } from "@/components/shared/empty-state";
+import { IconBadge } from "@/components/shared/stat-card";
 import { useReportRows } from "@/features/dashboard/use-report-rows";
 import { usePowerBiPalette } from "@/lib/chart-palette";
 import { PROPERTY_STATUS_LABELS, type PropertyStatusValue } from "@/types/property";
@@ -55,6 +57,9 @@ export function PropertiesStatusChart() {
         <CardDescription>
           Distribución del inventario actual — {rows?.reduce((sum, row) => sum + row.count, 0) ?? 0} propiedades en total.
         </CardDescription>
+        <CardAction>
+          <IconBadge icon={ChartPie} tone="chart-3" />
+        </CardAction>
       </CardHeader>
       <CardContent>
         {rows === null && !error && <LoadingState rows={4} />}

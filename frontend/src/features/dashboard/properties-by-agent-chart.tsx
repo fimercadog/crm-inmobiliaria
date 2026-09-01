@@ -1,11 +1,13 @@
 "use client";
 
+import { Users } from "lucide-react";
 import { Bar, BarChart, LabelList, XAxis } from "recharts";
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
+import { Card, CardAction, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { ChartContainer, ChartTooltip, ChartTooltipContent, type ChartConfig } from "@/components/ui/chart";
 import { LoadingState } from "@/components/shared/loading-state";
 import { ErrorState } from "@/components/shared/error-state";
 import { EmptyState } from "@/components/shared/empty-state";
+import { IconBadge } from "@/components/shared/stat-card";
 import { useReportRows } from "@/features/dashboard/use-report-rows";
 import { usePowerBiPalette } from "@/lib/chart-palette";
 import { PROPERTY_STATUS_LABELS, PROPERTY_STATUSES } from "@/types/property";
@@ -24,6 +26,9 @@ export function PropertiesByAgentChart() {
       <CardHeader>
         <CardTitle>Propiedades por agente</CardTitle>
         <CardDescription>Cartera de cada agente, por estado.</CardDescription>
+        <CardAction>
+          <IconBadge icon={Users} tone="chart-4" />
+        </CardAction>
       </CardHeader>
       <CardContent>
         {rows === null && !error && <LoadingState rows={4} />}

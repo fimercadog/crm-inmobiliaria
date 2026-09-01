@@ -1,11 +1,13 @@
 "use client";
 
+import { Trophy } from "lucide-react";
 import { Bar, BarChart, LabelList, XAxis } from "recharts";
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
+import { Card, CardAction, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { ChartContainer, ChartTooltip, ChartTooltipContent, type ChartConfig } from "@/components/ui/chart";
 import { LoadingState } from "@/components/shared/loading-state";
 import { ErrorState } from "@/components/shared/error-state";
 import { EmptyState } from "@/components/shared/empty-state";
+import { IconBadge } from "@/components/shared/stat-card";
 import { useReportRows } from "@/features/dashboard/use-report-rows";
 import { usePowerBiPalette } from "@/lib/chart-palette";
 import type { ClosingsByPeriodRow } from "@/types/report";
@@ -34,6 +36,9 @@ export function ClosingsChart() {
             ? `${totalWon} ganados · ${totalLost} perdidos · ${currencyFormatter.format(totalWonValue)} en negocios ganados`
             : "Negocios ganados y perdidos en los últimos 6 meses."}
         </CardDescription>
+        <CardAction>
+          <IconBadge icon={Trophy} tone="chart-5" />
+        </CardAction>
       </CardHeader>
       <CardContent>
         {rows === null && !error && <LoadingState rows={4} />}

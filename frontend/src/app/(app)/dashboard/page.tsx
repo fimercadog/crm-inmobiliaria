@@ -6,6 +6,7 @@ import {
   CalendarClock,
   CalendarDays,
   CheckCircle2,
+  Filter,
   Handshake,
   Home,
   KeyRound,
@@ -20,8 +21,8 @@ import { PageContainer } from "@/components/shared/page-container";
 import { PageHeader } from "@/components/shared/page-header";
 import { LoadingState } from "@/components/shared/loading-state";
 import { ErrorState } from "@/components/shared/error-state";
-import { StatCard } from "@/components/shared/stat-card";
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
+import { StatCard, IconBadge } from "@/components/shared/stat-card";
+import { Card, CardAction, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { FunnelChart } from "@/features/dashboard/funnel-chart";
 import { PropertiesStatusChart } from "@/features/dashboard/properties-status-chart";
 import { PropertiesByAgentChart } from "@/features/dashboard/properties-by-agent-chart";
@@ -92,6 +93,9 @@ export default function DashboardPage() {
               <CardHeader>
                 <CardTitle>Embudo inmobiliario</CardTitle>
                 <CardDescription>Lead → Contactado → Propiedad recomendada → Visita → Negociación → Cierre</CardDescription>
+                <CardAction>
+                  <IconBadge icon={Filter} tone="chart-1" />
+                </CardAction>
               </CardHeader>
               <CardContent>
                 <FunnelChart data={summary.funnel} />

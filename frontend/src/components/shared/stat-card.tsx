@@ -22,6 +22,17 @@ interface StatCardProps {
   tone?: StatCardTone;
 }
 
+// Shared with the dashboard's chart card headers — the tinted icon square is
+// what makes the stat cards read as "designed" rather than plain boxes, so
+// the chart cards borrow the same piece instead of looking flatter.
+export function IconBadge({ icon: Icon, tone = "chart-1", className }: { icon: LucideIcon; tone?: StatCardTone; className?: string }) {
+  return (
+    <div className={cn("flex size-10 shrink-0 items-center justify-center rounded-lg", TONE_CLASSNAMES[tone], className)}>
+      <Icon className="size-5" />
+    </div>
+  );
+}
+
 // A generic accent-blue icon on every card reads as one undifferentiated
 // wall of numbers — a distinct tone per metric lets the eye group and scan
 // them, same idea as the dashboard's colored charts.
@@ -33,11 +44,7 @@ export function StatCard({ label, value, icon: Icon, tone = "chart-1" }: StatCar
           <p className="text-muted-foreground text-sm">{label}</p>
           <p className="text-2xl font-semibold">{value}</p>
         </div>
-        {Icon && (
-          <div className={cn("flex size-10 shrink-0 items-center justify-center rounded-lg", TONE_CLASSNAMES[tone])}>
-            <Icon className="size-5" />
-          </div>
-        )}
+        {Icon && <IconBadge icon={Icon} tone={tone} />}
       </CardContent>
     </Card>
   );
