@@ -82,7 +82,12 @@ export default function DashboardPage() {
             tone="success"
           />
 
-          <div className="grid gap-4 lg:grid-cols-2">
+          {/* Material-style elevation on the chart cards specifically — the
+           * default Card is just a 1px ring with no shadow, which read as
+           * "flat" once several charts sat side by side. Scoped to this
+           * grid's direct children rather than the shared Card component,
+           * so the rest of the app's cards (forms, tables) are unaffected. */}
+          <div className="grid gap-4 lg:grid-cols-2 *:shadow-md *:transition-shadow *:hover:shadow-lg">
             <Card>
               <CardHeader>
                 <CardTitle>Embudo inmobiliario</CardTitle>

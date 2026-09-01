@@ -15,6 +15,31 @@ function statusLabel(status: string): string {
   return PROPERTY_STATUS_LABELS[status as PropertyStatusValue] ?? status;
 }
 
+interface PieLabelProps {
+  cx?: number;
+  cy?: number;
+  midAngle?: number;
+  outerRadius?: number;
+  value?: number;
+}
+
+// Recharts' default Pie label sits just outside the slice — with a full pie
+// (no legend gap to grow into) that overflows the card and gets clipped by
+// its `overflow-hidden`. Placing it inside the slice instead means it can
+// never spill past the chart's own bounds.
+function renderInsideLabel({ cx = 0, cy = 0, midAngle = 0, outerRadius = 0, value = 0 }: PieLabelProps) {
+  const radius = outerRadius * 0.65;
+  const radians = (-midAngle * Math.PI) / 180;
+  const x = cx + radius * Math.cos(radians);
+  const y = cy + radius * Math.sin(radians);
+
+  return (
+    <text x={x} y={y} fill="white" textAnchor="middle" dominantBaseline="central" fontSize={13} fontWeight={600}>
+      {value}
+    </text>
+  );
+}
+
 export function PropertiesStatusChart() {
   const { rows, error } = useReportRows<PropertiesByStatusRow>("/reports/properties-by-status");
 
@@ -36,6 +61,19 @@ export function PropertiesStatusChart() {
           <>
             <ResponsiveContainer width="100%" height={240}>
               <PieChart>
+                <defs>
+                  {/* Subtle top-to-bottom gradient per slice instead of a
+                   * flat fill — a plain saturated color on every wedge is
+                   * exactly the "looks flat" complaint. stopColor is a raw
+                   * SVG attribute, same as `fill`: a CSS var only resolves
+                   * through `style`, not the attribute itself. */}
+                  {rows.map((row, index) => (
+                    <linearGradient key={row.status} id={`pie-gradient-${row.status}`} x1="0" y1="0" x2="0" y2="1">
+                      <stop offset="0%" style={{ stopColor: COLORS[index % COLORS.length], stopOpacity: 1 }} />
+                      <stop offset="100%" style={{ stopColor: COLORS[index % COLORS.length], stopOpacity: 0.7 }} />
+                    </linearGradient>
+                  ))}
+                </defs>
                 <Pie
                   data={rows}
                   dataKey="count"
@@ -43,11 +81,11 @@ export function PropertiesStatusChart() {
                   outerRadius={95}
                   strokeWidth={0}
                   isAnimationActive={false}
-                  label={({ value }: { value: number }) => value}
+                  label={renderInsideLabel}
                   labelLine={false}
                 >
-                  {rows.map((row, index) => (
-                    <Cell key={row.status} style={{ fill: COLORS[index % COLORS.length] }} />
+                  {rows.map((row) => (
+                    <Cell key={row.status} fill={`url(#pie-gradient-${row.status})`} />
                   ))}
                 </Pie>
                 <Tooltip
