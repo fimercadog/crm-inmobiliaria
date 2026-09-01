@@ -52,7 +52,12 @@ export function AppSidebar() {
                   <Building2 className="size-4" />
                 </div>
                 <div className="flex flex-col gap-0.5 leading-none">
-                  <span className="font-semibold">CRM Inmobiliaria</span>
+                  <span className="flex items-center gap-1.5 font-semibold">
+                    CRM Inmobiliaria
+                    <Badge variant="secondary" className="px-1.5 py-0 text-[10px]">
+                      Beta
+                    </Badge>
+                  </span>
                   <span className="text-xs text-muted-foreground">Gestión inmobiliaria</span>
                 </div>
               </Link>

@@ -1,6 +1,4 @@
-import { AppHeader } from "@/components/layout/app-header";
-import { AppSidebar } from "@/components/layout/app-sidebar";
-import { SidebarInset, SidebarProvider } from "@/components/ui/sidebar";
+import { AppShell } from "@/components/layout/app-shell";
 import { RequireAuth } from "@/features/auth/require-auth";
 
 // Every page here needs a live session and renders per-user data client-side,
@@ -14,13 +12,7 @@ export const dynamic = "force-dynamic";
 export default function AppLayout({ children }: LayoutProps<"/">) {
   return (
     <RequireAuth>
-      <SidebarProvider>
-        <AppSidebar />
-        <SidebarInset>
-          <AppHeader />
-          <div className="flex flex-1 flex-col">{children}</div>
-        </SidebarInset>
-      </SidebarProvider>
+      <AppShell>{children}</AppShell>
     </RequireAuth>
   );
 }

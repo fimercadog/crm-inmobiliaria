@@ -1,7 +1,7 @@
 "use client";
 
 import { useRouter } from "next/navigation";
-import { LogOut, User } from "lucide-react";
+import { LogOut, TriangleAlert, User } from "lucide-react";
 import { toast } from "sonner";
 import { logout as logoutRequest } from "@/features/auth/api";
 import { ModeToggle } from "@/components/mode-toggle";
@@ -20,7 +20,11 @@ import { useAppDispatch, useAppSelector } from "@/hooks/redux";
 import { setStoredToken } from "@/lib/api/axios";
 import { clearCredentials } from "@/store/slices/authSlice";
 
-export function AppHeader() {
+interface AppHeaderProps {
+  onShowBetaNotice: () => void;
+}
+
+export function AppHeader({ onShowBetaNotice }: AppHeaderProps) {
   const user = useAppSelector((state) => state.auth.user);
   const dispatch = useAppDispatch();
   const router = useRouter();
@@ -44,6 +48,9 @@ export function AppHeader() {
       <Separator orientation="vertical" className="h-4" />
 
       <div className="ml-auto flex items-center gap-2">
+        <Button variant="ghost" size="icon" aria-label="Ver aviso de versión Beta" onClick={onShowBetaNotice}>
+          <TriangleAlert className="text-warning" />
+        </Button>
         <ModeToggle />
 
         <DropdownMenu>

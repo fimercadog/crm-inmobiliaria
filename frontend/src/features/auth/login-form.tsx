@@ -11,6 +11,7 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Field, FieldError, FieldGroup, FieldLabel } from "@/components/ui/field";
 import { login } from "@/features/auth/api";
+import { BETA_NOTICE_KEY } from "@/components/layout/beta-notice-dialog";
 import { useAppDispatch } from "@/hooks/redux";
 import { setStoredToken } from "@/lib/api/axios";
 import { setCredentials } from "@/store/slices/authSlice";
@@ -50,6 +51,7 @@ export function LoginForm() {
     try {
       const { token, user } = await login(values.email, values.password);
       setStoredToken(token);
+      sessionStorage.removeItem(BETA_NOTICE_KEY);
       dispatch(setCredentials({ user, token }));
       router.push("/dashboard");
     } catch (error) {
