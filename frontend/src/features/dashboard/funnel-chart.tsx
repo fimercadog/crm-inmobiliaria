@@ -1,19 +1,20 @@
+"use client";
+
+import { usePowerBiPalette } from "@/lib/chart-palette";
+
 interface FunnelChartProps {
   data: { stage: string; label: string; count: number }[];
 }
 
-// One color per stage instead of a single flat bar color — a funnel where
-// every stage looks the same doesn't read as a funnel at a glance.
-const STAGE_COLORS = ["var(--chart-1)", "var(--chart-3)", "var(--chart-5)", "var(--chart-2)", "var(--chart-4)", "var(--destructive)"];
-
 export function FunnelChart({ data }: FunnelChartProps) {
+  const palette = usePowerBiPalette();
   const max = Math.max(1, ...data.map((item) => item.count));
 
   return (
     <div className="flex flex-col gap-3">
       {data.map((item, index) => {
         const widthPercent = (item.count / max) * 100;
-        const color = STAGE_COLORS[index % STAGE_COLORS.length];
+        const color = palette[index % palette.length];
 
         return (
           <div key={item.stage} className="flex items-center gap-3">

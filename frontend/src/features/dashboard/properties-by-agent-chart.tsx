@@ -1,25 +1,23 @@
 "use client";
 
-import { Bar, BarChart, CartesianGrid, Legend, LabelList, ResponsiveContainer, Tooltip, XAxis, YAxis } from "recharts";
+import { Bar, BarChart, CartesianGrid, LabelList, XAxis, YAxis } from "recharts";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
+import { ChartContainer, ChartTooltip, ChartTooltipContent, type ChartConfig } from "@/components/ui/chart";
 import { LoadingState } from "@/components/shared/loading-state";
 import { ErrorState } from "@/components/shared/error-state";
 import { EmptyState } from "@/components/shared/empty-state";
 import { useReportRows } from "@/features/dashboard/use-report-rows";
-import { PROPERTY_STATUS_LABELS, PROPERTY_STATUSES, type PropertyStatusValue } from "@/types/property";
+import { usePowerBiPalette } from "@/lib/chart-palette";
+import { PROPERTY_STATUS_LABELS, PROPERTY_STATUSES } from "@/types/property";
 import type { PropertiesByAgentStatusRow } from "@/types/report";
 
-const STATUS_COLORS: Record<PropertyStatusValue, string> = {
-  borrador: "var(--muted-foreground)",
-  disponible: "var(--chart-2)",
-  reservado: "var(--chart-3)",
-  vendido: "var(--chart-1)",
-  arrendado: "var(--chart-4)",
-  inactivo: "var(--destructive)",
-};
+const chartConfig: ChartConfig = Object.fromEntries(
+  PROPERTY_STATUSES.map((status) => [status, { label: PROPERTY_STATUS_LABELS[status] }]),
+);
 
 export function PropertiesByAgentChart() {
   const { rows, error } = useReportRows<PropertiesByAgentStatusRow>("/reports/properties-by-agent-status");
+  const palette = usePowerBiPalette();
 
   return (
     <Card>
@@ -34,48 +32,49 @@ export function PropertiesByAgentChart() {
           <EmptyState title="Sin propiedades asignadas" description="Ningún agente tiene propiedades todavía." />
         )}
         {rows !== null && !error && rows.length > 0 && (
-          <ResponsiveContainer width="100%" height={280}>
-            <BarChart data={rows} margin={{ left: -20 }}>
-              <CartesianGrid strokeDasharray="3 3" vertical={false} className="stroke-border/50" />
-              <XAxis dataKey="agent" tick={{ fontSize: 12, fill: "var(--muted-foreground)" }} axisLine={false} tickLine={false} tickMargin={8} />
-              <YAxis tick={{ fontSize: 12, fill: "var(--muted-foreground)" }} allowDecimals={false} axisLine={false} tickLine={false} />
-              <Tooltip
-                cursor={{ fill: "var(--muted)", opacity: 0.5 }}
-                contentStyle={{ borderRadius: 8, fontSize: 12 }}
-                animationDuration={150}
-              />
-              {/* Always-rendered legend — a chart with 6 stacked segments has
-               * to identify its colors without waiting for a hover. */}
-              <Legend wrapperStyle={{ fontSize: 12, paddingTop: 8 }} />
-              {PROPERTY_STATUSES.map((status) => (
-                <Bar
-                  key={status}
-                  dataKey={status}
-                  name={PROPERTY_STATUS_LABELS[status]}
-                  stackId="properties"
-                  // Both needed: `fill` (recharts reads this prop, not the
-                  // DOM, to color the Legend swatch) and `style.fill` (a
-                  // CSS var doesn't resolve as a plain SVG attribute, so the
-                  // bar itself needs it as real inline style — see
-                  // properties-status-chart.tsx for the same fix).
-                  fill={STATUS_COLORS[status]}
-                  style={{ fill: STATUS_COLORS[status] }}
-                  isAnimationActive={false}
-                  className="transition-opacity hover:opacity-80"
-                >
-                  <LabelList
+          <>
+            <ChartContainer config={chartConfig} className="aspect-auto h-70 w-full">
+              <BarChart data={rows} margin={{ left: -20 }}>
+                <CartesianGrid strokeDasharray="3 3" vertical={false} className="stroke-border/50" />
+                <XAxis dataKey="agent" tick={{ fontSize: 12, fill: "var(--muted-foreground)" }} axisLine={false} tickLine={false} tickMargin={8} />
+                <YAxis tick={{ fontSize: 12, fill: "var(--muted-foreground)" }} allowDecimals={false} axisLine={false} tickLine={false} />
+                <ChartTooltip cursor={{ fill: "var(--muted)", opacity: 0.5 }} content={<ChartTooltipContent />} />
+                {PROPERTY_STATUSES.map((status, index) => (
+                  <Bar
+                    key={status}
                     dataKey={status}
-                    position="inside"
-                    fill="white"
-                    fontSize={11}
-                    // Hide the label on a segment with nothing in it — a "0"
-                    // floating in an empty stack reads as noise, not data.
-                    formatter={(value) => (Number(value) > 0 ? value : "")}
-                  />
-                </Bar>
+                    name={PROPERTY_STATUS_LABELS[status]}
+                    stackId="properties"
+                    // Literal hex from the shuffled palette — no CSS-var
+                    // workaround needed, it's a plain color string.
+                    fill={palette[index % palette.length]}
+                    isAnimationActive={false}
+                    className="transition-opacity hover:opacity-80"
+                  >
+                    <LabelList
+                      dataKey={status}
+                      position="inside"
+                      fill="white"
+                      fontSize={11}
+                      // Hide the label on a segment with nothing in it — a "0"
+                      // floating in an empty stack reads as noise, not data.
+                      formatter={(value) => (Number(value) > 0 ? value : "")}
+                    />
+                  </Bar>
+                ))}
+              </BarChart>
+            </ChartContainer>
+            {/* Always-visible legend — a stack of 6 segments needs its colors
+             * identified without waiting for a hover. */}
+            <div className="mt-2 flex flex-wrap justify-center gap-x-4 gap-y-1.5 text-xs text-muted-foreground">
+              {PROPERTY_STATUSES.map((status, index) => (
+                <div key={status} className="flex items-center gap-1.5">
+                  <span className="size-2.5 shrink-0 rounded-full" style={{ backgroundColor: palette[index % palette.length] }} />
+                  {PROPERTY_STATUS_LABELS[status]}
+                </div>
               ))}
-            </BarChart>
-          </ResponsiveContainer>
+            </div>
+          </>
         )}
       </CardContent>
     </Card>

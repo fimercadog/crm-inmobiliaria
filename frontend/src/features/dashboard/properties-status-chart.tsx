@@ -1,15 +1,15 @@
 "use client";
 
-import { Cell, Pie, PieChart, ResponsiveContainer, Tooltip } from "recharts";
+import { Cell, Pie, PieChart } from "recharts";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
+import { ChartContainer, ChartTooltip, ChartTooltipContent, type ChartConfig } from "@/components/ui/chart";
 import { LoadingState } from "@/components/shared/loading-state";
 import { ErrorState } from "@/components/shared/error-state";
 import { EmptyState } from "@/components/shared/empty-state";
 import { useReportRows } from "@/features/dashboard/use-report-rows";
+import { usePowerBiPalette } from "@/lib/chart-palette";
 import { PROPERTY_STATUS_LABELS, type PropertyStatusValue } from "@/types/property";
 import type { PropertiesByStatusRow } from "@/types/report";
-
-const COLORS = ["var(--chart-1)", "var(--chart-2)", "var(--chart-3)", "var(--chart-4)", "var(--chart-5)", "var(--muted-foreground)"];
 
 function statusLabel(status: string): string {
   return PROPERTY_STATUS_LABELS[status as PropertyStatusValue] ?? status;
@@ -42,6 +42,11 @@ function renderInsideLabel({ cx = 0, cy = 0, midAngle = 0, outerRadius = 0, valu
 
 export function PropertiesStatusChart() {
   const { rows, error } = useReportRows<PropertiesByStatusRow>("/reports/properties-by-status");
+  const palette = usePowerBiPalette();
+
+  const chartConfig: ChartConfig = Object.fromEntries(
+    (rows ?? []).map((row) => [row.status, { label: statusLabel(row.status) }]),
+  );
 
   return (
     <Card>
@@ -59,18 +64,17 @@ export function PropertiesStatusChart() {
         )}
         {rows !== null && !error && rows.length > 0 && (
           <>
-            <ResponsiveContainer width="100%" height={240}>
+            <ChartContainer config={chartConfig} className="mx-auto aspect-auto h-60 w-full">
               <PieChart>
                 <defs>
-                  {/* Subtle top-to-bottom gradient per slice instead of a
-                   * flat fill — a plain saturated color on every wedge is
-                   * exactly the "looks flat" complaint. stopColor is a raw
-                   * SVG attribute, same as `fill`: a CSS var only resolves
-                   * through `style`, not the attribute itself. */}
+                  {/* Subtle top-to-bottom gradient per slice instead of a flat
+                   * fill. Literal hex from the palette, not a CSS var — a
+                   * var() doesn't resolve through the raw `stop-color`
+                   * attribute (confirmed by hand this session). */}
                   {rows.map((row, index) => (
                     <linearGradient key={row.status} id={`pie-gradient-${row.status}`} x1="0" y1="0" x2="0" y2="1">
-                      <stop offset="0%" style={{ stopColor: COLORS[index % COLORS.length], stopOpacity: 1 }} />
-                      <stop offset="100%" style={{ stopColor: COLORS[index % COLORS.length], stopOpacity: 0.7 }} />
+                      <stop offset="0%" stopColor={palette[index % palette.length]} stopOpacity={1} />
+                      <stop offset="100%" stopColor={palette[index % palette.length]} stopOpacity={0.7} />
                     </linearGradient>
                   ))}
                 </defs>
@@ -88,16 +92,13 @@ export function PropertiesStatusChart() {
                     <Cell key={row.status} fill={`url(#pie-gradient-${row.status})`} />
                   ))}
                 </Pie>
-                <Tooltip
-                  formatter={(value, _name, entry) => [value, statusLabel(String((entry.payload as PropertiesByStatusRow).status))]}
-                  contentStyle={{ borderRadius: 8, fontSize: 12 }}
-                />
+                <ChartTooltip content={<ChartTooltipContent nameKey="status" />} />
               </PieChart>
-            </ResponsiveContainer>
+            </ChartContainer>
             <div className="mt-2 flex flex-wrap justify-center gap-x-4 gap-y-1.5 text-xs text-muted-foreground">
               {rows.map((row, index) => (
                 <div key={row.status} className="flex items-center gap-1.5">
-                  <span className="size-2.5 shrink-0 rounded-full" style={{ backgroundColor: COLORS[index % COLORS.length] }} />
+                  <span className="size-2.5 shrink-0 rounded-full" style={{ backgroundColor: palette[index % palette.length] }} />
                   {statusLabel(row.status)} ({row.count})
                 </div>
               ))}
