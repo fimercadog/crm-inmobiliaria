@@ -53,25 +53,25 @@ export default function DashboardPage() {
           <div>
             <h2 className="mb-3 text-sm font-medium">Propiedades</h2>
             <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-5">
-              <StatCard label="Activas" value={summary.properties.active} icon={Building2} />
-              <StatCard label="Disponibles" value={summary.properties.available} icon={Home} />
-              <StatCard label="Reservadas" value={summary.properties.reserved} icon={Bookmark} />
-              <StatCard label="Vendidas" value={summary.properties.sold} icon={CheckCircle2} />
-              <StatCard label="Arrendadas" value={summary.properties.rented} icon={KeyRound} />
+              <StatCard label="Activas" value={summary.properties.active} icon={Building2} tone="chart-1" />
+              <StatCard label="Disponibles" value={summary.properties.available} icon={Home} tone="success" />
+              <StatCard label="Reservadas" value={summary.properties.reserved} icon={Bookmark} tone="chart-3" />
+              <StatCard label="Vendidas" value={summary.properties.sold} icon={CheckCircle2} tone="chart-4" />
+              <StatCard label="Arrendadas" value={summary.properties.rented} icon={KeyRound} tone="chart-5" />
             </div>
           </div>
 
           <div>
             <h2 className="mb-3 text-sm font-medium">Personas y comercial</h2>
             <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
-              <StatCard label="Leads nuevos" value={summary.leads_new} icon={UserPlus} />
-              <StatCard label="Clientes activos" value={summary.clients_active} icon={Users} />
-              <StatCard label="Visitas de hoy" value={summary.visits_today} icon={CalendarClock} />
-              <StatCard label="Visitas próximas" value={summary.visits_upcoming} icon={CalendarDays} />
-              <StatCard label="Oportunidades abiertas" value={summary.opportunities_open} icon={Target} />
-              <StatCard label="En negociación" value={summary.deals_in_negotiation} icon={Handshake} />
-              <StatCard label="Cierres del mes" value={summary.closings_this_month} icon={Trophy} />
-              <StatCard label="Tareas pendientes" value={summary.tasks_pending} icon={ListTodo} />
+              <StatCard label="Leads nuevos" value={summary.leads_new} icon={UserPlus} tone="chart-1" />
+              <StatCard label="Clientes activos" value={summary.clients_active} icon={Users} tone="chart-2" />
+              <StatCard label="Visitas de hoy" value={summary.visits_today} icon={CalendarClock} tone="chart-3" />
+              <StatCard label="Visitas próximas" value={summary.visits_upcoming} icon={CalendarDays} tone="chart-4" />
+              <StatCard label="Oportunidades abiertas" value={summary.opportunities_open} icon={Target} tone="chart-5" />
+              <StatCard label="En negociación" value={summary.deals_in_negotiation} icon={Handshake} tone="warning" />
+              <StatCard label="Cierres del mes" value={summary.closings_this_month} icon={Trophy} tone="success" />
+              <StatCard label="Tareas pendientes" value={summary.tasks_pending} icon={ListTodo} tone="destructive" />
             </div>
           </div>
 
@@ -79,6 +79,7 @@ export default function DashboardPage() {
             label="Valor estimado del pipeline (oportunidades abiertas)"
             value={currencyFormatter.format(summary.pipeline_value)}
             icon={Wallet}
+            tone="success"
           />
 
           <div className="grid gap-4 lg:grid-cols-2">

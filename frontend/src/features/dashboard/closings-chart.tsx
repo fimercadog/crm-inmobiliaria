@@ -27,9 +27,16 @@ export function ClosingsChart() {
         {rows !== null && !error && hasData && (
           <ResponsiveContainer width="100%" height={240}>
             <BarChart data={rows} margin={{ left: -20 }}>
-              <CartesianGrid strokeDasharray="3 3" vertical={false} className="stroke-border" />
-              <XAxis dataKey="period" tick={{ fontSize: 12 }} tickFormatter={(value: string) => value.split(" ")[0]} />
-              <YAxis tick={{ fontSize: 12 }} allowDecimals={false} />
+              <CartesianGrid strokeDasharray="3 3" vertical={false} className="stroke-border/50" />
+              <XAxis
+                dataKey="period"
+                tick={{ fontSize: 12, fill: "var(--muted-foreground)" }}
+                tickFormatter={(value: string) => value.split(" ")[0]}
+                axisLine={false}
+                tickLine={false}
+                tickMargin={8}
+              />
+              <YAxis tick={{ fontSize: 12, fill: "var(--muted-foreground)" }} allowDecimals={false} axisLine={false} tickLine={false} />
               <Tooltip contentStyle={{ borderRadius: 8, fontSize: 12 }} />
               <Legend wrapperStyle={{ fontSize: 12 }} />
               {/* `fill` (for the Legend swatch color, recharts reads the

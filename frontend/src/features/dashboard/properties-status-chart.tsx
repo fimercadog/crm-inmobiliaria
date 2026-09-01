@@ -44,6 +44,8 @@ export function PropertiesStatusChart() {
                     paddingAngle={2}
                     strokeWidth={0}
                     isAnimationActive={false}
+                    label={({ value }: { value: number }) => value}
+                    labelLine={false}
                   >
                     {rows.map((row, index) => (
                       <Cell key={row.status} style={{ fill: COLORS[index % COLORS.length] }} />

@@ -1,6 +1,6 @@
 "use client";
 
-import { Bar, BarChart, CartesianGrid, Legend, ResponsiveContainer, Tooltip, XAxis, YAxis } from "recharts";
+import { Bar, BarChart, CartesianGrid, Legend, LabelList, ResponsiveContainer, Tooltip, XAxis, YAxis } from "recharts";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { LoadingState } from "@/components/shared/loading-state";
 import { ErrorState } from "@/components/shared/error-state";
@@ -36,9 +36,9 @@ export function PropertiesByAgentChart() {
         {rows !== null && !error && rows.length > 0 && (
           <ResponsiveContainer width="100%" height={280}>
             <BarChart data={rows} margin={{ left: -20 }}>
-              <CartesianGrid strokeDasharray="3 3" vertical={false} className="stroke-border" />
-              <XAxis dataKey="agent" tick={{ fontSize: 12 }} />
-              <YAxis tick={{ fontSize: 12 }} allowDecimals={false} />
+              <CartesianGrid strokeDasharray="3 3" vertical={false} className="stroke-border/50" />
+              <XAxis dataKey="agent" tick={{ fontSize: 12, fill: "var(--muted-foreground)" }} axisLine={false} tickLine={false} tickMargin={8} />
+              <YAxis tick={{ fontSize: 12, fill: "var(--muted-foreground)" }} allowDecimals={false} axisLine={false} tickLine={false} />
               <Tooltip
                 cursor={{ fill: "var(--muted)", opacity: 0.5 }}
                 contentStyle={{ borderRadius: 8, fontSize: 12 }}
@@ -62,7 +62,17 @@ export function PropertiesByAgentChart() {
                   style={{ fill: STATUS_COLORS[status] }}
                   isAnimationActive={false}
                   className="transition-opacity hover:opacity-80"
-                />
+                >
+                  <LabelList
+                    dataKey={status}
+                    position="inside"
+                    fill="white"
+                    fontSize={11}
+                    // Hide the label on a segment with nothing in it — a "0"
+                    // floating in an empty stack reads as noise, not data.
+                    formatter={(value) => (Number(value) > 0 ? value : "")}
+                  />
+                </Bar>
               ))}
             </BarChart>
           </ResponsiveContainer>
