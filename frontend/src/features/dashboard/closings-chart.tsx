@@ -1,6 +1,6 @@
 "use client";
 
-import { Bar, BarChart, CartesianGrid, Legend, ResponsiveContainer, Tooltip, XAxis, YAxis } from "recharts";
+import { Bar, BarChart, CartesianGrid, Legend, LabelList, ResponsiveContainer, Tooltip, XAxis, YAxis } from "recharts";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { LoadingState } from "@/components/shared/loading-state";
 import { ErrorState } from "@/components/shared/error-state";
@@ -8,15 +8,24 @@ import { EmptyState } from "@/components/shared/empty-state";
 import { useReportRows } from "@/features/dashboard/use-report-rows";
 import type { ClosingsByPeriodRow } from "@/types/report";
 
+const currencyFormatter = new Intl.NumberFormat("es-CO", { style: "currency", currency: "COP", maximumFractionDigits: 0 });
+
 export function ClosingsChart() {
   const { rows, error } = useReportRows<ClosingsByPeriodRow>("/reports/closings-by-period");
   const hasData = rows?.some((row) => row.won_count > 0 || row.lost_count > 0) ?? false;
+  const totalWon = rows?.reduce((sum, row) => sum + row.won_count, 0) ?? 0;
+  const totalLost = rows?.reduce((sum, row) => sum + row.lost_count, 0) ?? 0;
+  const totalWonValue = rows?.reduce((sum, row) => sum + row.won_value, 0) ?? 0;
 
   return (
     <Card>
       <CardHeader>
         <CardTitle>Cierres por periodo</CardTitle>
-        <CardDescription>Negocios ganados y perdidos en los últimos 6 meses.</CardDescription>
+        <CardDescription>
+          {hasData
+            ? `${totalWon} ganados · ${totalLost} perdidos · ${currencyFormatter.format(totalWonValue)} en negocios ganados`
+            : "Negocios ganados y perdidos en los últimos 6 meses."}
+        </CardDescription>
       </CardHeader>
       <CardContent>
         {rows === null && !error && <LoadingState rows={4} />}
@@ -42,8 +51,12 @@ export function ClosingsChart() {
               {/* `fill` (for the Legend swatch color, recharts reads the
                * prop directly) + `style.fill` (for the bar itself, since a
                * CSS var doesn't resolve as a plain SVG attribute). */}
-              <Bar dataKey="won_count" name="Ganados" fill="var(--chart-2)" style={{ fill: "var(--chart-2)" }} radius={[4, 4, 0, 0]} isAnimationActive={false} />
-              <Bar dataKey="lost_count" name="Perdidos" fill="var(--chart-4)" style={{ fill: "var(--chart-4)" }} radius={[4, 4, 0, 0]} isAnimationActive={false} />
+              <Bar dataKey="won_count" name="Ganados" fill="var(--chart-2)" style={{ fill: "var(--chart-2)" }} radius={[4, 4, 0, 0]} isAnimationActive={false}>
+                <LabelList dataKey="won_count" position="top" fontSize={11} fill="var(--muted-foreground)" formatter={(value) => (Number(value) > 0 ? value : "")} />
+              </Bar>
+              <Bar dataKey="lost_count" name="Perdidos" fill="var(--chart-4)" style={{ fill: "var(--chart-4)" }} radius={[4, 4, 0, 0]} isAnimationActive={false}>
+                <LabelList dataKey="lost_count" position="top" fontSize={11} fill="var(--muted-foreground)" formatter={(value) => (Number(value) > 0 ? value : "")} />
+              </Bar>
             </BarChart>
           </ResponsiveContainer>
         )}
