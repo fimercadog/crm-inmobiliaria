@@ -15,6 +15,7 @@ import { ActionMenu, type ActionMenuItem } from "@/components/shared/action-menu
 import { DeleteDialog } from "@/components/dialogs/delete-dialog";
 import { deleteClient } from "@/features/clients/api";
 import { CLIENT_STATUS_CONFIG } from "@/features/clients/status-config";
+import { useContingency } from "@/features/contingency/contingency-context";
 import { usePermissions } from "@/hooks/use-permissions";
 import { useServerTable } from "@/hooks/use-server-table";
 import type { Client } from "@/types/client";
@@ -89,7 +90,11 @@ function buildColumns(canWrite: boolean, canDelete: boolean): DataTableColumnDef
 
 export function ClientsTable() {
   const router = useRouter();
-  const { canWrite, canDelete } = usePermissions();
+  const { canWrite: roleCanWrite, canDelete: roleCanDelete } = usePermissions();
+  const { isReadOnly } = useContingency();
+  const contingencyBlocksWrites = isReadOnly("clients");
+  const canWrite = roleCanWrite && !contingencyBlocksWrites;
+  const canDelete = roleCanDelete && !contingencyBlocksWrites;
   const [pendingDelete, setPendingDelete] = useState<Client | null>(null);
   const [isDeleting, setIsDeleting] = useState(false);
 
@@ -130,6 +135,10 @@ export function ClientsTable() {
           ) : undefined
         }
       />
+
+      {contingencyBlocksWrites && roleCanWrite && (
+        <p className="text-sm text-muted-foreground">Solo lectura durante modo contingencia.</p>
+      )}
 
       <DataTable
         columns={columns}

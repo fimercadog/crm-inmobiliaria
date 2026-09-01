@@ -65,6 +65,7 @@ export const NAV_GROUPS: NavGroup[] = [
       { title: "Agentes", href: "/team/agents" },
       { title: "Usuarios", href: "/team/users" },
       { title: "Roles", href: "/team/roles" },
+      { title: "Modo contingencia", href: "/settings/contingency" },
     ],
   },
 ];

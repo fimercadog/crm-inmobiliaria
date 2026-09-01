@@ -16,6 +16,7 @@ import { ActionMenu, type ActionMenuItem } from "@/components/shared/action-menu
 import { DeleteDialog } from "@/components/dialogs/delete-dialog";
 import { deleteProperty } from "@/features/properties/api";
 import { PROPERTY_STATUS_CONFIG } from "@/features/properties/status-config";
+import { useContingency } from "@/features/contingency/contingency-context";
 import { usePermissions } from "@/hooks/use-permissions";
 import { useServerTable } from "@/hooks/use-server-table";
 import {
@@ -100,7 +101,13 @@ export function PropertiesTable() {
   const router = useRouter();
   const searchParams = useSearchParams();
   const statusFromUrl = searchParams.get("status") ?? undefined;
-  const { canWrite, canDelete } = usePermissions();
+  const { canWrite: roleCanWrite, canDelete: roleCanDelete } = usePermissions();
+  const { isReadOnly } = useContingency();
+  // Properties isn't a contingency-eligible module: while contingency mode
+  // is active, it's always forced into read-only regardless of role.
+  const contingencyBlocksWrites = isReadOnly("properties");
+  const canWrite = roleCanWrite && !contingencyBlocksWrites;
+  const canDelete = roleCanDelete && !contingencyBlocksWrites;
 
   const [status, setStatus] = useState<string | undefined>(statusFromUrl);
   const [listingType, setListingType] = useState<string | undefined>(undefined);
@@ -168,6 +175,10 @@ export function PropertiesTable() {
           ) : undefined
         }
       />
+
+      {contingencyBlocksWrites && roleCanWrite && (
+        <p className="text-sm text-muted-foreground">Solo lectura durante modo contingencia.</p>
+      )}
 
       <DataTable
         columns={columns}

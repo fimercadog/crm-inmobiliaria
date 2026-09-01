@@ -4,6 +4,7 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { Building2, ChevronRight, Lock, Sparkles } from "lucide-react";
 import { BOTTOM_LINKS, DASHBOARD_LINK, NAV_GROUPS } from "@/constants/navigation";
+import { useContingency } from "@/features/contingency/contingency-context";
 import { usePermissions } from "@/hooks/use-permissions";
 import { Badge } from "@/components/ui/badge";
 import { Collapsible, CollapsibleContent, CollapsibleTrigger } from "@/components/ui/collapsible";
@@ -30,8 +31,14 @@ function isPathActive(pathname: string, href: string): boolean {
 
 export function AppSidebar() {
   const pathname = usePathname();
-  const { isAdmin, canWrite } = usePermissions();
+  const { isAdmin, canWrite: roleCanWrite } = usePermissions();
+  const { active: contingencyActive } = useContingency();
   const { isMobile, setOpenMobile } = useSidebar();
+  // writeOnly sidebar shortcuts don't carry a module key, so contingency
+  // hides all of them while active rather than guessing which module each
+  // belongs to — conservative, and correct today since the one enabled
+  // module (Seguimientos) has no writeOnly shortcut of its own here.
+  const canWrite = roleCanWrite && !contingencyActive;
   const visibleGroups = NAV_GROUPS.filter((group) => !group.adminOnly || isAdmin).map((group) => ({
     ...group,
     items: group.items.filter((item) => !item.writeOnly || canWrite),

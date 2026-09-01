@@ -8,16 +8,23 @@ import { Card, CardContent } from "@/components/ui/card";
 import { RequireWrite } from "@/features/auth/require-write";
 import { ActivityForm } from "@/features/activities/activity-form";
 import { createActivity } from "@/features/activities/api";
+import { useContingency } from "@/features/contingency/contingency-context";
 import { ApiError } from "@/types/api";
 import type { ActivityFormOutput } from "@/features/activities/activity-form-schema";
 
 export default function NewActivityPage() {
   const router = useRouter();
+  const { isModuleEnabled, queue } = useContingency();
 
   async function handleSubmit(values: ActivityFormOutput) {
     try {
-      await createActivity(values);
-      toast.success("Seguimiento registrado correctamente");
+      if (isModuleEnabled("activities")) {
+        await queue("activities", "create", values);
+        toast.success("Seguimiento guardado en contingencia — pendiente de sincronizar");
+      } else {
+        await createActivity(values);
+        toast.success("Seguimiento registrado correctamente");
+      }
       router.push("/activities");
     } catch (error) {
       toast.error(error instanceof ApiError ? error.message : "No fue posible registrar el seguimiento");
