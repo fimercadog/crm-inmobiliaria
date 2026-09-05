@@ -9,16 +9,16 @@ function emptyToUndefined(val: unknown) {
 }
 
 const optionalNumber = z.preprocess(emptyToUndefined, z.coerce.number().min(0).optional());
-const optionalEmail = z.preprocess(emptyToUndefined, z.string().email("Correo inválido").optional());
+const optionalEmail = z.preprocess(emptyToUndefined, z.string().email("Correo inválido").max(255).optional());
 const optionalEnum = <T extends readonly [string, ...string[]]>(values: T) =>
   z.preprocess(emptyToUndefined, z.enum(values).optional());
 
 export const clientFormSchema = z
   .object({
     name: z.string().min(1, "El nombre es obligatorio").max(255),
-    document: z.string().optional(),
-    phone: z.string().optional(),
-    whatsapp: z.string().optional(),
+    document: z.string().max(50).optional(),
+    phone: z.string().max(50).optional(),
+    whatsapp: z.string().max(50).optional(),
     email: optionalEmail,
     interest_type: optionalEnum(INTEREST_TYPES),
     budget_min: optionalNumber,
@@ -28,7 +28,10 @@ export const clientFormSchema = z
       z
         .string()
         .optional()
-        .transform((val) => (val ? val.split(",").map((zone) => zone.trim()).filter(Boolean) : undefined)),
+        .transform((val) => (val ? val.split(",").map((zone) => zone.trim()).filter(Boolean) : undefined))
+        .refine((zones) => !zones || zones.every((zone) => zone.length <= 100), {
+          message: "Cada zona debe tener máximo 100 caracteres",
+        }),
     ),
     property_type_interest: optionalEnum(PROPERTY_TYPES),
     bedrooms_needed: optionalNumber,

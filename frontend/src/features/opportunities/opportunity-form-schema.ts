@@ -15,7 +15,7 @@ export const opportunityFormSchema = z.object({
   value: optionalNumber,
   stage: z.enum(OPPORTUNITY_STAGES, { message: "Selecciona una etapa" }),
   probability: z.preprocess(emptyToUndefined, z.coerce.number().min(0).max(100).optional()),
-  next_action: z.string().optional(),
+  next_action: z.string().max(255).optional(),
   estimated_close_date: z.string().optional(),
   notes: z.string().optional(),
 });

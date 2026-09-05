@@ -7,8 +7,8 @@ function emptyToUndefined(val: unknown) {
 
 export const leadFormSchema = z.object({
   name: z.string().min(1, "El nombre es obligatorio").max(255),
-  phone: z.string().optional(),
-  email: z.preprocess(emptyToUndefined, z.string().email("Correo inválido").optional()),
+  phone: z.string().max(50).optional(),
+  email: z.preprocess(emptyToUndefined, z.string().email("Correo inválido").max(255).optional()),
   source: z.enum(LEAD_SOURCES, { message: "Selecciona un origen" }),
   status: z.enum(LEAD_STATUSES, { message: "Selecciona un estado" }),
   notes: z.string().optional(),

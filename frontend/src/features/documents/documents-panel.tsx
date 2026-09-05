@@ -14,6 +14,22 @@ import { usePermissions } from "@/hooks/use-permissions";
 import { ApiError } from "@/types/api";
 import type { CrmDocument, DocumentSubjectType } from "@/types/document";
 
+// Mirrors StoreDocumentRequest's server-side rules (mimes + max:10240 KB) so
+// an obviously-invalid file is rejected before a slow upload, not after one.
+const MAX_FILE_SIZE_BYTES = 10 * 1024 * 1024;
+const ACCEPTED_EXTENSIONS = ["pdf", "jpg", "jpeg", "png", "doc", "docx", "xls", "xlsx"];
+
+function validateDocumentFile(file: File): string | null {
+  if (file.size > MAX_FILE_SIZE_BYTES) {
+    return "El archivo supera el tamaño máximo permitido (10 MB).";
+  }
+  const extension = file.name.split(".").pop()?.toLowerCase();
+  if (!extension || !ACCEPTED_EXTENSIONS.includes(extension)) {
+    return "Tipo de archivo no permitido. Usa PDF, Word, Excel o una imagen (JPG/PNG).";
+  }
+  return null;
+}
+
 function formatFileSize(bytes: number): string {
   if (bytes < 1024) return `${bytes} B`;
   if (bytes < 1024 * 1024) return `${(bytes / 1024).toFixed(1)} KB`;
@@ -68,6 +84,12 @@ export function DocumentsPanel({ subjectType, subjectId }: DocumentsPanelProps) 
     event.target.value = "";
     if (!file) return;
 
+    const validationError = validateDocumentFile(file);
+    if (validationError) {
+      toast.error(validationError);
+      return;
+    }
+
     setIsUploading(true);
     try {
       await uploadDocument(subjectType, subjectId, file);
@@ -113,7 +135,13 @@ export function DocumentsPanel({ subjectType, subjectId }: DocumentsPanelProps) 
         </div>
         {canWrite && (
           <>
-            <input ref={fileInputRef} type="file" className="hidden" onChange={handleFileSelected} />
+            <input
+              ref={fileInputRef}
+              type="file"
+              accept=".pdf,.jpg,.jpeg,.png,.doc,.docx,.xls,.xlsx"
+              className="hidden"
+              onChange={handleFileSelected}
+            />
             <Button size="sm" variant="outline" disabled={isUploading} onClick={() => fileInputRef.current?.click()}>
               {isUploading ? <Loader2 className="animate-spin" /> : <Upload />}
               Subir documento

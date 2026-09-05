@@ -7,7 +7,7 @@ function emptyToUndefined(val: unknown) {
 export const profileFormSchema = z
   .object({
     name: z.string().min(1, "El nombre es obligatorio").max(255),
-    email: z.string().min(1, "El correo es obligatorio").email("Correo inválido"),
+    email: z.string().min(1, "El correo es obligatorio").email("Correo inválido").max(255),
     password: z.preprocess(
       emptyToUndefined,
       z.string().min(8, "La contraseña debe tener al menos 8 caracteres").optional(),

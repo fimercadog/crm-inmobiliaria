@@ -9,6 +9,12 @@ function emptyToUndefined(val: unknown) {
 
 const optionalNumber = z.preprocess(emptyToUndefined, z.coerce.number().min(0).optional());
 const optionalStratum = z.preprocess(emptyToUndefined, z.coerce.number().min(1).max(6).optional());
+// Mirrors StorePropertyRequest's 'min:1900, max:'.(date('Y') + 1) — a year
+// far outside a plausible construction date is rejected client-side too.
+const optionalYearBuilt = z.preprocess(
+  emptyToUndefined,
+  z.coerce.number().min(1900).max(new Date().getFullYear() + 1).optional(),
+);
 
 export const propertyFormSchema = z
   .object({
@@ -19,8 +25,8 @@ export const propertyFormSchema = z
     status: z.enum(PROPERTY_STATUSES, { message: "Selecciona un estado" }),
     owner_id: optionalNumber,
     city: z.string().min(1, "La ciudad es obligatoria").max(255),
-    zone: z.string().optional(),
-    address: z.string().optional(),
+    zone: z.string().max(255).optional(),
+    address: z.string().max(255).optional(),
     price: z.coerce.number().min(0, "El precio debe ser mayor o igual a 0"),
     admin_fee: optionalNumber,
     stratum: optionalStratum,
@@ -29,7 +35,7 @@ export const propertyFormSchema = z
     parking_spots: optionalNumber,
     built_area: optionalNumber,
     private_area: optionalNumber,
-    year_built: optionalNumber,
+    year_built: optionalYearBuilt,
     notes: z.string().optional(),
     is_featured: z.boolean().optional(),
     is_published: z.boolean().optional(),

@@ -7,11 +7,11 @@ function emptyToUndefined(val: unknown) {
 
 export const ownerFormSchema = z.object({
   name: z.string().min(1, "El nombre es obligatorio").max(255),
-  document: z.string().optional(),
-  phone: z.string().optional(),
-  whatsapp: z.string().optional(),
-  email: z.preprocess(emptyToUndefined, z.string().email("Correo inválido").optional()),
-  address: z.string().optional(),
+  document: z.string().max(50).optional(),
+  phone: z.string().max(50).optional(),
+  whatsapp: z.string().max(50).optional(),
+  email: z.preprocess(emptyToUndefined, z.string().email("Correo inválido").max(255).optional()),
+  address: z.string().max(255).optional(),
   notes: z.string().optional(),
   status: z.enum(OWNER_STATUSES, { message: "Selecciona un estado" }),
 });

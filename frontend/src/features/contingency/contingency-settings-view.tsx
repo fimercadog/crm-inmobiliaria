@@ -27,6 +27,11 @@ import type { ContingencyModuleDefinition, ContingencyTransaction } from "@/type
 
 const dateFormatter = new Intl.DateTimeFormat("es-CO", { dateStyle: "medium", timeStyle: "short" });
 
+// This never reaches the backend (discard is a local-only IndexedDB write),
+// so there's no server rule to mirror — but an unbounded textarea still lets
+// someone paste an arbitrarily large blob into local storage for no reason.
+const DISCARD_REASON_MAX_LENGTH = 500;
+
 const STATUS_CONFIG = {
   PENDING: { label: "Pendiente", tone: "warning" as const },
   SYNCED: { label: "Sincronizada", tone: "success" as const },
@@ -271,7 +276,11 @@ export function ContingencySettingsView() {
               value={discardReason}
               onChange={(event) => setDiscardReason(event.target.value)}
               placeholder="Explica por qué se descarta esta transacción"
+              maxLength={DISCARD_REASON_MAX_LENGTH}
             />
+            <p className="text-right text-xs text-muted-foreground">
+              {discardReason.length}/{DISCARD_REASON_MAX_LENGTH}
+            </p>
           </div>
           <AlertDialogFooter>
             <AlertDialogCancel>Cancelar</AlertDialogCancel>

@@ -13,6 +13,23 @@ import { usePermissions } from "@/hooks/use-permissions";
 import { ApiError } from "@/types/api";
 import type { PropertyImage } from "@/types/property";
 
+// Mirrors StorePropertyImageRequest's server-side rules (image, mimes,
+// max:5120 KB) so an obviously-invalid file is rejected before a slow
+// upload, not after one.
+const MAX_FILE_SIZE_BYTES = 5 * 1024 * 1024;
+const ACCEPTED_EXTENSIONS = ["jpg", "jpeg", "png", "webp"];
+
+function validateImageFile(file: File): string | null {
+  if (file.size > MAX_FILE_SIZE_BYTES) {
+    return "La imagen supera el tamaño máximo permitido (5 MB).";
+  }
+  const extension = file.name.split(".").pop()?.toLowerCase();
+  if (!extension || !ACCEPTED_EXTENSIONS.includes(extension)) {
+    return "Formato no permitido. Usa JPG, PNG o WEBP.";
+  }
+  return null;
+}
+
 interface PropertyImagesPanelProps {
   propertyId: number;
   images: PropertyImage[];
@@ -30,6 +47,12 @@ export function PropertyImagesPanel({ propertyId, images, onChange }: PropertyIm
     const file = event.target.files?.[0];
     event.target.value = "";
     if (!file) return;
+
+    const validationError = validateImageFile(file);
+    if (validationError) {
+      toast.error(validationError);
+      return;
+    }
 
     setIsUploading(true);
     try {
@@ -80,7 +103,7 @@ export function PropertyImagesPanel({ propertyId, images, onChange }: PropertyIm
         </div>
         {canWrite && (
           <>
-            <input ref={fileInputRef} type="file" accept="image/*" className="hidden" onChange={handleFileSelected} />
+            <input ref={fileInputRef} type="file" accept=".jpg,.jpeg,.png,.webp" className="hidden" onChange={handleFileSelected} />
             <Button size="sm" variant="outline" disabled={isUploading} onClick={() => fileInputRef.current?.click()}>
               {isUploading ? <Loader2 className="animate-spin" /> : <Upload />}
               Subir foto
