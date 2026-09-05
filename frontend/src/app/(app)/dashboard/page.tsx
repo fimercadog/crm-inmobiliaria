@@ -1,27 +1,11 @@
 "use client";
 
-import {
-  Bookmark,
-  Building2,
-  CalendarClock,
-  CalendarDays,
-  CheckCircle2,
-  Filter,
-  Handshake,
-  Home,
-  KeyRound,
-  ListTodo,
-  Target,
-  Trophy,
-  UserPlus,
-  Users,
-  Wallet,
-} from "lucide-react";
+import { Filter } from "lucide-react";
 import { PageContainer } from "@/components/shared/page-container";
 import { PageHeader } from "@/components/shared/page-header";
 import { LoadingState } from "@/components/shared/loading-state";
 import { ErrorState } from "@/components/shared/error-state";
-import { StatCard, IconBadge } from "@/components/shared/stat-card";
+import { StatCard, IconBadge, RateBadge } from "@/components/shared/stat-card";
 import { Card, CardAction, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { FunnelChart } from "@/features/dashboard/funnel-chart";
 import { PropertiesStatusChart } from "@/features/dashboard/properties-status-chart";
@@ -41,8 +25,17 @@ const currencyFormatter = new Intl.NumberFormat("es-CO", {
 export default function DashboardPage() {
   const { summary, isLoading, error, retry } = useDashboardSummary();
 
+  const funnel = summary?.funnel ?? [];
+  const firstStageCount = funnel[0]?.count ?? 0;
+  const lastStageCount = funnel[funnel.length - 1]?.count ?? 0;
+  const conversionRate = firstStageCount > 0 ? Math.round((lastStageCount / firstStageCount) * 100) : null;
+
   return (
-    <PageContainer>
+    // Scoped dark theme — this page only, not the sidebar/topbar shell —
+    // copying the reference BI-dashboard's dark look. Every Card/StatCard
+    // already reads its colors from CSS vars, so flipping `.dark` here is
+    // enough; no chart component needs its own dark-mode branch.
+    <PageContainer className="dark bg-background text-foreground">
       <PageHeader title="Dashboard" description="Vista general del negocio inmobiliario." />
 
       {isLoading && <LoadingState rows={6} />}
@@ -54,32 +47,31 @@ export default function DashboardPage() {
           <div>
             <h2 className="mb-3 text-sm font-medium">Propiedades</h2>
             <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-5">
-              <StatCard label="Activas" value={summary.properties.active} icon={Building2} tone="chart-1" />
-              <StatCard label="Disponibles" value={summary.properties.available} icon={Home} tone="success" />
-              <StatCard label="Reservadas" value={summary.properties.reserved} icon={Bookmark} tone="chart-3" />
-              <StatCard label="Vendidas" value={summary.properties.sold} icon={CheckCircle2} tone="chart-4" />
-              <StatCard label="Arrendadas" value={summary.properties.rented} icon={KeyRound} tone="chart-5" />
+              <StatCard label="Activas" value={summary.properties.active} tone="chart-1" />
+              <StatCard label="Disponibles" value={summary.properties.available} tone="success" />
+              <StatCard label="Reservadas" value={summary.properties.reserved} tone="chart-3" />
+              <StatCard label="Vendidas" value={summary.properties.sold} tone="chart-4" />
+              <StatCard label="Arrendadas" value={summary.properties.rented} tone="chart-5" />
             </div>
           </div>
 
           <div>
             <h2 className="mb-3 text-sm font-medium">Personas y comercial</h2>
             <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
-              <StatCard label="Leads nuevos" value={summary.leads_new} icon={UserPlus} tone="chart-1" />
-              <StatCard label="Clientes activos" value={summary.clients_active} icon={Users} tone="chart-2" />
-              <StatCard label="Visitas de hoy" value={summary.visits_today} icon={CalendarClock} tone="chart-3" />
-              <StatCard label="Visitas próximas" value={summary.visits_upcoming} icon={CalendarDays} tone="chart-4" />
-              <StatCard label="Oportunidades abiertas" value={summary.opportunities_open} icon={Target} tone="chart-5" />
-              <StatCard label="En negociación" value={summary.deals_in_negotiation} icon={Handshake} tone="warning" />
-              <StatCard label="Cierres del mes" value={summary.closings_this_month} icon={Trophy} tone="success" />
-              <StatCard label="Tareas pendientes" value={summary.tasks_pending} icon={ListTodo} tone="destructive" />
+              <StatCard label="Leads nuevos" value={summary.leads_new} tone="chart-1" />
+              <StatCard label="Clientes activos" value={summary.clients_active} tone="chart-2" />
+              <StatCard label="Visitas de hoy" value={summary.visits_today} tone="chart-3" />
+              <StatCard label="Visitas próximas" value={summary.visits_upcoming} tone="chart-4" />
+              <StatCard label="Oportunidades abiertas" value={summary.opportunities_open} tone="chart-5" />
+              <StatCard label="En negociación" value={summary.deals_in_negotiation} tone="warning" />
+              <StatCard label="Cierres del mes" value={summary.closings_this_month} tone="success" />
+              <StatCard label="Tareas pendientes" value={summary.tasks_pending} tone="destructive" />
             </div>
           </div>
 
           <StatCard
             label="Valor estimado del pipeline (oportunidades abiertas)"
             value={currencyFormatter.format(summary.pipeline_value)}
-            icon={Wallet}
             tone="success"
           />
 
@@ -96,6 +88,11 @@ export default function DashboardPage() {
                 <CardAction>
                   <IconBadge icon={Filter} tone="chart-1" />
                 </CardAction>
+                {conversionRate !== null && (
+                  <div className="mt-2">
+                    <RateBadge value={`${conversionRate}%`} label="conversión a cierre" tone="success" />
+                  </div>
+                )}
               </CardHeader>
               <CardContent>
                 <FunnelChart data={summary.funnel} />

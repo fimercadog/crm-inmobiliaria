@@ -7,7 +7,7 @@ import { ChartContainer, ChartTooltip, ChartTooltipContent, type ChartConfig } f
 import { LoadingState } from "@/components/shared/loading-state";
 import { ErrorState } from "@/components/shared/error-state";
 import { EmptyState } from "@/components/shared/empty-state";
-import { IconBadge } from "@/components/shared/stat-card";
+import { IconBadge, RateBadge } from "@/components/shared/stat-card";
 import { useReportRows } from "@/features/dashboard/use-report-rows";
 import { usePowerBiPalette } from "@/lib/chart-palette";
 import type { ClosingsByPeriodRow } from "@/types/report";
@@ -26,6 +26,8 @@ export function ClosingsChart() {
   const totalWon = rows?.reduce((sum, row) => sum + row.won_count, 0) ?? 0;
   const totalLost = rows?.reduce((sum, row) => sum + row.lost_count, 0) ?? 0;
   const totalWonValue = rows?.reduce((sum, row) => sum + row.won_value, 0) ?? 0;
+  const totalDecided = totalWon + totalLost;
+  const winRate = totalDecided > 0 ? Math.round((totalWon / totalDecided) * 100) : null;
 
   return (
     <Card>
@@ -39,6 +41,12 @@ export function ClosingsChart() {
         <CardAction>
           <IconBadge icon={Trophy} tone="chart-5" />
         </CardAction>
+        {winRate !== null && (
+          <div className="mt-2 flex flex-wrap gap-2">
+            <RateBadge value={`${winRate}%`} label="tasa de cierre" tone="success" />
+            <RateBadge value={`${100 - winRate}%`} label="negocios perdidos" tone="destructive" />
+          </div>
+        )}
       </CardHeader>
       <CardContent>
         {rows === null && !error && <LoadingState rows={4} />}
