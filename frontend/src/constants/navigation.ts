@@ -1,5 +1,33 @@
 import type { LucideIcon } from "lucide-react";
-import { Building2, Globe, Handshake, LayoutDashboard, Settings, Target, Users, UsersRound, WifiOff } from "lucide-react";
+import {
+  Building2,
+  CircleCheck,
+  CircleDashed,
+  CircleDollarSign,
+  CircleUserRound,
+  Contact,
+  FileSignature,
+  Globe,
+  Handshake,
+  KeyRound,
+  LayoutDashboard,
+  LayoutList,
+  ListChecks,
+  MapPin,
+  Newspaper,
+  Plus,
+  Settings,
+  ShieldCheck,
+  SquareCheckBig,
+  SquarePen,
+  Target,
+  UserRound,
+  UserRoundCheck,
+  UserRoundPlus,
+  Users,
+  UsersRound,
+  WifiOff,
+} from "lucide-react";
 
 export interface NavLink {
   title: string;
@@ -11,7 +39,7 @@ export interface NavLink {
 export interface NavGroup {
   title: string;
   icon: LucideIcon;
-  items: { title: string; href: string; writeOnly?: boolean }[];
+  items: { title: string; href: string; icon: LucideIcon; writeOnly?: boolean }[];
   adminOnly?: boolean;
 }
 
@@ -38,40 +66,40 @@ export const NAV_GROUPS: NavGroup[] = [
     title: "Propiedades",
     icon: Building2,
     items: [
-      { title: "Todas", href: "/properties" },
-      { title: "Disponibles", href: "/properties?status=disponible" },
-      { title: "Reservadas", href: "/properties?status=reservado" },
-      { title: "Vendidas", href: "/properties?status=vendido" },
-      { title: "Arrendadas", href: "/properties?status=arrendado" },
-      { title: "Nueva propiedad", href: "/properties/new", writeOnly: true },
+      { title: "Todas", href: "/properties", icon: LayoutList },
+      { title: "Disponibles", href: "/properties?status=disponible", icon: CircleCheck },
+      { title: "Reservadas", href: "/properties?status=reservado", icon: CircleDashed },
+      { title: "Vendidas", href: "/properties?status=vendido", icon: CircleDollarSign },
+      { title: "Arrendadas", href: "/properties?status=arrendado", icon: KeyRound },
+      { title: "Nueva propiedad", href: "/properties/new", icon: Plus, writeOnly: true },
     ],
   },
   {
     title: "Personas",
     icon: Users,
     items: [
-      { title: "Propietarios", href: "/owners" },
-      { title: "Clientes", href: "/clients" },
-      { title: "Leads", href: "/leads" },
+      { title: "Propietarios", href: "/owners", icon: UserRoundCheck },
+      { title: "Clientes", href: "/clients", icon: UserRound },
+      { title: "Leads", href: "/leads", icon: UserRoundPlus },
     ],
   },
   {
     title: "Comercial",
     icon: Handshake,
     items: [
-      { title: "Oportunidades", href: "/opportunities" },
-      { title: "Visitas", href: "/visits" },
-      { title: "Seguimientos", href: "/activities" },
-      { title: "Tareas", href: "/tasks" },
-      { title: "Cierres", href: "/closings" },
+      { title: "Oportunidades", href: "/opportunities", icon: Target },
+      { title: "Visitas", href: "/visits", icon: MapPin },
+      { title: "Seguimientos", href: "/activities", icon: ListChecks },
+      { title: "Tareas", href: "/tasks", icon: SquareCheckBig },
+      { title: "Cierres", href: "/closings", icon: FileSignature },
     ],
   },
   {
     title: "Sitio web",
     icon: Globe,
     items: [
-      { title: "Blog", href: "/blog-posts" },
-      { title: "Nuevo artículo", href: "/blog-posts/new", writeOnly: true },
+      { title: "Blog", href: "/blog-posts", icon: Newspaper },
+      { title: "Nuevo artículo", href: "/blog-posts/new", icon: SquarePen, writeOnly: true },
     ],
   },
   {
@@ -79,9 +107,9 @@ export const NAV_GROUPS: NavGroup[] = [
     icon: UsersRound,
     adminOnly: true,
     items: [
-      { title: "Agentes", href: "/team/agents" },
-      { title: "Usuarios", href: "/team/users" },
-      { title: "Roles", href: "/team/roles" },
+      { title: "Agentes", href: "/team/agents", icon: Contact },
+      { title: "Usuarios", href: "/team/users", icon: CircleUserRound },
+      { title: "Roles", href: "/team/roles", icon: ShieldCheck },
     ],
   },
 ];

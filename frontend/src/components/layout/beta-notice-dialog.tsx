@@ -10,11 +10,7 @@ import {
 } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
-
-/** Cleared on every fresh login (see login-form.tsx) so the auto-popup shows
- * once per session, not once forever — the header button (see app-header.tsx)
- * can always reopen it regardless of this flag. */
-export const BETA_NOTICE_KEY = "crm_beta_notice_seen";
+import { openFeedbackForm } from "@/lib/feedback";
 
 interface BetaNoticeDialogProps {
   open: boolean;
@@ -43,6 +39,9 @@ export function BetaNoticeDialog({ open, onOpenChange }: BetaNoticeDialogProps) 
           cuéntanoslo.
         </p>
         <DialogFooter>
+          <Button variant="outline" onClick={openFeedbackForm}>
+            Enviar comentarios
+          </Button>
           <Button onClick={() => onOpenChange(false)}>Entendido</Button>
         </DialogFooter>
       </DialogContent>
