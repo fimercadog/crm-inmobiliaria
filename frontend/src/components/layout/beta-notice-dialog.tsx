@@ -10,7 +10,6 @@ import {
 } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
-import { openFeedbackForm } from "@/lib/feedback";
 
 interface BetaNoticeDialogProps {
   open: boolean;
@@ -39,9 +38,6 @@ export function BetaNoticeDialog({ open, onOpenChange }: BetaNoticeDialogProps) 
           cuéntanoslo.
         </p>
         <DialogFooter>
-          <Button variant="outline" onClick={openFeedbackForm}>
-            Enviar comentarios
-          </Button>
           <Button onClick={() => onOpenChange(false)}>Entendido</Button>
         </DialogFooter>
       </DialogContent>
