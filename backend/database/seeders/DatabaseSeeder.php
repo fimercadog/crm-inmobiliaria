@@ -11,6 +11,7 @@ use App\Models\Lead;
 use App\Models\Opportunity;
 use App\Models\Owner;
 use App\Models\Property;
+use App\Models\PropertyImage;
 use App\Models\Task;
 use App\Models\User;
 use App\Models\Visit;
@@ -92,6 +93,31 @@ class DatabaseSeeder extends Seeder
         BlogPost::factory(8)
             ->recycle($agents)
             ->create();
+
+        // PropertyImage module was never seeded either (same class of bug as
+        // Documents below): every property showed an empty gallery with no
+        // cover photo. Attach 3-6 real JPEG files per property — a decoded
+        // placeholder, not a fake path string — so Storage::url() resolves
+        // and the <img> gallery actually renders instead of 404ing.
+        $placeholderImage = base64_decode(
+            '/9j/4AAQSkZJRgABAQEAYABgAAD/2wBDAAMCAgICAgMCAgIDAwMDBAYEBAQEBAgGBgUGCQgKCgkICQkKDA8MCgsOCwkJDRENDg8QEBEQCgwSExIQEw8QEBD/2wBDAQMDAwQDBAgEBAgQCwkLEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBD/wAARCAABAAEDASIAAhEBAxEB/8QAHwAAAQUBAQEBAQEAAAAAAAAAAAECAwQFBgcICQoL/8QAtRAAAgEDAwIEAwUFBAQAAAF9AQIDAAQRBRIhMUEGE1FhByJxFDKBkaEII0KxwRVS0fAkM2JyggkKFhcYGRolJicoKSo0NTY3ODk6Q0RFRkdISUpTVFVWV1hZWmNkZWZnaGlqc3R1dnd4eXqDhIWGh4iJipKTlJWWl5iZmqKjpKWmp6ipqrKztLW2t7i5usLDxMXGx8jJytLT1NXW19jZ2uHi4+Tl5ufo6erx8vP09fb3+Pn6/8QAHwEAAwEBAQEBAQEBAQAAAAAAAAECAwQFBgcICQoL/8QAtREAAgECBAQDBAcFBAQAAQJ3AAECAxEEBSExBhJBUQdhcRMiMoEIFEKRobHBCSMzUvAVYnLRChYkNOEl8RcYGRomJygpKjU2Nzg5OkNERUZHSElKU1RVVldYWVpjZGVmZ2hpanN0dXZ3eHl6goOEhYaHiImKkpOUlZaXmJmaoqOkpaanqKmqsrO0tba3uLm6wsPExcbHyMnK0tPU1dbX2Nna4uPk5ebn6Onq8vP09fb3+Pn6/9oADAMBAAIRAxEAPwD3+iiigD//2Q=='
+        );
+
+        $properties->each(function (Property $property) use ($placeholderImage): void {
+            $imageCount = random_int(3, 6);
+
+            for ($i = 0; $i < $imageCount; $i++) {
+                $path = 'property-images/'.Str::uuid().'.jpg';
+                Storage::disk('public')->put($path, $placeholderImage);
+
+                PropertyImage::factory()->create([
+                    'property_id' => $property->id,
+                    'path' => $path,
+                    'sort_order' => $i,
+                    'is_cover' => $i === 0,
+                ]);
+            }
+        });
 
         // Documents module was never seeded (factory existed, nobody called
         // it), so every property/client/owner showed an empty "Documentos"
