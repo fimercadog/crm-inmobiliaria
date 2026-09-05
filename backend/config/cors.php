@@ -29,6 +29,11 @@ return [
 
     'max_age' => 0,
 
-    'supports_credentials' => false,
+    // Required so the browser attaches/accepts the httpOnly JWT auth cookie
+    // on cross-origin requests (frontend and backend run on different
+    // ports/origins). `allowed_origins` must stay an explicit list — the
+    // Fetch spec forbids `Access-Control-Allow-Origin: *` together with
+    // credentialed requests.
+    'supports_credentials' => true,
 
 ];

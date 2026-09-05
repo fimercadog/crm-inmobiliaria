@@ -25,26 +25,23 @@ async function login(page: Page, email: string) {
   if (await betaDismiss.isVisible().catch(() => false)) await betaDismiss.click();
 }
 
-async function getToken(page: Page): Promise<string> {
-  return page.evaluate(() => localStorage.getItem("crm_token") ?? "");
-}
-
+// The auth token now lives only in an httpOnly cookie (never localStorage),
+// so these page-context fetches rely on the browser attaching it — same as
+// the app's own axios instance does — instead of reading/forwarding it as a
+// Bearer header. `credentials: "include"` is required since the backend
+// (127.0.0.1:8000) is a different origin than the frontend under test.
 async function closeAnyActiveSession(page: Page) {
-  const token = await getToken(page);
-  await page.evaluate(
-    async ([apiUrl, authToken]) => {
-      const status = await fetch(`${apiUrl}/contingency/status`, {
-        headers: { Authorization: `Bearer ${authToken}` },
-      }).then((r) => r.json());
-      if (status.data.active) {
-        await fetch(`${apiUrl}/contingency/deactivate`, {
-          method: "POST",
-          headers: { Authorization: `Bearer ${authToken}` },
-        });
-      }
-    },
-    [API, token],
-  );
+  await page.evaluate(async (apiUrl) => {
+    const status = await fetch(`${apiUrl}/contingency/status`, {
+      credentials: "include",
+    }).then((r) => r.json());
+    if (status.data.active) {
+      await fetch(`${apiUrl}/contingency/deactivate`, {
+        method: "POST",
+        credentials: "include",
+      });
+    }
+  }, API);
 }
 
 test.describe("Contingency mode — full lifecycle", () => {
@@ -110,7 +107,7 @@ test.describe("Contingency mode — full lifecycle", () => {
   });
 
   test("only admin can activate contingency", async ({ page }) => {
-    await page.evaluate(() => localStorage.clear());
+    await page.context().clearCookies();
     await login(page, "agente@crm.test");
 
     await page.goto("/settings/contingency", { waitUntil: "networkidle" });
@@ -151,15 +148,11 @@ test.describe("Contingency mode — full lifecycle", () => {
 });
 
 async function countActivities(page: Page): Promise<number> {
-  const token = await getToken(page);
-  return page.evaluate(
-    async ([apiUrl, authToken]) => {
-      const res = await fetch(`${apiUrl}/activities?per_page=1`, {
-        headers: { Authorization: `Bearer ${authToken}` },
-      });
-      const body = await res.json();
-      return body.data.meta.total as number;
-    },
-    [API, token],
-  );
+  return page.evaluate(async (apiUrl) => {
+    const res = await fetch(`${apiUrl}/activities?per_page=1`, {
+      credentials: "include",
+    });
+    const body = await res.json();
+    return body.data.meta.total as number;
+  }, API);
 }

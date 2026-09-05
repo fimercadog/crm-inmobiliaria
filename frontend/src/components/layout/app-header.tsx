@@ -17,7 +17,6 @@ import {
 import { Separator } from "@/components/ui/separator";
 import { SidebarTrigger } from "@/components/ui/sidebar";
 import { useAppDispatch, useAppSelector } from "@/hooks/redux";
-import { setStoredToken } from "@/lib/api/axios";
 import { clearCredentials } from "@/store/slices/authSlice";
 
 interface AppHeaderProps {
@@ -35,7 +34,6 @@ export function AppHeader({ onShowBetaNotice }: AppHeaderProps) {
     } catch {
       // best-effort: proceed with local logout even if the request fails
     } finally {
-      setStoredToken(null);
       dispatch(clearCredentials());
       toast.success("Sesión cerrada correctamente");
       router.push("/login");

@@ -1,36 +1,20 @@
 import axios from "axios";
 import { ApiError } from "@/types/api";
 
-const TOKEN_STORAGE_KEY = "crm_token";
-
-export function getStoredToken(): string | null {
-  if (typeof window === "undefined") return null;
-  return window.localStorage.getItem(TOKEN_STORAGE_KEY);
-}
-
-export function setStoredToken(token: string | null): void {
-  if (typeof window === "undefined") return;
-  if (token) {
-    window.localStorage.setItem(TOKEN_STORAGE_KEY, token);
-  } else {
-    window.localStorage.removeItem(TOKEN_STORAGE_KEY);
-  }
-}
-
+// The JWT lives only in the httpOnly cookie the backend sets on login — never
+// in localStorage or any other place JS can read it. An XSS payload that ran
+// on this page could read localStorage directly; it cannot read an httpOnly
+// cookie. `withCredentials` is what makes the browser attach that cookie (and
+// accept the Set-Cookie from login/refresh/logout) on every request, and the
+// backend mirrors this with CORS `supports_credentials` + an explicit origin
+// allowlist (required together — credentialed requests can't use `*`).
 export const api = axios.create({
   baseURL: process.env.NEXT_PUBLIC_API_URL ?? "http://localhost:8000/api/v1",
   timeout: 15000,
+  withCredentials: true,
   headers: {
     Accept: "application/json",
   },
-});
-
-api.interceptors.request.use((config) => {
-  const token = getStoredToken();
-  if (token) {
-    config.headers.Authorization = `Bearer ${token}`;
-  }
-  return config;
 });
 
 api.interceptors.response.use(
@@ -43,7 +27,6 @@ api.interceptors.response.use(
         | undefined;
 
       if (status === 401) {
-        setStoredToken(null);
         if (typeof window !== "undefined" && !window.location.pathname.startsWith("/login")) {
           // eslint-disable-next-line @next/next/no-location-assign-relative-destination -- outside React tree, useRouter is unavailable here
           window.location.href = "/login";

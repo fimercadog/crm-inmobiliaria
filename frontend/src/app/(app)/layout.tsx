@@ -1,4 +1,5 @@
 import { AppShell } from "@/components/layout/app-shell";
+import { AuthProvider } from "@/features/auth/auth-provider";
 import { RequireAuth } from "@/features/auth/require-auth";
 
 // Every page here needs a live session and renders per-user data client-side,
@@ -11,8 +12,14 @@ export const dynamic = "force-dynamic";
 
 export default function AppLayout({ children }: LayoutProps<"/">) {
   return (
-    <RequireAuth>
-      <AppShell>{children}</AppShell>
-    </RequireAuth>
+    // Only the authenticated app and the auth pages need session state — the
+    // public marketing site (also under this Redux store) doesn't, so
+    // AuthProvider lives here instead of the root layout to avoid firing a
+    // guaranteed-401 /auth/me call on every anonymous public-site pageview.
+    <AuthProvider>
+      <RequireAuth>
+        <AppShell>{children}</AppShell>
+      </RequireAuth>
+    </AuthProvider>
   );
 }

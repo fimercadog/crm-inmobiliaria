@@ -30,7 +30,7 @@ Route::prefix('v1')->group(function (): void {
     ]));
 
     Route::prefix('auth')->group(function (): void {
-        Route::post('/login', [AuthController::class, 'login']);
+        Route::post('/login', [AuthController::class, 'login'])->middleware('throttle:5,1');
         Route::post('/forgot-password', [AuthController::class, 'forgotPassword'])->middleware('throttle:6,1');
         Route::post('/reset-password', [AuthController::class, 'resetPassword'])->middleware('throttle:6,1');
 

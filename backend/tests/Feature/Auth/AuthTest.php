@@ -25,7 +25,46 @@ class AuthTest extends TestCase
         $response->assertOk()
             ->assertJsonPath('success', true)
             ->assertJsonPath('data.user.email', $user->email)
-            ->assertJsonStructure(['data' => ['token', 'type', 'expires_in', 'user' => ['id', 'name', 'email']]]);
+            ->assertJsonStructure(['data' => ['user' => ['id', 'name', 'email']]])
+            // The JWT must travel only as an httpOnly cookie, never in the
+            // JSON body — a body token would be just as readable by an XSS
+            // payload as the localStorage copy this migration removes.
+            ->assertJsonMissingPath('data.token');
+
+        $cookie = $response->getCookie(config('jwt.cookie_key_name', 'token'), decrypt: false);
+        $this->assertNotNull($cookie, 'Login response must set the auth cookie.');
+        $this->assertTrue($cookie->isHttpOnly(), 'Auth cookie must be httpOnly.');
+    }
+
+    public function test_login_cookie_authenticates_subsequent_requests_without_a_bearer_header(): void
+    {
+        $user = User::factory()->create(['password' => 'password']);
+
+        $login = $this->postJson('/api/v1/auth/login', [
+            'email' => $user->email,
+            'password' => 'password',
+        ])->assertOk();
+
+        $token = $login->getCookie(config('jwt.cookie_key_name', 'token'))->getValue();
+
+        $this->withCookie(config('jwt.cookie_key_name', 'token'), $token)
+            ->getJson('/api/v1/auth/me')
+            ->assertOk()
+            ->assertJsonPath('data.email', $user->email);
+    }
+
+    public function test_logout_clears_the_auth_cookie(): void
+    {
+        $user = User::factory()->create(['role' => UserRole::Admin]);
+        $token = auth('api')->login($user);
+
+        $response = $this->withHeader('Authorization', "Bearer {$token}")
+            ->postJson('/api/v1/auth/logout');
+
+        $response->assertOk();
+        $cookie = $response->getCookie(config('jwt.cookie_key_name', 'token'), decrypt: false);
+        $this->assertNotNull($cookie);
+        $this->assertTrue($cookie->getExpiresTime() > 0 && $cookie->getExpiresTime() < time(), 'Logout must expire the auth cookie.');
     }
 
     public function test_user_cannot_login_with_invalid_credentials(): void

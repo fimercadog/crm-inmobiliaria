@@ -4,7 +4,6 @@ import { StoreProvider } from "@/store/StoreProvider";
 import { ThemeProvider } from "@/components/theme-provider";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import { Toaster } from "@/components/ui/sonner";
-import { AuthProvider } from "@/features/auth/auth-provider";
 import { SITE_CONFIG } from "@/constants/site";
 import "./globals.css";
 
@@ -54,12 +53,10 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
       <body className="min-h-full flex flex-col" suppressHydrationWarning>
         <ThemeProvider attribute="class" defaultTheme="system" enableSystem disableTransitionOnChange>
           <StoreProvider>
-            <AuthProvider>
-              <TooltipProvider>
-                {children}
-                <Toaster position="top-right" richColors />
-              </TooltipProvider>
-            </AuthProvider>
+            <TooltipProvider>
+              {children}
+              <Toaster position="top-right" richColors />
+            </TooltipProvider>
           </StoreProvider>
         </ThemeProvider>
       </body>

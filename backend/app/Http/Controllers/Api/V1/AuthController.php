@@ -11,6 +11,7 @@ use App\Http\Resources\UserResource;
 use App\Http\Responses\ApiResponse;
 use App\Services\Auth\AuthService;
 use Illuminate\Http\JsonResponse;
+use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Password;
 
 class AuthController extends Controller
@@ -29,9 +30,9 @@ class AuthController extends Controller
         }
 
         return ApiResponse::success([
-            ...$this->authService->tokenPayload($token),
             'user' => new UserResource($this->authService->currentUser()),
-        ], 'Sesión iniciada correctamente');
+        ], 'Sesión iniciada correctamente')
+            ->withCookie($this->authService->makeAuthCookie($token, $request));
     }
 
     public function me(): JsonResponse
@@ -70,15 +71,19 @@ class AuthController extends Controller
         return ApiResponse::success(null, 'Contraseña actualizada correctamente');
     }
 
-    public function refresh(): JsonResponse
+    public function refresh(Request $request): JsonResponse
     {
-        return ApiResponse::success($this->authService->tokenPayload($this->authService->refresh()), 'Token renovado');
+        $token = $this->authService->refresh();
+
+        return ApiResponse::success($this->authService->tokenPayload(), 'Token renovado')
+            ->withCookie($this->authService->makeAuthCookie($token, $request));
     }
 
     public function logout(): JsonResponse
     {
         $this->authService->logout();
 
-        return ApiResponse::success(null, 'Sesión cerrada correctamente');
+        return ApiResponse::success(null, 'Sesión cerrada correctamente')
+            ->withCookie($this->authService->forgetAuthCookie());
     }
 }

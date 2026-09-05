@@ -3,10 +3,12 @@
 namespace App\Services\Auth;
 
 use App\Models\User;
+use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Password;
 use PHPOpenSourceSaver\JWTAuth\Facades\JWTAuth;
+use Symfony\Component\HttpFoundation\Cookie;
 
 class AuthService
 {
@@ -66,14 +68,39 @@ class AuthService
     }
 
     /**
-     * @return array{token: string, type: string, expires_in: int}
+     * @return array{type: string, expires_in: int}
      */
-    public function tokenPayload(string $token): array
+    public function tokenPayload(): array
     {
         return [
-            'token' => $token,
             'type' => 'bearer',
             'expires_in' => Auth::guard('api')->factory()->getTTL() * 60,
         ];
+    }
+
+    // The JWT travels only as an httpOnly cookie now, never in the JSON body
+    // or in an Authorization header the frontend has to store itself — a
+    // token readable from JS (localStorage, or even a JSON response body) is
+    // just as stealable by an XSS payload as one sitting in localStorage.
+    // `secure` mirrors the current request's own scheme so it works over
+    // plain http in local dev and requires https once deployed.
+    public function makeAuthCookie(string $token, Request $request): Cookie
+    {
+        return cookie(
+            name: config('jwt.cookie_key_name', 'token'),
+            value: $token,
+            minutes: Auth::guard('api')->factory()->getTTL(),
+            path: '/',
+            domain: null,
+            secure: $request->secure(),
+            httpOnly: true,
+            raw: false,
+            sameSite: config('session.same_site', 'lax'),
+        );
+    }
+
+    public function forgetAuthCookie(): Cookie
+    {
+        return cookie()->forget(config('jwt.cookie_key_name', 'token'));
     }
 }

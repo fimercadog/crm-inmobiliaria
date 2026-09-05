@@ -3,9 +3,6 @@ import type { ApiSuccessResponse } from "@/types/api";
 import type { AuthUser } from "@/store/slices/authSlice";
 
 interface LoginResponse {
-  token: string;
-  type: string;
-  expires_in: number;
   user: AuthUser;
 }
 

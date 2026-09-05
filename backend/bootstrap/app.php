@@ -19,7 +19,15 @@ return Application::configure(basePath: dirname(__DIR__))
         health: '/up',
     )
     ->withMiddleware(function (Middleware $middleware): void {
-        //
+        // The `api` group is stateless by default and skips Laravel's cookie
+        // middleware entirely. The JWT auth cookie (httpOnly, replacing the
+        // old Authorization-header/localStorage token) needs both: decrypt
+        // it coming in, flush it going out — without these, login's
+        // ->withCookie() would silently produce no Set-Cookie header at all.
+        $middleware->api(prepend: [
+            \Illuminate\Cookie\Middleware\EncryptCookies::class,
+            \Illuminate\Cookie\Middleware\AddQueuedCookiesToResponse::class,
+        ]);
     })
     ->withExceptions(function (Exceptions $exceptions): void {
         $exceptions->render(function (ValidationException $e, Request $request) {

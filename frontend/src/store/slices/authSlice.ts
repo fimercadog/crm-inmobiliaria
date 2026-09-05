@@ -11,13 +11,11 @@ export interface AuthUser {
 
 interface AuthState {
   user: AuthUser | null;
-  token: string | null;
   status: "idle" | "authenticated" | "unauthenticated";
 }
 
 const initialState: AuthState = {
   user: null,
-  token: null,
   status: "idle",
 };
 
@@ -25,14 +23,14 @@ const authSlice = createSlice({
   name: "auth",
   initialState,
   reducers: {
-    setCredentials(state, action: PayloadAction<{ user: AuthUser; token: string }>) {
+    // No token here — it lives only in the httpOnly cookie the backend sets,
+    // which JS was never meant to read in the first place.
+    setCredentials(state, action: PayloadAction<{ user: AuthUser }>) {
       state.user = action.payload.user;
-      state.token = action.payload.token;
       state.status = "authenticated";
     },
     clearCredentials(state) {
       state.user = null;
-      state.token = null;
       state.status = "unauthenticated";
     },
     updateUser(state, action: PayloadAction<AuthUser>) {

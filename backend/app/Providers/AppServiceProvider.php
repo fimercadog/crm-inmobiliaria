@@ -18,6 +18,7 @@ use App\Policies\UserPolicy;
 use Illuminate\Database\Eloquent\Relations\Relation;
 use Illuminate\Support\Facades\Gate;
 use Illuminate\Support\ServiceProvider;
+use PHPOpenSourceSaver\JWTAuth\Http\Parser\Cookies;
 
 class AppServiceProvider extends ServiceProvider
 {
@@ -53,5 +54,13 @@ class AppServiceProvider extends ServiceProvider
         // CRM write — reuses the existing Admin role rather than adding a new
         // granular permission for a single gate.
         Gate::define('manage-contingency', fn (User $user): bool => $user->isAdmin());
+
+        // jwt-auth's default parser chain only reads the Bearer header. The
+        // frontend now carries the JWT in an httpOnly cookie instead (never
+        // in localStorage/JS-readable storage), so the chain needs a parser
+        // that knows to look there too — `decrypt_cookies` stays false in
+        // config/jwt.php because Laravel's own EncryptCookies middleware
+        // already decrypts it before this parser ever sees the value.
+        $this->app->make('tymon.jwt.parser')->addParser(new Cookies((bool) config('jwt.decrypt_cookies')));
     }
 }
